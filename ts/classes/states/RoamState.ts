@@ -1,4 +1,5 @@
-import { Direction } from "../../Util.js";
+import { Direction, Entity } from "../../Util.js";
+import GameMap from "../GameMap.js";
 import Player from "../Player.js";
 import Renderer from "../Renderer.js";
 import Vector from "../Vector.js";
@@ -25,7 +26,7 @@ export default class RoamState extends State {
 		const map = this.currentMap;
 		if (!map) return;
 		if (map.img) return;
-		map.load();
+		map.preload();
 	}
 	update(): void {
 		this.player.update();
@@ -40,32 +41,6 @@ export default class RoamState extends State {
 
 
 		this.player.render(renderer);
-	}
-}
-
-/*
-GameMaps will have an imgUrl, width, height, tileData, and interactable. An interactable is an interface that a player can interact with, like a note on a table.
-
-Interactables will have activation points, from where they can be activated. An activation point includes an pos Vector and directions that the player must face to activate the Interactables. Interactables will also have the text that will be displayed upon interaction.
-*/
-export class GameMap {
-	img: HTMLImageElement | undefined = undefined;
-	constructor(public name: string, public imgUrl: string, public sizeInTiles: Vector, public tileSizeInPx = 16) { }
-
-	async load(): Promise<HTMLImageElement | void> {
-		return new Promise((res) => {
-			const image = new Image();
-			image.addEventListener('load', e => {
-				this.img = image;
-				res(image);
-			})
-			image.src = this.imgUrl;
-		})
-	}
-
-	render(renderer: Renderer) {
-		if (!this.img) return;
-		renderer.ctx.drawImage(this.img, 0, 0);
 	}
 }
 
