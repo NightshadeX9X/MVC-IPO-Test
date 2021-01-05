@@ -4,12 +4,16 @@ GameMaps will have an imgUrl, width, height, tileData, and interactable. An inte
 Interactables will have activation points, from where they can be activated. An activation point includes an pos Vector and directions that the player must face to activate the Interactables. Interactables will also have the text that will be displayed upon interaction.
 */
 export default class GameMap {
-    constructor(name, imgUrl, sizeInTiles, tileSizeInPx = 16) {
+    constructor(name, imgUrl, sizeInTiles, tileSizeInPx, tileData, tileDataMappings = { "0": { type: 'empty' }, "1": { type: "wall" }, "2": { type: "grass" } }) {
         this.name = name;
         this.imgUrl = imgUrl;
         this.sizeInTiles = sizeInTiles;
         this.tileSizeInPx = tileSizeInPx;
+        this.tileData = tileData;
+        this.tileDataMappings = tileDataMappings;
         this.img = undefined;
+        this.tileDataMapped = [];
+        this.tileDataMapped = tileData.map(row => row.map(val => tileDataMappings[val]));
     }
     async preload() {
         return new Promise((res) => {

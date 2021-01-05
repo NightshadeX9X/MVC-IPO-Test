@@ -7,8 +7,9 @@ export default class Player {
         this.pos = pos;
         this.size = size;
         this.cameraSize = new Vector(300, 450);
-        this.speed = new Vector(2);
+        this.speed = new Vector(1);
         this.facing = Direction.UP;
+        this.speed = new Vector(Math.floor(this.speed.x), Math.floor(this.speed.y));
     }
     async preload() { }
     update(input) {
@@ -31,6 +32,8 @@ export default class Player {
     }
     render(renderer) {
         let multiplier = this.roamState.currentMap?.tileSizeInPx || 16;
-        renderer.rect(this.pos.multiply(multiplier), this.size.multiply(multiplier));
+        const pos = new Vector(this.pos.x, this.pos.y).subtract(new Vector(0, 1)).multiply(multiplier);
+        const size = new Vector(this.size.x, this.size.y).multiply(multiplier);
+        renderer.ctx.fillRect(pos.x, pos.y, size.x, size.y);
     }
 }

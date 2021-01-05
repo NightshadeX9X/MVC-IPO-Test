@@ -25,4 +25,8 @@ export default class Vector {
 		let y = v.y === 0 ? 0 : this.y / v.y;
 		return new Vector(x, y);
 	}
+
+	floor() {
+		return new Vector(Math.floor(this.x), Math.floor(this.y))
+	}
 }

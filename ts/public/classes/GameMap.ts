@@ -2,6 +2,24 @@ import { Entity } from "../Util.js";
 import Renderer from "./Renderer.js";
 import Vector from "./Vector.js";
 
+interface TileDataWall {
+	type: 'wall';
+}
+interface TileDataGrass {
+	type: 'grass';
+}
+interface TileDataPortal {
+	type: 'portal',
+	to: {
+		map: GameMap,
+		pos: Vector
+	}
+}
+interface TileDataEmpty {
+	type: 'empty'
+}
+type TileData = TileDataWall | TileDataPortal | TileDataEmpty | TileDataGrass;
+
 /**
 GameMaps will have an imgUrl, width, height, tileData, and interactable. An interactable is an interface that a player can interact with, like a note on a table.
 
@@ -9,7 +27,12 @@ Interactables will have activation points, from where they can be activated. An 
 */
 export default class GameMap implements Entity {
 	img: HTMLImageElement | undefined = undefined;
-	constructor(public name: string, public imgUrl: string, public sizeInTiles: Vector, public tileSizeInPx = 16) { }
+	tileDataMapped: TileData[][] = [];
+	constructor(public name: string, public imgUrl: string, public sizeInTiles: Vector, public tileSizeInPx: number, public tileData: string[][], public tileDataMappings: { [k: string]: TileData } = { "0": { type: 'empty' }, "1": { type: "wall" }, "2": { type: "grass" } }) {
+
+		this.tileDataMapped = tileData.map(row => row.map(val => tileDataMappings[val]));
+
+	}
 
 	async preload(): Promise<HTMLImageElement | void> {
 		return new Promise((res) => {
