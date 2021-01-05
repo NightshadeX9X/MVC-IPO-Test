@@ -1,4 +1,5 @@
 import { Entity } from "../Util.js";
+import Input from "./Input.js";
 import Renderer from "./Renderer.js";
 import RoamState from "./states/RoamState.js";
 import State from "./states/State.js";
@@ -7,7 +8,7 @@ export default class StateStack implements Entity {
 	public states: State[] = [];
 
 	constructor() {
-		this.push(new RoamState());
+		this.push(new RoamState(this));
 	}
 
 	async push(s: State) {
@@ -31,9 +32,9 @@ export default class StateStack implements Entity {
 			await s.preload();
 		}
 	}
-	update(): void {
+	update(input: Input): void {
 
-		this.states.filter(s => s.forceUpdate || s === this.top).forEach(s => s.update());
+		this.states.filter(s => s.forceUpdate || s === this.top).forEach(s => s.update(input));
 	}
 	render(renderer: Renderer): void {
 		this.states.forEach(s => s.render(renderer));

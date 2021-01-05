@@ -1,15 +1,16 @@
+import Input from "./classes/Input.js";
 import Renderer from "./classes/Renderer.js";
 import Vector from "./classes/Vector.js";
 
 export enum Direction {
 	LEFT,
-	TOP,
+	UP,
 	RIGHT,
-	BOTTOM,
+	DOWN,
 }
 export interface Entity {
 	preload(): void;
-	update(): void;
+	update(input: Input): void;
 	render(renderer: Renderer): void;
 }
 export interface Interactable {

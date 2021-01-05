@@ -1,5 +1,5 @@
 export default class Vector {
-	constructor(public x: number, public y: number) { }
+	constructor(public x = 0, public y = x) { }
 
 	add(n: Vector | number) {
 		let v = n instanceof Vector ? n : { x: n, y: n };

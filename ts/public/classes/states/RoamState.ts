@@ -1,23 +1,25 @@
 import { Direction, Entity } from "../../Util.js";
 import GameMap from "../GameMap.js";
+import Input from "../Input.js";
 import Player from "../Player.js";
 import Renderer from "../Renderer.js";
 import Vector from "../Vector.js";
 import State from "./State.js";
+import StateStack from '../StateStack.js';
 
 export default class RoamState extends State {
 	public static gameMaps = new Map<string, GameMap>();
 	public gameMapName = "test";
-	private readonly INITIAL_PLAYER_POS = new Vector(50, 50);
+	private readonly INITIAL_PLAYER_POS = new Vector(0.5, 1);
 
-	constructor() {
-		super();
+	constructor(public stateStack: StateStack) {
+		super(stateStack);
 	}
 
 	get currentMap() {
 		return RoamState.gameMaps.get(this.gameMapName);
 	}
-	player = new Player(this, this.INITIAL_PLAYER_POS, new Vector(30, 20));
+	player = new Player(this, this.INITIAL_PLAYER_POS, new Vector(1, 2));
 
 	async preload() {
 		await this.loadCurrentMap();
@@ -28,8 +30,8 @@ export default class RoamState extends State {
 		if (map.img) return;
 		map.preload();
 	}
-	update(): void {
-		this.player.update();
+	update(input: Input): void {
+		this.player.update(input);
 	}
 	render(renderer: Renderer): void {
 		renderer.clear();
@@ -38,9 +40,8 @@ export default class RoamState extends State {
 
 			this.currentMap.render(renderer);
 		}
-
-
 		this.player.render(renderer);
+
 	}
 }
 

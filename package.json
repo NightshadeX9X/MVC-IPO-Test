@@ -1,0 +1,27 @@
+{
+	"name": "MVC-IPO-Test",
+	"version": "1.0.0",
+	"description": "",
+	"main": "js/app.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"type": "module",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/NightshadeX9X/MVC-IPO-Test.git"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/NightshadeX9X/MVC-IPO-Test/issues"
+	},
+	"homepage": "https://github.com/NightshadeX9X/MVC-IPO-Test#readme",
+	"devDependencies": {
+		"@types/express": "^4.17.9"
+	},
+	"dependencies": {
+		"express": "^4.17.1"
+	}
+}
