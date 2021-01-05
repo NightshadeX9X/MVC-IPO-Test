@@ -1,5 +1,6 @@
 import { Entity } from "../Util.js";
 import Renderer from "./Renderer.js";
+import RoamState from "./states/RoamState.js";
 import Vector from "./Vector.js";
 
 interface TileDataWall {
@@ -28,7 +29,7 @@ Interactables will have activation points, from where they can be activated. An 
 export default class GameMap implements Entity {
 	img: HTMLImageElement | undefined = undefined;
 	tileDataMapped: TileData[][] = [];
-	constructor(public name: string, public imgUrl: string, public sizeInTiles: Vector, public tileSizeInPx: number, public tileData: string[][], public tileDataMappings: { [k: string]: TileData } = { "0": { type: 'empty' }, "1": { type: "wall" }, "2": { type: "grass" } }) {
+	constructor(public roamState: RoamState, public name: string, public imgUrl: string, public sizeInTiles: Vector, public tileSizeInPx: number, public tileData: string[][], public tileDataMappings: { [k: string]: TileData } = { "0": { type: 'empty' }, "1": { type: "wall" }, "2": { type: "grass" } }) {
 
 		this.tileDataMapped = tileData.map(row => row.map(val => tileDataMappings[val]));
 
@@ -51,6 +52,9 @@ export default class GameMap implements Entity {
 
 	render(renderer: Renderer) {
 		if (!this.img) return;
-		renderer.ctx.drawImage(this.img, 0, 0);
+		const cameraSize = this.roamState.player.cameraSize;
+		const cameraPos = this.roamState.player.pos.multiply(16);
+		// console.log(cameraSize, cameraPos)
+		renderer.ctx.drawImage(this.img, cameraPos.x - cameraSize.x / 2, cameraPos.y - cameraSize.y / 2, cameraSize.x, cameraSize.y, 0, 0, cameraSize.x, cameraSize.y);
 	}
 }

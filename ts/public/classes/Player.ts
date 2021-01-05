@@ -6,7 +6,7 @@ import Vector from "./Vector.js";
 import PlayerMovingState from './states/PlayerMovingState.js';
 
 export default class Player implements Entity {
-	public cameraSize = new Vector(300, 450);
+	public cameraSize = new Vector(480, 320);
 	public speed = new Vector(1)
 	public facing = Direction.UP;
 	constructor(public roamState: RoamState, public pos: Vector, public size: Vector) {
@@ -33,6 +33,7 @@ export default class Player implements Entity {
 		const pos = new Vector(this.pos.x, this.pos.y).subtract(new Vector(0, 1)).multiply(multiplier);
 		const size = new Vector(this.size.x, this.size.y).multiply(multiplier);
 
-		renderer.ctx.fillRect(pos.x, pos.y, size.x, size.y)
+		// renderer.ctx.fillRect(pos.x, pos.y, size.x, size.y)
+		renderer.rect(new Vector(15.5, 10).multiply(16), this.size.multiply(16))
 	}
 }

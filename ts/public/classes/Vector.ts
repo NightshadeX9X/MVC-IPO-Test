@@ -29,4 +29,7 @@ export default class Vector {
 	floor() {
 		return new Vector(Math.floor(this.x), Math.floor(this.y))
 	}
+	round() {
+		return new Vector(Math.round(this.x), Math.round(this.y))
+	}
 }

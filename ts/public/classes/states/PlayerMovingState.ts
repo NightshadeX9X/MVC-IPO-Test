@@ -27,7 +27,7 @@ export default class PlayerMovingState extends State {
 		const headedToTile = headedToRow?.[headedToTilePos.x];
 		// console.log({ x: inFront.x, y: inFront.y })
 
-		if (headedToTile?.type === "wall") {
+		if (headedToTile?.type === "wall" || headedToTilePos.x <= -1 || headedToTilePos.y <= -1 || headedToTilePos.x > 40 || headedToTilePos.y > 35) {
 			this.toMove = false;
 			this.stateStack.pop();
 			return;
@@ -39,7 +39,7 @@ export default class PlayerMovingState extends State {
 
 			this.player.pos = this.player.pos.add(directionToVector(this.player.facing).multiply(fraction).multiply(this.player.speed));
 		} else {
-			this.player.pos = this.originalPos.add(directionToVector(this.player.facing).multiply(this.player.speed));
+			this.player.pos = this.originalPos.add(directionToVector(this.player.facing).multiply(this.player.speed)).round()
 			this.timesUpdated = 0;
 			// console.log(this.player.pos)
 			this.stateStack.pop();
