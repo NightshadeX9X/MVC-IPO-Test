@@ -46,3 +46,8 @@ export function chance(x = 1, outOfY = 100) {
     const gen = random(x, outOfY, true);
     return gen <= x;
 }
+export function delay(ms) {
+    return new Promise((res) => {
+        setTimeout(() => res(ms), ms);
+    });
+}

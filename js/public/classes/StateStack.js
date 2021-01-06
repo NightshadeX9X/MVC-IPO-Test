@@ -1,12 +1,13 @@
 import RoamState from "./states/RoamState.js";
 export default class StateStack {
-    constructor() {
+    constructor(loader) {
+        this.loader = loader;
         this.states = [];
-        this.push(new RoamState(this));
+        this.push(new RoamState(this, this.loader));
     }
     async push(s) {
         this.states.push(s);
-        await this.top?.preload();
+        await this.top?.preload(this.loader);
     }
     pop() {
         return this.states.pop();
@@ -17,9 +18,10 @@ export default class StateStack {
     get bottom() {
         return this.states[0];
     }
-    async preload() {
+    async preload(loader) {
+        this.loader = loader;
         for await (let s of this.states) {
-            await s.preload();
+            await s.preload(loader);
         }
     }
     update(input) {

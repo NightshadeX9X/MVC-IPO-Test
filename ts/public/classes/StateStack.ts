@@ -1,5 +1,6 @@
 import { Entity } from "../Util.js";
 import Input from "./Input.js";
+import Loader from "./Loader.js";
 import Renderer from "./Renderer.js";
 import RoamState from "./states/RoamState.js";
 import State from "./states/State.js";
@@ -7,13 +8,13 @@ import State from "./states/State.js";
 export default class StateStack implements Entity {
 	public states: State[] = [];
 
-	constructor() {
-		this.push(new RoamState(this));
+	constructor(public loader: Loader) {
+		this.push(new RoamState(this, this.loader));
 	}
 
 	async push(s: State) {
 		this.states.push(s);
-		await this.top?.preload()
+		await this.top?.preload(this.loader)
 	}
 
 	pop() {
@@ -27,9 +28,10 @@ export default class StateStack implements Entity {
 	get bottom(): State | undefined {
 		return this.states[0];
 	}
-	async preload() {
+	async preload(loader: Loader) {
+		this.loader = loader;
 		for await (let s of this.states) {
-			await s.preload();
+			await s.preload(loader);
 		}
 	}
 	update(input: Input): void {

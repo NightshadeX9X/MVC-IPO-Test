@@ -1,4 +1,4 @@
-import { generate2DArray } from "../../Util.js";
+import { Direction, generate2DArray } from "../../Util.js";
 import GameMap from "../GameMap.js";
 import Input from "../Input.js";
 import Player from "../Player.js";
@@ -6,36 +6,42 @@ import Renderer from "../Renderer.js";
 import Vector from "../Vector.js";
 import State from "./State.js";
 import StateStack from '../StateStack.js';
+import Loader from "../Loader.js";
+import { getSaveData } from '../../SaveData.js';
 
 export default class RoamState extends State {
 	public static gameMaps = new Map<string, GameMap>();
 	public static gameMapsSet = false;
-	public gameMapName = "the_square";
-	private readonly INITIAL_PLAYER_POS = new Vector(18, 0);
+	private readonly INITIAL_PLAYER_POS = getSaveData().pos;
 
-	constructor(public stateStack: StateStack) {
+	constructor(public stateStack: StateStack, public loader: Loader, public gameMapName = getSaveData().currentMap) {
 		super(stateStack);
 
 		if (!RoamState.gameMapsSet) {
 			RoamState.gameMaps.set('the_square', new GameMap(this, 'the_square', '../../../assets/images/maps/the-square.png', new Vector(40, 25), 16, generate2DArray(25, 40, "0", [
 				{
 					pos1: new Vector(0, 0),
-					pos2: new Vector(3, 12),
-					value: "1"
-				},
-				{
-					pos1: new Vector(4, 0),
 					pos2: new Vector(15, 2),
 					value: "1"
 				},
 				{
-					pos1: new Vector(0, 16),
-					pos2: new Vector(3, 20),
+					pos1: new Vector(0, 3),
+					pos2: new Vector(3, 11),
 					value: "1"
 				},
 				{
-					pos1: new Vector(4, 3),
-					pos2: new Vector(12, 12),
+					pos1: new Vector(5, 4),
+					pos2: new Vector(15, 12),
+					value: "1"
+				},
+				{
+					pos1: new Vector(6, 3),
+					pos2: new Vector(14, 3),
+					value: "1"
+				},
+				{
+					pos1: new Vector(0, 16),
+					pos2: new Vector(3, 21),
 					value: "1"
 				},
 				{
@@ -49,19 +55,14 @@ export default class RoamState extends State {
 					value: "1"
 				},
 				{
-					pos1: new Vector(19, 11),
-					pos2: new Vector(21, 15),
-					value: "1"
-				},
-				{
 					pos1: new Vector(18, 12),
 					pos2: new Vector(22, 14),
 					value: "1"
 				},
 				{
-					pos1: new Vector(13, 3),
-					pos2: new Vector(14, 12),
-					value: "2"
+					pos1: new Vector(19, 11),
+					pos2: new Vector(21, 15),
+					value: "1"
 				},
 				{
 					pos1: new Vector(0, 13),
@@ -69,31 +70,37 @@ export default class RoamState extends State {
 					value: "2"
 				},
 				{
-					pos1: new Vector(18, 15),
-					pos2: new Vector(18, 15),
-					value: "2"
-				},
-				{
 					pos1: new Vector(21, 17),
-					pos2: new Vector(22, 23),
-					value: "2"
-				},
-				{
-					pos1: new Vector(23, 15),
-					pos2: new Vector(24, 23),
-					value: "2"
-				},
-				{
-					pos1: new Vector(25, 8),
 					pos2: new Vector(28, 23),
 					value: "2"
 				},
 				{
-					pos1: new Vector(29, 19),
+					pos1: new Vector(23, 15),
+					pos2: new Vector(24, 16),
+					value: "2"
+				},
+				{
+					pos1: new Vector(29, 17),
 					pos2: new Vector(30, 22),
 					value: "2"
 				},
-			])));
+				{
+					pos1: new Vector(31, 17),
+					pos2: new Vector(32, 18),
+					value: "2"
+				},
+				{
+					pos1: new Vector(25, 8),
+					pos2: new Vector(28, 16),
+					value: "2"
+				},
+				{
+					pos1: new Vector(0, 24),
+					pos2: new Vector(39, 24),
+					value: "3"
+				}
+			]), { ...GameMap.defaultTileDataMappings, "3": { type: 'portal', to: { mapName: 'test', pos: new Vector(10, 11), direction: Direction.UP }, delay: 3000 } }));
+
 			RoamState.gameMaps.set('test', new GameMap(this, 'test', '../../../assets/images/maps/test.png', new Vector(40, 25), 16, generate2DArray(25, 40, "0", [
 				{
 					pos1: new Vector(0, 0),
@@ -150,10 +157,17 @@ export default class RoamState extends State {
 					pos2: new Vector(34, 18),
 					value: "1"
 				},
-			])));
+				{
+					pos1: new Vector(32, 1),
+					pos2: new Vector(33, 2),
+					value: "3"
+				}
+			]), { ...GameMap.defaultTileDataMappings, "3": { type: 'portal', to: { mapName: 'test', pos: new Vector(1, 0) } } }));
 
 			RoamState.gameMapsSet = true;
 		}
+		console.log(this.currentMap)
+
 	}
 
 	get currentMap() {
@@ -161,17 +175,19 @@ export default class RoamState extends State {
 	}
 	player = new Player(this, this.INITIAL_PLAYER_POS, new Vector(1, 2));
 
-	async preload() {
+	async preload(loader: Loader) {
 		await this.loadCurrentMap();
+		await this.player.preload(loader);
 	}
 	async loadCurrentMap() {
 		const map = this.currentMap;
 		if (!map) return;
 		if (map.img) return;
-		map.preload();
+		map.preload(this.loader);
 	}
 	update(input: Input): void {
 		this.player.update(input);
+
 	}
 	render(renderer: Renderer): void {
 

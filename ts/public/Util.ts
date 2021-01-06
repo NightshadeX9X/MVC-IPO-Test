@@ -1,4 +1,5 @@
 import Input from "./classes/Input.js";
+import Loader from "./classes/Loader.js";
 import Renderer from "./classes/Renderer.js";
 import Vector from "./classes/Vector.js";
 
@@ -9,7 +10,7 @@ export enum Direction {
 	DOWN,
 }
 export interface Entity {
-	preload(): void;
+	preload(loader: Loader): void;
 	update(input: Input): void;
 	render(renderer: Renderer): void;
 }
@@ -64,4 +65,10 @@ export function random(min = 0, max = 1, whole = true) {
 export function chance(x = 1, outOfY = 100) {
 	const gen = random(x, outOfY, true);
 	return gen <= x;
+}
+
+export function delay(ms: number) {
+	return new Promise((res) => {
+		setTimeout(() => res(ms), ms);
+	})
 }

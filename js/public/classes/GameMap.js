@@ -4,7 +4,7 @@ GameMaps will have an imgUrl, width, height, tileData, and interactable. An inte
 Interactables will have activation points, from where they can be activated. An activation point includes an pos Vector and directions that the player must face to activate the Interactables. Interactables will also have the text that will be displayed upon interaction.
 */
 export default class GameMap {
-    constructor(roamState, name, imgUrl, sizeInTiles, tileSizeInPx, tileData, tileDataMappings = { "0": { type: 'empty' }, "1": { type: "wall" }, "2": { type: "grass" } }) {
+    constructor(roamState, name, imgUrl, sizeInTiles, tileSizeInPx, tileData, tileDataMappings = GameMap.defaultTileDataMappings) {
         this.roamState = roamState;
         this.name = name;
         this.imgUrl = imgUrl;
@@ -16,15 +16,9 @@ export default class GameMap {
         this.tileDataMapped = [];
         this.tileDataMapped = tileData.map(row => row.map(val => tileDataMappings[val]));
     }
-    async preload() {
-        return new Promise((res) => {
-            const image = new Image();
-            image.addEventListener('load', e => {
-                this.img = image;
-                res(image);
-            });
-            image.src = this.imgUrl;
-        });
+    async preload(loader) {
+        const image = await loader.image(this.imgUrl);
+        this.img = image;
     }
     update() {
     }
@@ -37,3 +31,4 @@ export default class GameMap {
         renderer.ctx.drawImage(this.img, cameraPos.x - cameraSize.x / 2, cameraPos.y - cameraSize.y / 2, cameraSize.x, cameraSize.y, 0, 0, cameraSize.x, cameraSize.y);
     }
 }
+GameMap.defaultTileDataMappings = { "0": { type: 'empty' }, "1": { type: "wall" }, "2": { type: "grass" } };
