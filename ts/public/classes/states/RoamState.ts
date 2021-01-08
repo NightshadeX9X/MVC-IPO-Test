@@ -188,26 +188,7 @@ export default class RoamState extends State {
 	update(input: Input): void {
 		this.player.update(input);
 
-		if (input.keyIsDown("Shift")) {
-			let cutscene = new CutsceneState(this.stateStack, this, [], [
-				{
-					type: 'move_player',
-					coords: new Vector(30, 20),
-					mapName: 'the_square'
-				},
-				{
-					type: 'delay',
-					delayFrames: 60
-				},
-				{
-					type: 'move_player',
-					coords: new Vector(10, 15),
-					mapName: 'the_square'
-				},
-			])
-			this.stateStack.push(cutscene);
-			cutscene.executeAllSteps();
-		}
+
 	}
 	render(renderer: Renderer): void {
 

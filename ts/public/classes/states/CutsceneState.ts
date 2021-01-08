@@ -8,7 +8,7 @@ import Vector from "../Vector.js"
 import RoamState from "./RoamState.js"
 import State from "./State.js"
 
-export type CutsceneStep = {
+type _CutsceneStep = {
 	type: 'push_state',
 	stateName: "TextState" | "CutsceneState" | "RoamState";
 	params: any[];
@@ -23,6 +23,8 @@ export type CutsceneStep = {
 	mapName: string;
 	coords: Vector;
 }
+
+export type CutsceneStep = _CutsceneStep & { requiredStoryPoints?: string[] }
 
 export type CutsceneActivationMethod = {
 	type: 'move_to_tile',
