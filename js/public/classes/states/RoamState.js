@@ -159,7 +159,6 @@ export default class RoamState extends State {
             ]), { ...GameMap.defaultTileDataMappings, "3": { type: 'portal', to: { mapName: 'test', pos: new Vector(1, 0) } } }));
             RoamState.gameMapsSet = true;
         }
-        console.log(this.currentMap);
     }
     get currentMap() {
         return RoamState.gameMaps.get(this.gameMapName);

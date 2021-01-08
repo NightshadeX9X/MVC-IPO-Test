@@ -2,6 +2,7 @@ import Input from "./classes/Input.js";
 import Loader from "./classes/Loader.js";
 import Renderer from "./classes/Renderer.js";
 import Vector from "./classes/Vector.js";
+import State from './classes/states/State.js';
 
 export enum Direction {
 	LEFT,
@@ -72,3 +73,4 @@ export function delay(ms: number) {
 		setTimeout(() => res(ms), ms);
 	})
 }
+

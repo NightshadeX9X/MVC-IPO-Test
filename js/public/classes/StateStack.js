@@ -1,9 +1,9 @@
-import RoamState from "./states/RoamState.js";
+import StartScreenState from './states/StartScreenState.js';
 export default class StateStack {
     constructor(loader) {
         this.loader = loader;
         this.states = [];
-        this.push(new RoamState(this, this.loader));
+        this.states.push(new StartScreenState(this));
     }
     async push(s) {
         this.states.push(s);

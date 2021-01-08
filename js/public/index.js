@@ -22,6 +22,7 @@ async function setup() {
     }, 1000 / fps);
     render();
 }
+console.log(stateStack.states);
 function update(input) {
     stateStack.update(input);
 }

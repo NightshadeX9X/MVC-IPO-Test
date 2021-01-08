@@ -51,7 +51,6 @@ export default class Player implements Entity {
 		// renderer.ctx.fillRect(pos.x, pos.y, size.x, size.y)
 		// renderer.rect(new Vector(15.5, 10).multiply(16), this.size.multiply(16))
 		if (this.spriteSheet) {
-			console.log(this.facing)
 			renderer.ctx.drawImage(this.spriteSheet, spriteSheetCords.x, spriteSheetCords.y, size.x, size.y, pos.x, pos.y, size.x, size.y)
 		}
 	}

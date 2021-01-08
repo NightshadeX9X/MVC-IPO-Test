@@ -16,7 +16,6 @@ async function preload() {
 }
 async function setup() {
 	await preload();
-
 	input.start(document);
 	let times = 0;
 	setInterval(() => {
@@ -26,6 +25,7 @@ async function setup() {
 
 	render();
 }
+console.log(stateStack.states)
 
 function update(input: Input) {
 	stateStack.update(input);

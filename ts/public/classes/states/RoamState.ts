@@ -166,7 +166,6 @@ export default class RoamState extends State {
 
 			RoamState.gameMapsSet = true;
 		}
-		console.log(this.currentMap)
 
 	}
 
@@ -187,7 +186,6 @@ export default class RoamState extends State {
 	}
 	update(input: Input): void {
 		this.player.update(input);
-
 	}
 	render(renderer: Renderer): void {
 

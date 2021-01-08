@@ -8,7 +8,7 @@ export default class Loader {
     }
     image(src, giveName = src) {
         if (this.alreadyLoaded.has(src)) {
-            return Promise.resolve(this.alreadyLoaded.get(src));
+            return Promise.resolve(this.alreadyLoaded.get(giveName));
         }
         return new Promise((res, rej) => {
             const image = new Image();
@@ -23,6 +23,26 @@ export default class Loader {
             });
             image.src = src;
         });
+    }
+    audio(src, giveName = src) {
+        if (this.alreadyLoaded.has(src)) {
+            return Promise.resolve(this.alreadyLoaded.get(giveName));
+        }
+        const audio = new Audio(src);
+        return Promise.resolve(audio);
+        /* return new Promise<HTMLAudioElement>((res, rej) => {
+            const audio = new Audio();
+            audio.addEventListener('load', e => {
+                try {
+
+                    res(audio);
+                    this.alreadyLoaded.set(giveName, audio);
+                } catch (e) {
+                    rej(audio);
+                }
+            })
+            audio.src = src;
+        }) */
     }
 }
 Loader.instance = null;

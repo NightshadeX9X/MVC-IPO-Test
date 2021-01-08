@@ -8,14 +8,12 @@ import { fps } from '../../index.js';
 import Vector from '../Vector.js';
 import { chance } from '../../Util.js';
 import RoamState from './RoamState.js';
-import { FadeState } from './FadeState.js';
 export default class PlayerMovingState extends State {
 	timesUpdated = 0;
 	originalPos: Vector;
 	toMove = true;
 	constructor(public stateStack: StateStack, public player: Player, public tilesToMovePlayer = 1) {
 		super(stateStack);
-		console.log(this.player)
 		this.originalPos = new Vector(player.pos.x, player.pos.y);
 		this.preload();
 	}
@@ -28,7 +26,6 @@ export default class PlayerMovingState extends State {
 		const headedToTilePos = this.player.pos.add(inFront);
 		const headedToRow = this.player.roamState.currentMap.tileDataMapped[headedToTilePos.y];
 		const headedToTile = headedToRow?.[headedToTilePos.x];
-		// console.log({ x: inFront.x, y: inFront.y })
 
 		if (headedToTile?.type === "wall" || headedToTilePos.x <= -1 || headedToTilePos.y <= -1 || headedToTilePos.x > 40 || headedToTilePos.y > 25) {
 			this.toMove = false;
@@ -44,7 +41,6 @@ export default class PlayerMovingState extends State {
 		} else {
 			this.player.pos = this.originalPos.add(directionToVector(this.player.facing).multiply(this.player.speed)).round()
 			this.timesUpdated = 0;
-			// console.log(this.player.pos)
 			if (headedToTile?.type !== "portal")
 				this.stateStack.pop();
 
@@ -68,26 +64,15 @@ export default class PlayerMovingState extends State {
 
 		if (headedToTile?.type === "portal") {
 
-			const fadeState = new FadeState(this.stateStack);
-			this.stateStack.push(fadeState);
-
 			(async () => {
 
-				console.log(headedToTile)
 
-				if (headedToTile.delay)
-					await delay(headedToTile.delay)
 				this.player.roamState.gameMapName = headedToTile.to.mapName;
 				this.player.pos = headedToTile.to.pos;
-				console.log(this.player)
 				if (headedToTile.to.direction) {
 					this.player.facing = headedToTile.to.direction;
 				}
-				await this.player.roamState.preload(this.stateStack.loader)
-				await fadeState.end()
-				console.log(this.player)
-
-				this.stateStack.pop();
+				await this.player.roamState.loadCurrentMap();
 			})()
 		}
 

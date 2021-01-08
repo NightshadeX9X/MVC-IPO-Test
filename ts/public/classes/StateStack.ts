@@ -4,12 +4,13 @@ import Loader from "./Loader.js";
 import Renderer from "./Renderer.js";
 import RoamState from "./states/RoamState.js";
 import State from "./states/State.js";
+import StartScreenState from './states/StartScreenState.js';
 
 export default class StateStack implements Entity {
 	public states: State[] = [];
 
 	constructor(public loader: Loader) {
-		this.push(new RoamState(this, this.loader));
+		this.states.push(new StartScreenState(this));
 	}
 
 	async push(s: State) {

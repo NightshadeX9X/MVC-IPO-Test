@@ -1,8 +1,7 @@
 import State from './State.js';
-import { delay, directionToVector } from '../../Util.js';
+import { directionToVector } from '../../Util.js';
 import Vector from '../Vector.js';
 import { chance } from '../../Util.js';
-import { FadeState } from './FadeState.js';
 export default class PlayerMovingState extends State {
     constructor(stateStack, player, tilesToMovePlayer = 1) {
         super(stateStack);
@@ -11,7 +10,6 @@ export default class PlayerMovingState extends State {
         this.tilesToMovePlayer = tilesToMovePlayer;
         this.timesUpdated = 0;
         this.toMove = true;
-        console.log(this.player);
         this.originalPos = new Vector(player.pos.x, player.pos.y);
         this.preload();
     }
@@ -24,7 +22,6 @@ export default class PlayerMovingState extends State {
         const headedToTilePos = this.player.pos.add(inFront);
         const headedToRow = this.player.roamState.currentMap.tileDataMapped[headedToTilePos.y];
         const headedToTile = headedToRow?.[headedToTilePos.x];
-        // console.log({ x: inFront.x, y: inFront.y })
         if (headedToTile?.type === "wall" || headedToTilePos.x <= -1 || headedToTilePos.y <= -1 || headedToTilePos.x > 40 || headedToTilePos.y > 25) {
             this.toMove = false;
             this.stateStack.pop();
@@ -39,7 +36,6 @@ export default class PlayerMovingState extends State {
         else {
             this.player.pos = this.originalPos.add(directionToVector(this.player.facing).multiply(this.player.speed)).round();
             this.timesUpdated = 0;
-            // console.log(this.player.pos)
             if (headedToTile?.type !== "portal")
                 this.stateStack.pop();
         }
@@ -62,22 +58,13 @@ export default class PlayerMovingState extends State {
             }
         }
         if (headedToTile?.type === "portal") {
-            const fadeState = new FadeState(this.stateStack);
-            this.stateStack.push(fadeState);
             (async () => {
-                console.log(headedToTile);
-                if (headedToTile.delay)
-                    await delay(headedToTile.delay);
                 this.player.roamState.gameMapName = headedToTile.to.mapName;
+                await this.player.roamState.loadCurrentMap();
                 this.player.pos = headedToTile.to.pos;
-                console.log(this.player);
                 if (headedToTile.to.direction) {
                     this.player.facing = headedToTile.to.direction;
                 }
-                await this.player.roamState.preload(this.stateStack.loader);
-                await fadeState.end();
-                console.log(this.player);
-                this.stateStack.pop();
             })();
         }
         this.timesUpdated++;
