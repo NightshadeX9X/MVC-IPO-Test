@@ -8,6 +8,7 @@ import { fps } from '../../index.js';
 import Vector from '../Vector.js';
 import { chance } from '../../Util.js';
 import RoamState from './RoamState.js';
+import CutsceneState from './CutsceneState.js';
 export default class PlayerMovingState extends State {
 	timesUpdated = 0;
 	originalPos: Vector;
@@ -44,6 +45,7 @@ export default class PlayerMovingState extends State {
 			if (headedToTile?.type !== "portal")
 				this.stateStack.pop();
 
+
 		}
 		if (this.timesUpdated === 0) {
 			this.player.spriteSheetCords.x = 0
@@ -67,13 +69,25 @@ export default class PlayerMovingState extends State {
 			(async () => {
 
 
-				this.player.roamState.gameMapName = headedToTile.to.mapName;
-				this.player.pos = headedToTile.to.pos;
-				if (headedToTile.to.direction) {
-					this.player.facing = headedToTile.to.direction;
-				}
-				await this.player.roamState.loadCurrentMap();
-			})()
+				let cutscene = new CutsceneState(this.stateStack, this.player.roamState, [], [
+					{
+						type: 'delay',
+						delayFrames: 10
+					},
+					{
+						type: 'move_player',
+						coords: headedToTile.to.pos,
+						mapName: headedToTile.to.mapName
+					},
+					{
+						type: 'delay',
+						delayFrames: 10
+					},
+
+				])
+				this.stateStack.push(cutscene);
+				await cutscene.executeAllSteps();
+			})();
 		}
 
 		this.timesUpdated++;

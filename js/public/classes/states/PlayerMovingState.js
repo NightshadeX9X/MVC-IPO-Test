@@ -2,6 +2,7 @@ import State from './State.js';
 import { directionToVector } from '../../Util.js';
 import Vector from '../Vector.js';
 import { chance } from '../../Util.js';
+import CutsceneState from './CutsceneState.js';
 export default class PlayerMovingState extends State {
     constructor(stateStack, player, tilesToMovePlayer = 1) {
         super(stateStack);
@@ -59,12 +60,23 @@ export default class PlayerMovingState extends State {
         }
         if (headedToTile?.type === "portal") {
             (async () => {
-                this.player.roamState.gameMapName = headedToTile.to.mapName;
-                await this.player.roamState.loadCurrentMap();
-                this.player.pos = headedToTile.to.pos;
-                if (headedToTile.to.direction) {
-                    this.player.facing = headedToTile.to.direction;
-                }
+                let cutscene = new CutsceneState(this.stateStack, this.player.roamState, [], [
+                    {
+                        type: 'delay',
+                        delayFrames: 10
+                    },
+                    {
+                        type: 'move_player',
+                        coords: headedToTile.to.pos,
+                        mapName: headedToTile.to.mapName
+                    },
+                    {
+                        type: 'delay',
+                        delayFrames: 10
+                    },
+                ]);
+                this.stateStack.push(cutscene);
+                await cutscene.executeAllSteps();
             })();
         }
         this.timesUpdated++;

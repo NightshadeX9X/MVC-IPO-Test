@@ -4,6 +4,7 @@ import Player from "../Player.js";
 import Vector from "../Vector.js";
 import State from "./State.js";
 import { getSaveData } from '../../SaveData.js';
+import CutsceneState from "./CutsceneState.js";
 export default class RoamState extends State {
     constructor(stateStack, loader, gameMapName = getSaveData().currentMap) {
         super(stateStack);
@@ -177,6 +178,26 @@ export default class RoamState extends State {
     }
     update(input) {
         this.player.update(input);
+        if (input.keyIsDown("Shift")) {
+            let cutscene = new CutsceneState(this.stateStack, this, [], [
+                {
+                    type: 'move_player',
+                    coords: new Vector(30, 20),
+                    mapName: 'the_square'
+                },
+                {
+                    type: 'delay',
+                    delayFrames: 60
+                },
+                {
+                    type: 'move_player',
+                    coords: new Vector(10, 15),
+                    mapName: 'the_square'
+                },
+            ]);
+            this.stateStack.push(cutscene);
+            cutscene.executeAllSteps();
+        }
     }
     render(renderer) {
         renderer.clear();
