@@ -1,8 +1,14 @@
 import Entity from "../interfaces.js";
+import Controller from "./Controller.js";
+import Loader from "./Loader.js";
 import State from "./State.js";
 
 export default class StateStack implements Entity {
 	public states: State[] = [];
+
+	constructor(public loader: Loader) {
+
+	}
 
 	/**
 	 * Preloads the state, executes the init function of that state, and then adds it to the `this.states`.
@@ -45,18 +51,19 @@ export default class StateStack implements Entity {
 		this.states.forEach(s => s.init());
 	}
 
-	update() {
+	update(controller: Controller) {
+
 		this.states.forEach(s => {
 			if (s.forceUpdate === false) return;
-			if (s.forceUpdate === true) s.update();
-			if (s === this.top()) s.update();
+			if (s.forceUpdate === true) s.update(controller);
+			if (s === this.top()) s.update(controller);
 		})
 	}
 
-	render() {
+	render(ctx: CanvasRenderingContext2D) {
 		this.states.forEach(s => {
 			if (s.toRender === false) return;
-			s.update();
+			s.render(ctx);
 		})
 	}
 
