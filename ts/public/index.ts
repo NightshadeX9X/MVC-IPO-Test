@@ -12,6 +12,7 @@ const loader = new Loader();
 const stateStack = new StateStack(loader);
 
 async function preload() {
+
 	await stateStack.preload(loader);
 }
 async function setup() {
@@ -19,6 +20,7 @@ async function setup() {
 	input.start(document);
 	let times = 0;
 	setInterval(() => {
+
 		update(input);
 		times++;
 	}, 1000 / fps);

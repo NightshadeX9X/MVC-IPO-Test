@@ -11,7 +11,7 @@ export enum Direction {
 	DOWN,
 }
 export interface Entity {
-	preload(loader: Loader): void;
+	preload(loader: Loader): Promise<any>;
 	update(input: Input): void;
 	render(renderer: Renderer): void;
 }

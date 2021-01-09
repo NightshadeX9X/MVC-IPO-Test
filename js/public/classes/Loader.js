@@ -44,5 +44,10 @@ export default class Loader {
             audio.src = src;
         }) */
     }
+    async json(url) {
+        const res = await fetch(url);
+        const json = await res.json();
+        return json;
+    }
 }
 Loader.instance = null;

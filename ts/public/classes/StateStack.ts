@@ -30,6 +30,7 @@ export default class StateStack implements Entity {
 		return this.states[0];
 	}
 	async preload(loader: Loader) {
+
 		this.loader = loader;
 		for await (let s of this.states) {
 			await s.preload(loader);

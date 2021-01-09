@@ -33,7 +33,7 @@ function handleGottenSaveData(gottenSaveData: any): SaveData {
 export function getInitialSaveData(): SaveData {
 	return {
 		playerName: "Player",
-		currentMap: "the_square",
+		currentMap: "the-square",
 		pos: new Vector(18, 0),
 		// pos: new Vector(5, 15),
 	}

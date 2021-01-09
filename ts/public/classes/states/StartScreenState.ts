@@ -15,6 +15,7 @@ export default class StartScreenState extends State {
 	private increaseButtonYBy = 0.6;
 	async preload(loader: Loader) {
 		const [image, music] = await Promise.all([
+
 			loader.image(StartScreenState.imageUrl),
 			loader.audio(StartScreenState.musicUrl),
 		]);
@@ -25,6 +26,7 @@ export default class StartScreenState extends State {
 		this.music.play();
 	}
 	update(input: Input): void {
+
 		this.frameCount++;
 		this.updateButton();
 
@@ -33,9 +35,6 @@ export default class StartScreenState extends State {
 			let roamState = new RoamState(this.stateStack, this.stateStack.loader);
 			this.stateStack.pop();
 			this.stateStack.push(roamState);
-
-
-
 		}
 
 	}

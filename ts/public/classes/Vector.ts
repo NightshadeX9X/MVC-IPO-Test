@@ -32,4 +32,12 @@ export default class Vector {
 	round() {
 		return new Vector(Math.round(this.x), Math.round(this.y))
 	}
+
+	abs() {
+		return new Vector(Math.abs(this.x), Math.abs(this.y))
+	}
+
+	equals(ov: Vector) {
+		return ov.x === this.x && ov.y === this.y;
+	}
 }

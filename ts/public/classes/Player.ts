@@ -5,9 +5,10 @@ import RoamState from "./states/RoamState.js";
 import Vector from "./Vector.js";
 import PlayerMovingState from './states/PlayerMovingState.js';
 import Loader from "./Loader.js";
+import Camera from "./Camera.js";
 
 export default class Player implements Entity {
-	public cameraSize = new Vector(480, 320);
+	public camera = new Camera(this, new Vector(30, 20));
 	public speed = new Vector(1)
 	public facing = Direction.UP;
 	public spriteSheetCords = new Vector(0, 0);
@@ -21,6 +22,8 @@ export default class Player implements Entity {
 		this.spriteSheet = image;
 	}
 	update(input: Input): void {
+		this.camera.update(input);
+		this.camera.currentPos.add(1)
 		if (input.keyIsDown('ArrowLeft')) {
 			this.facing = Direction.LEFT;
 			this.spriteSheetCords.y = 2;
@@ -44,14 +47,15 @@ export default class Player implements Entity {
 	render(renderer: Renderer): void {
 		let multiplier = this.roamState.currentMap?.tileSizeInPx || 16;
 		// const pos = new Vector(this.pos.x, this.pos.y).subtract(new Vector(0, 1)).multiply(multiplier);
-		const pos = new Vector(15, 10).subtract(new Vector(0, 1)).multiply(multiplier);
+		const pos = this.pos.subtract(new Vector(0, 1)).multiply(multiplier);
 		const size = this.size.multiply(multiplier);
 		const spriteSheetCords = this.spriteSheetCords.multiply(multiplier)
 
 		// renderer.ctx.fillRect(pos.x, pos.y, size.x, size.y)
 		// renderer.rect(new Vector(15.5, 10).multiply(16), this.size.multiply(16))
 		if (this.spriteSheet) {
-			renderer.ctx.drawImage(this.spriteSheet, spriteSheetCords.x, spriteSheetCords.y, size.x, size.y, pos.x, pos.y, size.x, size.y)
+			this.camera.render(renderer).imageComplex(this.spriteSheet, spriteSheetCords, size, pos, size)
+			// renderer.ctx.drawImage(this.spriteSheet, spriteSheetCords.x, spriteSheetCords.y, size.x, size.y, pos.x, pos.y, size.x, size.y)
 		}
 	}
 }

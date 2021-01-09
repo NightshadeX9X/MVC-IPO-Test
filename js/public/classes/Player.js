@@ -1,12 +1,13 @@
 import { Direction } from "../Util.js";
 import Vector from "./Vector.js";
 import PlayerMovingState from './states/PlayerMovingState.js';
+import Camera from "./Camera.js";
 export default class Player {
     constructor(roamState, pos, size) {
         this.roamState = roamState;
         this.pos = pos;
         this.size = size;
-        this.cameraSize = new Vector(480, 320);
+        this.camera = new Camera(this, new Vector(30, 20));
         this.speed = new Vector(1);
         this.facing = Direction.UP;
         this.spriteSheetCords = new Vector(0, 0);
@@ -19,6 +20,8 @@ export default class Player {
         this.spriteSheet = image;
     }
     update(input) {
+        this.camera.update(input);
+        this.camera.currentPos.add(1);
         if (input.keyIsDown('ArrowLeft')) {
             this.facing = Direction.LEFT;
             this.spriteSheetCords.y = 2;
@@ -43,13 +46,14 @@ export default class Player {
     render(renderer) {
         let multiplier = this.roamState.currentMap?.tileSizeInPx || 16;
         // const pos = new Vector(this.pos.x, this.pos.y).subtract(new Vector(0, 1)).multiply(multiplier);
-        const pos = new Vector(15, 10).subtract(new Vector(0, 1)).multiply(multiplier);
+        const pos = this.pos.subtract(new Vector(0, 1)).multiply(multiplier);
         const size = this.size.multiply(multiplier);
         const spriteSheetCords = this.spriteSheetCords.multiply(multiplier);
         // renderer.ctx.fillRect(pos.x, pos.y, size.x, size.y)
         // renderer.rect(new Vector(15.5, 10).multiply(16), this.size.multiply(16))
         if (this.spriteSheet) {
-            renderer.ctx.drawImage(this.spriteSheet, spriteSheetCords.x, spriteSheetCords.y, size.x, size.y, pos.x, pos.y, size.x, size.y);
+            this.camera.render(renderer).imageComplex(this.spriteSheet, spriteSheetCords, size, pos, size);
+            // renderer.ctx.drawImage(this.spriteSheet, spriteSheetCords.x, spriteSheetCords.y, size.x, size.y, pos.x, pos.y, size.x, size.y)
         }
     }
 }

@@ -22,7 +22,7 @@ function handleGottenSaveData(gottenSaveData) {
 export function getInitialSaveData() {
     return {
         playerName: "Player",
-        currentMap: "the_square",
+        currentMap: "the-square",
         pos: new Vector(18, 0),
     };
 }
