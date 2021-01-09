@@ -17,10 +17,10 @@ export default class Tweener {
         if (this.ended)
             return;
         let val = this.tickValue + this.current;
-        if (this.timesTicked >= this.totalTimesToTick)
+        if (this.timesTicked >= this.totalTimesToTick || this.current >= this.end)
             val = this.mapFn(val);
         this.current = val;
-        if (this.timesTicked >= this.totalTimesToTick) {
+        if (this.timesTicked >= this.totalTimesToTick || this.current >= this.end) {
             if (this.loop) {
                 this.timesTicked = 0;
                 this.current = this.start;

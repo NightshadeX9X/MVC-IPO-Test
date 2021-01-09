@@ -1,4 +1,4 @@
-import Entity from "../interfaces.js";
+import { Entity } from "../interfaces.js";
 import Controller from "./Controller.js";
 import Loader from "./Loader.js";
 import State from "./State.js";
@@ -16,7 +16,7 @@ export default class StateStack implements Entity {
 	 * @memberof StateStack
 	 */
 	async push(s: State) {
-		await s.preload();
+		await s.preload(this.loader);
 		s.init();
 		this.states = [...this.states, s];
 	}
@@ -43,7 +43,7 @@ export default class StateStack implements Entity {
 
 	async preload() {
 		for (const s of this.states) {
-			await s.preload();
+			await s.preload(this.loader);
 		}
 	}
 

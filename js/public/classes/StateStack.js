@@ -9,7 +9,7 @@ export default class StateStack {
      * @memberof StateStack
      */
     async push(s) {
-        await s.preload();
+        await s.preload(this.loader);
         s.init();
         this.states = [...this.states, s];
     }
@@ -32,7 +32,7 @@ export default class StateStack {
     }
     async preload() {
         for (const s of this.states) {
-            await s.preload();
+            await s.preload(this.loader);
         }
     }
     init() {

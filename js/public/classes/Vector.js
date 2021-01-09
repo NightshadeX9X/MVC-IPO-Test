@@ -3,6 +3,13 @@ export default class Vector {
         this.x = x;
         this.y = y;
     }
+    static from(n) {
+        if (Array.isArray(n)) {
+            return new Vector(n[0], n[1]);
+        }
+        else
+            return new Vector(n.x, n.y);
+    }
     add(o) {
         const v = o instanceof Vector ? o : new Vector(o);
         return new Vector(this.x + v.x, this.y + v.y);
@@ -23,5 +30,8 @@ export default class Vector {
     }
     map(fn) {
         return new Vector(fn(this.x), fn(this.y));
+    }
+    equals(ov) {
+        return this.x === ov.x && this.y === ov.y;
     }
 }

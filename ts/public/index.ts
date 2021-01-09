@@ -1,6 +1,6 @@
 import Controller from "./classes/Controller.js";
 import Loader from "./classes/Loader.js";
-import TestState from "./classes/states/TestState.js";
+import RoamState from "./classes/states/RoamState.js";
 import StateStack from "./classes/StateStack.js";
 
 const cnv = document.getElementById('screen') as HTMLCanvasElement;
@@ -10,7 +10,7 @@ const loader = new Loader();
 const controller = new Controller(document);
 const stateStack = new StateStack(loader);
 
-stateStack.push(new TestState(stateStack));
+stateStack.push(new RoamState(stateStack));
 
 window.onload = () => {
 	setup();

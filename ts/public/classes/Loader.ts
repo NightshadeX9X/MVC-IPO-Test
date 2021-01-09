@@ -2,7 +2,7 @@ export type Loadable = Record<string, any> | HTMLImageElement | HTMLAudioElement
 export default class Loader {
 	private loaded = new Map<string, Loadable>();
 
-	loadImage(src: string, dynamic = false) {
+	loadImage(src: string, dynamic = false): Promise<HTMLImageElement> {
 		if (!dynamic) {
 			const old = this.loaded.get(src);
 			if (old) return Promise.resolve(old as HTMLImageElement);
