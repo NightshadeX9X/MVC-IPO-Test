@@ -51,9 +51,15 @@ export default class Camera {
 		ctx.drawImage(this.cnv, 0, 0)
 	}
 	drawImage(img: HTMLImageElement, _pos: Vector, _size: Vector) {
-		const pos = this.pos.multiply(this.zoom.multiply(-1)).add(this.size.divide(2));
+		const pos = this.pos.multiply(this.zoom.multiply(-1)).add(this.size.divide(2)).add(_pos);
 		const size = _size.multiply(this.player.roamState.tileSize).multiply(this.zoom);
 		this.ctx.drawImage(img, pos.x, pos.y, size.x, size.y);
+	}
+
+	rect(_pos: Vector, _size: Vector) {
+		const pos = this.pos.multiply(this.zoom.multiply(-1)).add(this.size.divide(2)).add(_pos);
+		const size = _size.multiply(this.player.roamState.tileSize).multiply(this.zoom);
+		this.ctx.fillRect(pos.x, pos.y, size.x, size.y);
 	}
 
 	public get deltaPos() {

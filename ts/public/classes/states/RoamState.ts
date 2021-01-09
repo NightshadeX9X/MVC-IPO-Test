@@ -31,6 +31,7 @@ export default class RoamState extends State {
 		ctx.font = "30px monospace";
 		ctx.fillText("hello", 30, 50) */
 		this.gameMap.render(ctx);
+		this.player.render(ctx);
 		this.player.camera.render(ctx);
 	}
 
