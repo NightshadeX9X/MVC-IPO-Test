@@ -1,4 +1,4 @@
-import { Entity, GameMapJSON } from "../interfaces.js";
+import { Entity, GameMapJSON } from "../Util.js";
 import Controller from "./Controller.js";
 import Loader from "./Loader.js";
 import RoamState from "./states/RoamState.js";

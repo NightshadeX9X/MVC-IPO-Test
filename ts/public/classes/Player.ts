@@ -1,6 +1,7 @@
-import { Entity } from "../interfaces.js";
+import { Direction, Entity } from "../Util.js";
 import Camera from "./Camera.js";
 import Controller from "./Controller.js";
+import PlayerMovingState from "./states/PlayerMovingState.js";
 import RoamState from "./states/RoamState.js";
 import Vector from "./Vector.js";
 
@@ -10,6 +11,7 @@ export default class Player implements Entity {
 	public drawSize = new Vector(1, 2);
 	public camera = new Camera(this);
 	public moving = false;
+	public facing = Direction.DOWN;
 
 
 	constructor(public roamState: RoamState) {
@@ -22,14 +24,16 @@ export default class Player implements Entity {
 		throw new Error("Method not implemented.");
 	}
 	update(controller: Controller): void {
-		let vec = new Vector();
-		if (controller.keyIsDown("ArrowUp")) vec.y = -1;
-		if (controller.keyIsDown("ArrowDown")) vec.y = 1;
-		if (controller.keyIsDown("ArrowLeft")) vec.x = -1;
-		if (controller.keyIsDown("ArrowRight")) vec.x = 1;
-		this.pos = this.pos.add(vec.multiply(1))
-		if (!vec.equals(new Vector()))
-			console.log(this.pos)
+		let direction: Direction | null = null;
+		if (controller.keyIsDown("ArrowUp")) direction = Direction.UP;
+		if (controller.keyIsDown("ArrowDown")) direction = Direction.DOWN;
+		if (controller.keyIsDown("ArrowLeft")) direction = Direction.LEFT;
+		if (controller.keyIsDown("ArrowRight")) direction = Direction.RIGHT;
+
+		if (direction !== null) {
+			const playerMovingState = new PlayerMovingState(this.roamState.stateStack, direction, this);
+			this.roamState.stateStack.push(playerMovingState);
+		}
 		this.camera.update();
 	}
 	render(ctx: CanvasRenderingContext2D): void {

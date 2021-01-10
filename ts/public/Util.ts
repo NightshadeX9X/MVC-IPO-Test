@@ -56,3 +56,10 @@ export namespace GameMapJSON {
 	}
 
 }
+
+export enum Direction {
+	UP,
+	DOWN,
+	LEFT,
+	RIGHT
+}

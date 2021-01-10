@@ -1,4 +1,4 @@
-import Entity from "../interfaces.js";
+import { Entity } from "../Util.js";
 import Controller from "./Controller.js";
 import Loader from "./Loader.js";
 import StateStack from "./StateStack.js";

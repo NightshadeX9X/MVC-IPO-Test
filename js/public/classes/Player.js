@@ -1,4 +1,6 @@
+import { Direction } from "../Util.js";
 import Camera from "./Camera.js";
+import PlayerMovingState from "./states/PlayerMovingState.js";
 import Vector from "./Vector.js";
 export default class Player {
     constructor(roamState) {
@@ -8,6 +10,7 @@ export default class Player {
         this.drawSize = new Vector(1, 2);
         this.camera = new Camera(this);
         this.moving = false;
+        this.facing = Direction.DOWN;
         this.camera.smoothing = 0;
     }
     async preload() {
@@ -17,18 +20,19 @@ export default class Player {
         throw new Error("Method not implemented.");
     }
     update(controller) {
-        let vec = new Vector();
+        let direction = null;
         if (controller.keyIsDown("ArrowUp"))
-            vec.y = -1;
+            direction = Direction.UP;
         if (controller.keyIsDown("ArrowDown"))
-            vec.y = 1;
+            direction = Direction.DOWN;
         if (controller.keyIsDown("ArrowLeft"))
-            vec.x = -1;
+            direction = Direction.LEFT;
         if (controller.keyIsDown("ArrowRight"))
-            vec.x = 1;
-        this.pos = this.pos.add(vec.multiply(1));
-        if (!vec.equals(new Vector()))
-            console.log(this.pos);
+            direction = Direction.RIGHT;
+        if (direction !== null) {
+            const playerMovingState = new PlayerMovingState(this.roamState.stateStack, direction, this);
+            this.roamState.stateStack.push(playerMovingState);
+        }
         this.camera.update();
     }
     render(ctx) {
