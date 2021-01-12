@@ -1,4 +1,4 @@
-import Controller from "./classes/Controller.js";
+import Input from "./classes/Input.js";
 import Loader from "./classes/Loader.js";
 import RoamState from "./classes/states/RoamState.js";
 import StateStack from "./classes/StateStack.js";
@@ -6,27 +6,28 @@ const cnv = document.getElementById('screen');
 const ctx = cnv.getContext('2d');
 export const FPS = 10;
 const loader = new Loader();
-const controller = new Controller(document);
+const input = new Input();
 const stateStack = new StateStack(loader);
-stateStack.push(new RoamState(stateStack));
-window.onload = () => {
-    setup();
-};
 async function setup() {
-    controller.start();
+    const r = new RoamState(stateStack);
+    stateStack.states.push(r);
+    console.log(r);
     await preload();
-    setInterval(() => {
-        update();
-    }, 1000 / FPS);
+    init();
+    setInterval(update, 1000 / FPS);
     render();
 }
 async function preload() {
     await stateStack.preload();
 }
+function init() {
+    stateStack.init();
+}
 function update() {
-    stateStack.update(controller);
+    stateStack.update(input);
 }
 function render() {
     stateStack.render(ctx);
     requestAnimationFrame(render);
 }
+window.onload = () => setup();

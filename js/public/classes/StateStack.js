@@ -2,57 +2,43 @@ export default class StateStack {
     constructor(loader) {
         this.loader = loader;
         this.states = [];
+        this.toPreload = true;
+        this.toUpdate = true;
+        this.toRender = true;
     }
-    /**
-     * Preloads the state, executes the init function of that state, and then adds it to the `this.states`.
-     *
-     * @memberof StateStack
-     */
+    async preload() {
+        await Promise.all(this.states.map(s => s.preload(this.loader)));
+    }
+    get statesToUpdate() {
+        return this.states.filter(s => {
+            if (s.toUpdate !== null)
+                return s.toUpdate;
+            return s === this.fromTop();
+        });
+    }
+    init() {
+        this.states.forEach(s => {
+            s.init();
+        });
+    }
+    update(input) {
+        this.statesToUpdate.forEach(s => s.update(input));
+    }
+    render(ctx) {
+        this.states.forEach(s => s.render(ctx));
+    }
+    fromTop(n = 0) {
+        return this.states[this.states.length - 1 - n];
+    }
+    fromBottom(n = 0) {
+        return this.states[n];
+    }
     async push(s) {
         await s.preload(this.loader);
         s.init();
-        this.states = [...this.states, s];
+        this.states.push(s);
     }
     pop() {
         return this.states.pop();
-    }
-    /**
-     * Returns the top state from the stack if no argument provided. If an argument is provided, the nth state from the top (where n is that argument) is returned.
-     *
-     */
-    top(nthFromTop = 0) {
-        return this.states[this.states.length - (1 + nthFromTop)];
-    }
-    /**
-     * Returns the bottom state from the stack if no argument provided. If an argument is provided, the nth state from the bottom (where n is that argument) is returned.
-     *
-     */
-    bottom(nthFromBottom = 0) {
-        return this.states[nthFromBottom];
-    }
-    async preload() {
-        for (const s of this.states) {
-            await s.preload(this.loader);
-        }
-    }
-    init() {
-        this.states.forEach(s => s.init());
-    }
-    update(controller) {
-        this.states.forEach(s => {
-            if (s.forceUpdate === false)
-                return;
-            if (s.forceUpdate === true)
-                s.update(controller);
-            if (s === this.top())
-                s.update(controller);
-        });
-    }
-    render(ctx) {
-        this.states.forEach(s => {
-            if (s.toRender === false)
-                return;
-            s.render(ctx);
-        });
     }
 }

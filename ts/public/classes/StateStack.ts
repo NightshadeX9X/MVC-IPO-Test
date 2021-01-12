@@ -2,6 +2,7 @@ import Entity from "../Entity.js";
 import Input from "./Input.js";
 import Loader from "./Loader.js";
 import State from "./State.js";
+import RoamState from "./states/RoamState.js";
 
 export default class StateStack implements Entity {
 
@@ -40,5 +41,14 @@ export default class StateStack implements Entity {
 	}
 	public fromBottom(n = 0) {
 		return this.states[n];
+	}
+
+	async push(s: State) {
+		await s.preload(this.loader);
+		s.init();
+		this.states.push(s);
+	}
+	pop() {
+		return this.states.pop();
 	}
 }

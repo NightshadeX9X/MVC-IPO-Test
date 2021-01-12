@@ -1,28 +1,20 @@
-import { GameMap } from "../GameMap.js";
-import Player from "../Player.js";
 import State from "../State.js";
 export default class RoamState extends State {
-    constructor(stateStack) {
-        super(stateStack);
-        this.tileSize = 16;
-        this.player = new Player(this);
-        this.gameMap = new GameMap(this, '/json/maps/the_square.json');
+    constructor() {
+        super(...arguments);
+        this.x = 30;
+        this.y = 50;
     }
     async preload(loader) {
-        await this.gameMap.preload(loader);
     }
     init() {
+        this.y = Math.random() * 400;
     }
-    update(controller) {
-        this.player.update(controller);
+    update(input) {
+        this.x++;
     }
     render(ctx) {
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-        /* this.gameMap.render(ctx)
-        ctx.font = "30px monospace";
-        ctx.fillText("hello", 30, 50) */
-        this.gameMap.render(ctx);
-        this.player.render(ctx);
-        this.player.camera.render(ctx);
+        ctx.fillRect(this.x, this.y, 20, 20);
     }
 }
