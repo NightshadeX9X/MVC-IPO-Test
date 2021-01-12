@@ -1,10 +1,10 @@
 import Input from "../Input.js";
 import Loader from "../Loader.js";
 import State from "../State.js";
+import Vector from "../Vector.js";
 
 export default class RoamState extends State {
-	private x = 30;
-	private y = 50;
+	private pos = new Vector(30, 40);
 	async preload(loader: Loader) {
 
 	}
@@ -12,11 +12,11 @@ export default class RoamState extends State {
 
 	}
 	update(input: Input): void {
-		this.x++;
+		this.pos.add(1);
 	}
 	render(ctx: CanvasRenderingContext2D): void {
 		ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-		ctx.fillRect(this.x, this.y, 20, 20);
+		ctx.fillRect(this.pos.x, this.pos.y, 20, 20);
 	}
 
 }
