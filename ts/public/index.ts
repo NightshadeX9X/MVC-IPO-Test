@@ -6,7 +6,7 @@ import Vector from "./classes/Vector.js";
 
 const cnv = document.getElementById('screen') as HTMLCanvasElement;
 const ctx = cnv.getContext('2d') as CanvasRenderingContext2D;
-export const FPS = 10;
+export const FPS = 1;
 const loader = new Loader();
 const input = new Input();
 const stateStack = new StateStack(loader);

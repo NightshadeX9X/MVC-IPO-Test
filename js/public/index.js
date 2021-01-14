@@ -4,7 +4,7 @@ import RoamState from "./classes/states/RoamState.js";
 import StateStack from "./classes/StateStack.js";
 const cnv = document.getElementById('screen');
 const ctx = cnv.getContext('2d');
-export const FPS = 10;
+export const FPS = 1;
 const loader = new Loader();
 const input = new Input();
 const stateStack = new StateStack(loader);

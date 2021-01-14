@@ -16,8 +16,10 @@ export default class RoamState extends State {
         ]);
     }
     init() {
+        this.player.init();
     }
     update(input) {
+        this.player.update(input);
     }
     render(ctx) {
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
