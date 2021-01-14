@@ -4,11 +4,12 @@ import RoamState from "./classes/states/RoamState.js";
 import StateStack from "./classes/StateStack.js";
 const cnv = document.getElementById('screen');
 const ctx = cnv.getContext('2d');
-export const FPS = 1;
+export const FPS = 30;
 const loader = new Loader();
 const input = new Input();
 const stateStack = new StateStack(loader);
 async function setup() {
+    input.start(document);
     const r = new RoamState(stateStack);
     stateStack.states.push(r);
     await preload();

@@ -6,25 +6,34 @@ export default class Input {
         el.addEventListener('keydown', e => {
             e.preventDefault();
             this.keyStates.set(e.key, Input.keyDownSymbol);
+            // console.log("keydown", this.keyStates.get((e as KeyboardEvent).key))
         });
         el.addEventListener('keyup', e => {
             e.preventDefault();
             this.keyStates.set(e.key, Input.keyUpSymbol);
+            // console.log("keyup", this.keyStates.get((e as KeyboardEvent).key))
         });
     }
     keyIsDown(key) {
         return this.keyStates.get(key) === Input.keyDownSymbol;
     }
     get directionKeyStates() {
-        const states = {};
+        const states = {
+            UP: false,
+            LEFT: false,
+            RIGHT: false,
+            DOWN: false,
+        };
         this.keyStates.forEach((symbol, key) => {
-            if (key === "W" || "ArrowUp")
+            if (symbol === Input.keyUpSymbol)
+                return;
+            if (key === "W" || key === "ArrowUp")
                 states.UP = true;
-            else if (key === "A" || "ArrowLeft")
+            if (key === "A" || key === "ArrowLeft")
                 states.LEFT = true;
-            else if (key === "S" || "ArrowDown")
+            if (key === "S" || key === "ArrowDown")
                 states.DOWN = true;
-            else if (key === "D" || "ArrowRight")
+            if (key === "D" || key === "ArrowRight")
                 states.RIGHT = true;
         });
         return states;

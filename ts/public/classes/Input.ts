@@ -9,11 +9,14 @@ export default class Input {
 		el.addEventListener('keydown', e => {
 			e.preventDefault();
 			this.keyStates.set((e as KeyboardEvent).key, Input.keyDownSymbol);
+			// console.log("keydown", this.keyStates.get((e as KeyboardEvent).key))
+
 		})
 
 		el.addEventListener('keyup', e => {
 			e.preventDefault();
 			this.keyStates.set((e as KeyboardEvent).key, Input.keyUpSymbol);
+			// console.log("keyup", this.keyStates.get((e as KeyboardEvent).key))
 		})
 	}
 
@@ -22,12 +25,18 @@ export default class Input {
 	}
 
 	public get directionKeyStates() {
-		const states: Partial<Record<keyof typeof Direction, boolean>> = {};
+		const states: Record<keyof typeof Direction, boolean> = {
+			UP: false,
+			LEFT: false,
+			RIGHT: false,
+			DOWN: false,
+		};
 		this.keyStates.forEach((symbol, key) => {
-			if (key === "W" || "ArrowUp") states.UP = true;
-			else if (key === "A" || "ArrowLeft") states.LEFT = true;
-			else if (key === "S" || "ArrowDown") states.DOWN = true;
-			else if (key === "D" || "ArrowRight") states.RIGHT = true;
+			if (symbol === Input.keyUpSymbol) return;
+			if (key === "W" || key === "ArrowUp") states.UP = true;
+			if (key === "A" || key === "ArrowLeft") states.LEFT = true;
+			if (key === "S" || key === "ArrowDown") states.DOWN = true;
+			if (key === "D" || key === "ArrowRight") states.RIGHT = true;
 		})
 
 		return states;

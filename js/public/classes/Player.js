@@ -19,14 +19,26 @@ export default class Player {
     init() {
         if (!this.spritesheet)
             return;
-        this.spritesheet.animator.register('down', new Vector(), [
-            new Vector(0, 1)
-        ]);
+        let xp1 = [
+            new Vector(1, 0)
+        ];
+        this.spritesheet.animator.register('down', new Vector(), xp1);
+        this.spritesheet.animator.register('left', new Vector(0, 1), xp1);
+        this.spritesheet.animator.register('right', new Vector(0, 2), xp1);
+        this.spritesheet.animator.register('up', new Vector(0, 3), xp1);
     }
     update(input) {
-        if (this.spritesheet) {
-            this.spritesheet.animator.play('down');
-        }
+        if (!this.spritesheet)
+            return;
+        const dirStrs = ["down", "left", "up", "right"];
+        dirStrs.forEach(dirStr => {
+            if (input.directionKeyStates[dirStr.toUpperCase()]) {
+                this.spritesheet?.animator.play(dirStr.toLowerCase());
+            }
+            else {
+                this.spritesheet?.animator.end(dirStr.toLowerCase());
+            }
+        });
     }
     render(ctx) {
         if (!this.image)
