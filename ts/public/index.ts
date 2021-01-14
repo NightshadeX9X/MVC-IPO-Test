@@ -14,7 +14,6 @@ const stateStack = new StateStack(loader);
 async function setup() {
 	const r = new RoamState(stateStack);
 	stateStack.states.push(r)
-	console.log(r)
 	await preload();
 	init();
 	setInterval(update, 1000 / FPS);

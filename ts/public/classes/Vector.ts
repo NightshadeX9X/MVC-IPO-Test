@@ -1,10 +1,6 @@
 export default class Vector implements Vector {
-	x: number;
-	y: number;
-	constructor(a: number | Vector, b?: number) {
-		const o = this.getVectorFromArgs(a, b);
-		this.x = o.x;
-		this.y = o.y;
+	constructor(public x = 0, public y = 0) {
+
 	}
 	private getVectorFromArgs(a: number | Vector, b?: number) {
 		const vector = typeof b === "number"

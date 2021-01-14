@@ -1,6 +1,5 @@
 {
 	"name": "the-square",
-	"imageUrl": "/assets/images/maps/the_square.png",
 	"sizeInTiles": {
 		"x": 40,
 		"y": 25

@@ -1,8 +1,7 @@
 export default class Vector {
-    constructor(a, b) {
-        const o = this.getVectorFromArgs(a, b);
-        this.x = o.x;
-        this.y = o.y;
+    constructor(x = 0, y = 0) {
+        this.x = x;
+        this.y = y;
     }
     getVectorFromArgs(a, b) {
         const vector = typeof b === "number"
