@@ -1,7 +1,9 @@
 import Entity from "../Entity.js";
+import { Direction, directionToVector } from "../Util.js";
 import Input from "./Input.js";
 import Loader from "./Loader.js";
 import Spritesheet from "./Spritesheet.js";
+import PlayerMovingState from "./states/PlayerMovingState.js";
 import RoamState from "./states/RoamState.js";
 import Vector from "./Vector.js";
 
@@ -27,21 +29,13 @@ export default class Player implements Entity {
 		let xp1 = [
 			new Vector(1, 0)
 		];
-		this.spritesheet.animator.register('down', new Vector(), xp1);
-		this.spritesheet.animator.register('left', new Vector(0, 1), xp1);
-		this.spritesheet.animator.register('right', new Vector(0, 2), xp1);
-		this.spritesheet.animator.register('up', new Vector(0, 3), xp1);
 	}
 	update(input: Input): void {
 		if (!this.spritesheet) return;
 		const dirStrs = ["down", "left", "up", "right"];
-
 		dirStrs.forEach(dirStr => {
-			if ((input.directionKeyStates as any)[dirStr.toUpperCase()]) {
-				this.spritesheet?.animator.play(dirStr.toLowerCase());
-			} else {
-				this.spritesheet?.animator.end(dirStr.toLowerCase());
-
+			if (this.roamState.stateStack.fromTop() === this.roamState && (input.directionKeyStates as any)[dirStr.toUpperCase()] === true) {
+				this.roamState.stateStack.push(new PlayerMovingState(this.roamState.stateStack, this.roamState, Direction[dirStr.toUpperCase() as keyof typeof Direction]))
 			}
 		})
 	}

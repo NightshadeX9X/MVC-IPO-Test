@@ -34,9 +34,9 @@ export default class StateStack {
         return this.states[n];
     }
     async push(s) {
+        this.states.push(s);
         await s.preload(this.loader);
         s.init();
-        this.states.push(s);
     }
     pop() {
         return this.states.pop();

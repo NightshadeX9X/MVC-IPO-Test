@@ -1,4 +1,6 @@
+import { Direction } from "../Util.js";
 import Spritesheet from "./Spritesheet.js";
+import PlayerMovingState from "./states/PlayerMovingState.js";
 import Vector from "./Vector.js";
 export default class Player {
     constructor(roamState) {
@@ -22,21 +24,14 @@ export default class Player {
         let xp1 = [
             new Vector(1, 0)
         ];
-        this.spritesheet.animator.register('down', new Vector(), xp1);
-        this.spritesheet.animator.register('left', new Vector(0, 1), xp1);
-        this.spritesheet.animator.register('right', new Vector(0, 2), xp1);
-        this.spritesheet.animator.register('up', new Vector(0, 3), xp1);
     }
     update(input) {
         if (!this.spritesheet)
             return;
         const dirStrs = ["down", "left", "up", "right"];
         dirStrs.forEach(dirStr => {
-            if (input.directionKeyStates[dirStr.toUpperCase()]) {
-                this.spritesheet?.animator.play(dirStr.toLowerCase());
-            }
-            else {
-                this.spritesheet?.animator.end(dirStr.toLowerCase());
+            if (this.roamState.stateStack.fromTop() === this.roamState && input.directionKeyStates[dirStr.toUpperCase()] === true) {
+                this.roamState.stateStack.push(new PlayerMovingState(this.roamState.stateStack, this.roamState, Direction[dirStr.toUpperCase()]));
             }
         });
     }

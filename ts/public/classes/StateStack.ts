@@ -44,9 +44,9 @@ export default class StateStack implements Entity {
 	}
 
 	async push(s: State) {
+		this.states.push(s);
 		await s.preload(this.loader);
 		s.init();
-		this.states.push(s);
 	}
 	pop() {
 		return this.states.pop();

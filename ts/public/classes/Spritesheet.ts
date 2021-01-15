@@ -1,10 +1,8 @@
-import Animator from "./Animator.js";
 import Player from "./Player.js";
 import Vector from "./Vector.js";
 
 export default class Spritesheet {
 	coords = new Vector();
-	animator = new Animator(this);
 	constructor(public image: HTMLImageElement, public size: Vector, public player: Player, public spriteCount = new Vector(4)) {
 
 	}

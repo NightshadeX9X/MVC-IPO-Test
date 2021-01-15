@@ -1,4 +1,3 @@
-import Animator from "./Animator.js";
 import Vector from "./Vector.js";
 export default class Spritesheet {
     constructor(image, size, player, spriteCount = new Vector(4)) {
@@ -7,7 +6,6 @@ export default class Spritesheet {
         this.player = player;
         this.spriteCount = spriteCount;
         this.coords = new Vector();
-        this.animator = new Animator(this);
     }
     render(ctx, pos) {
         if (!this.image)
