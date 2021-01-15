@@ -1,4 +1,5 @@
 import Vector from "./Vector.js";
+import { generate2DArray } from '../Util.js';
 export default class GameMap {
     constructor(name, roamState) {
         this.name = name;
@@ -23,6 +24,8 @@ export default class GameMap {
         this.image = image;
     }
     init() {
+        // console.table(this.collisionDataStr)
+        // console.log(this.json?.tileDataGenerator.overrides)
     }
     update(input) {
     }
@@ -30,6 +33,36 @@ export default class GameMap {
         if (!this.image)
             return;
         ctx.drawImage(this.image, 0, 0);
+        /* this.collisionData?.forEach((cd, y) => {
+            cd.forEach((val, x) => {
+                if (val?.type === "wall") {
+                    ctx.fillRect(x * 16, y * 16, 16, 16)
+                }
+            })
+        }); */
+    }
+    get collisionDataStr() {
+        if (!this.json)
+            return null;
+        const strData = generate2DArray(this.json.sizeInTiles.y, this.json.sizeInTiles.x, this.json.tileDataGenerator.defaultString, this.json.tileDataGenerator.overrides.map(x => ({ pos1: x.start, pos2: x.end, value: x.value })));
+        return strData;
+    }
+    get collisionData() {
+        const collisionDataStr = this.collisionDataStr;
+        if (!collisionDataStr)
+            return null;
+        return collisionDataStr.map(row => {
+            return row.map(str => {
+                if (!this.json)
+                    return null;
+                for (let i in this.json.tileDataGenerator.overrideMappings) {
+                    if (i === str) {
+                        return this.json.tileDataGenerator.overrideMappings[i];
+                    }
+                }
+                return null;
+            });
+        });
     }
 }
 export var JSONGameMap;
@@ -39,6 +72,7 @@ export var JSONGameMap;
         const [x, y] = arr.map(n => Number(n));
         return new Vector(x, y);
     }
+    JSONGameMap.strToVec = strToVec;
     function strRangeToVec(str) {
         const arr = str.split("-");
         const [pos1, pos2] = arr.map(p => strToVec(p));
@@ -47,13 +81,14 @@ export var JSONGameMap;
             end: pos2
         };
     }
+    JSONGameMap.strRangeToVec = strRangeToVec;
     function purify(raw) {
         let pure = { ...raw };
         pure.sizeInTiles = strToVec(pure.sizeInTiles);
-        pure.tileDataGenerator.overrides.forEach((o) => {
+        pure.tileDataGenerator.overrides = pure.tileDataGenerator.overrides.map((o) => {
             const { start, end } = strRangeToVec(o.range);
             return {
-                ...o,
+                value: o.value,
                 start,
                 end
             };

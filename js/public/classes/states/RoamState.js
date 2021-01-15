@@ -16,6 +16,7 @@ export default class RoamState extends State {
         ]);
     }
     init() {
+        this.gameMap.init();
         this.player.init();
     }
     update(input) {

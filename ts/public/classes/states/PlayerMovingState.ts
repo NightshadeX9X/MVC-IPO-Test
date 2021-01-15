@@ -29,6 +29,21 @@ export default class PlayerMovingState extends State {
 
 
 		}
+		let cd = this.roamState.gameMap.collisionData;
+		if (cd && this.roamState.gameMap.json) {
+			console.log("target coords", this.targetCoords);
+			console.log("sizeInTiles", this.roamState.gameMap.json?.sizeInTiles);
+			if (cd[this.targetCoords.y]?.[this.targetCoords.x]?.type === "wall" ||
+				this.targetCoords.x < 0 ||
+				this.targetCoords.x >= this.roamState.gameMap.json.sizeInTiles.x ||
+				this.targetCoords.y < 0 ||
+				this.targetCoords.y >= this.roamState.gameMap.json.sizeInTiles.y
+			) {
+				console.log("OUT OF BOUNDS")
+				this.stateStack.pop();
+				return;
+			}
+		}
 	}
 	private get vec() {
 		return directionToVector(this.direction).quo(this.roamState.tileSize);
@@ -47,7 +62,7 @@ export default class PlayerMovingState extends State {
 			this.roamState.player.pos.add(this.vec);
 		} else {
 			this.roamState.player.pos = this.targetCoords;
-			console.log(this.roamState.player.pos)
+			// console.log(this.roamState.player.pos)
 			this.stateStack.pop();
 			return;
 		}

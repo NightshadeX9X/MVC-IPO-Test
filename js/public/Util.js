@@ -17,3 +17,21 @@ export function directionToVector(d) {
         return new Vector(0, 1);
     return new Vector();
 }
+export function generate2DArray(rows, columns, defaultVal, ranges) {
+    const arr = [];
+    for (let y = 0; y < rows; y++) {
+        arr[y] = [];
+        for (let x = 0; x < columns; x++) {
+            arr[y][x] = defaultVal;
+        }
+    }
+    ranges.forEach(range => {
+        for (let y = 0; y < rows; y++) {
+            for (let x = 0; x < columns; x++) {
+                if (x >= range.pos1.x && x <= range.pos2.x && y >= range.pos1.y && y <= range.pos2.y)
+                    arr[y][x] = range.value;
+            }
+        }
+    });
+    return arr;
+}

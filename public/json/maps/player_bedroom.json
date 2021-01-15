@@ -5,7 +5,31 @@
 		"defaultString": "0",
 		"overrides": [
 			{
-				"range": "0x0-0x0",
+				"range": "0x0-21x1",
+				"value": "1"
+			},
+			{
+				"range": "0x2-7x5",
+				"value": "1"
+			},
+			{
+				"range": "1x6-1x6",
+				"value": "1"
+			},
+			{
+				"range": "11x3-19x8",
+				"value": "1"
+			},
+			{
+				"range": "11x5-11x6",
+				"value": "0"
+			},
+			{
+				"range": "12x7-18x8",
+				"value": "0"
+			},
+			{
+				"range": "19x12-21x14",
 				"value": "1"
 			}
 		],
