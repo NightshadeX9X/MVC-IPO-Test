@@ -1,5 +1,6 @@
 import Entity from "../Entity.js";
 import { Direction, directionToVector } from "../Util.js";
+import Camera from "./Camera.js";
 import Input from "./Input.js";
 import Loader from "./Loader.js";
 import Spritesheet from "./Spritesheet.js";
@@ -13,6 +14,7 @@ export default class Player implements Entity {
 	public drawOffset = new Vector(0, -1);
 	public image: HTMLImageElement | null = null;
 	public spritesheet: Spritesheet | null = null;
+	public camera = new Camera(this, new Vector(400, 250));
 	toUpdate: boolean | null = true;
 	toRender: boolean | null = true;
 	toPreload: boolean | null = true;
@@ -29,6 +31,7 @@ export default class Player implements Entity {
 
 	}
 	update(input: Input): void {
+		this.camera.update();
 		if (!this.spritesheet) return;
 		const dirStrs = ["down", "left", "up", "right"];
 		dirStrs.forEach(dirStr => {
@@ -39,9 +42,9 @@ export default class Player implements Entity {
 	}
 	render(ctx: CanvasRenderingContext2D): void {
 		if (!this.image || !this.spritesheet) return;
-		const pos = this.pos.sum(this.drawOffset).prod(this.roamState.tileSize).diff(0, 1);
 		const size = this.drawSize.prod(this.roamState.tileSize)
+		const pos = this.camera.convertCoords(this.pos.sum(this.drawOffset)/* .diff(this.drawOffset) */.prod(this.roamState.tileSize));
 		const spriteCoords = this.spritesheet.coords.prod(this.roamState.tileSize).prod(this.drawSize);
-		ctx.drawImage(this.image, spriteCoords.x, spriteCoords.y, size.x, size.y, pos.x, pos.y, size.x, size.y)
+		this.camera.ctx.drawImage(this.image, spriteCoords.x, spriteCoords.y, size.x, size.y, pos.x, pos.y, size.x, size.y)
 	}
 }

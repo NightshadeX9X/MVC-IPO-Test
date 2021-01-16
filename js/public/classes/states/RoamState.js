@@ -24,7 +24,10 @@ export default class RoamState extends State {
     }
     render(ctx) {
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+        ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+        this.player.camera.clear();
         this.gameMap.render(ctx);
         this.player.render(ctx);
+        this.player.camera.render(ctx);
     }
 }

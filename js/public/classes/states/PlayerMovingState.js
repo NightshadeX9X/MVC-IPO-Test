@@ -13,6 +13,7 @@ export default class PlayerMovingState extends State {
     async preload(loader) {
     }
     init() {
+        this.roamState.toUpdate = true;
         this.playerOriginalPos = Vector.from(this.roamState.player.pos);
         if (this.roamState.player.spritesheet) {
             if (this.direction === Direction.DOWN)
@@ -26,14 +27,11 @@ export default class PlayerMovingState extends State {
         }
         let cd = this.roamState.gameMap.collisionData;
         if (cd && this.roamState.gameMap.json) {
-            console.log("target coords", this.targetCoords);
-            console.log("sizeInTiles", this.roamState.gameMap.json?.sizeInTiles);
             if (cd[this.targetCoords.y]?.[this.targetCoords.x]?.type === "wall" ||
                 this.targetCoords.x < 0 ||
                 this.targetCoords.x >= this.roamState.gameMap.json.sizeInTiles.x ||
                 this.targetCoords.y < 0 ||
                 this.targetCoords.y >= this.roamState.gameMap.json.sizeInTiles.y) {
-                console.log("OUT OF BOUNDS");
                 this.stateStack.pop();
                 return;
             }
@@ -48,6 +46,7 @@ export default class PlayerMovingState extends State {
     update(input) {
         const spritesheet = this.roamState.player.spritesheet;
         if (this.frames < 16) {
+            console.log("during movement", this.roamState.player.camera.pos);
             if (spritesheet && this.frames % 4 === 0) {
                 spritesheet.coords.x = (spritesheet.coords.x + 1) % (spritesheet.spriteCount.x * spritesheet.size.x);
             }
@@ -55,8 +54,10 @@ export default class PlayerMovingState extends State {
             this.roamState.player.pos.add(this.vec);
         }
         else {
+            console.log(this.roamState.player.camera.pos);
             this.roamState.player.pos = this.targetCoords;
             // console.log(this.roamState.player.pos)
+            this.roamState.toUpdate = null;
             this.stateStack.pop();
             return;
         }

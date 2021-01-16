@@ -32,7 +32,8 @@ export default class GameMap {
     render(ctx) {
         if (!this.image)
             return;
-        ctx.drawImage(this.image, 0, 0);
+        const pos = this.roamState.player.camera.convertCoords(new Vector());
+        this.roamState.player.camera.ctx.drawImage(this.image, pos.x, pos.y);
         /* this.collisionData?.forEach((cd, y) => {
             cd.forEach((val, x) => {
                 if (val?.type === "wall") {
@@ -40,6 +41,9 @@ export default class GameMap {
                 }
             })
         }); */
+    }
+    get sizeInPx() {
+        return (this.json?.sizeInTiles || new Vector).prod(this.roamState.tileSize);
     }
     get collisionDataStr() {
         if (!this.json)

@@ -1,4 +1,5 @@
 import { Direction } from "../Util.js";
+import Camera from "./Camera.js";
 import Spritesheet from "./Spritesheet.js";
 import PlayerMovingState from "./states/PlayerMovingState.js";
 import Vector from "./Vector.js";
@@ -10,6 +11,7 @@ export default class Player {
         this.drawOffset = new Vector(0, -1);
         this.image = null;
         this.spritesheet = null;
+        this.camera = new Camera(this, new Vector(400, 250));
         this.toUpdate = true;
         this.toRender = true;
         this.toPreload = true;
@@ -23,6 +25,7 @@ export default class Player {
             return;
     }
     update(input) {
+        this.camera.update();
         if (!this.spritesheet)
             return;
         const dirStrs = ["down", "left", "up", "right"];
@@ -35,9 +38,9 @@ export default class Player {
     render(ctx) {
         if (!this.image || !this.spritesheet)
             return;
-        const pos = this.pos.sum(this.drawOffset).prod(this.roamState.tileSize).diff(0, 1);
         const size = this.drawSize.prod(this.roamState.tileSize);
+        const pos = this.camera.convertCoords(this.pos.sum(this.drawOffset) /* .diff(this.drawOffset) */.prod(this.roamState.tileSize));
         const spriteCoords = this.spritesheet.coords.prod(this.roamState.tileSize).prod(this.drawSize);
-        ctx.drawImage(this.image, spriteCoords.x, spriteCoords.y, size.x, size.y, pos.x, pos.y, size.x, size.y);
+        this.camera.ctx.drawImage(this.image, spriteCoords.x, spriteCoords.y, size.x, size.y, pos.x, pos.y, size.x, size.y);
     }
 }
