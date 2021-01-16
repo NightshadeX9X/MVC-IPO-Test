@@ -21,9 +21,6 @@ export default class Player {
     init() {
         if (!this.spritesheet)
             return;
-        let xp1 = [
-            new Vector(1, 0)
-        ];
     }
     update(input) {
         if (!this.spritesheet)
@@ -36,9 +33,11 @@ export default class Player {
         });
     }
     render(ctx) {
-        if (!this.image)
+        if (!this.image || !this.spritesheet)
             return;
-        const pos = this.pos.sum(this.drawOffset).prod(this.roamState.tileSize);
-        this.spritesheet?.render(ctx, pos);
+        const pos = this.pos.sum(this.drawOffset).prod(this.roamState.tileSize).diff(0, 1);
+        const size = this.drawSize.prod(this.roamState.tileSize);
+        const spriteCoords = this.spritesheet.coords.prod(this.roamState.tileSize).prod(this.drawSize);
+        ctx.drawImage(this.image, spriteCoords.x, spriteCoords.y, size.x, size.y, pos.x, pos.y, size.x, size.y);
     }
 }
