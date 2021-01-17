@@ -1,0 +1,13 @@
+{
+	"name": "player_house",
+	"sizeInTiles": "26x16",
+	"tileDataGenerator": {
+		"defaultString": "0",
+		"overrides": [],
+		"overrideMappings": {
+			"1": {
+				"type": "wall"
+			}
+		}
+	}
+}
