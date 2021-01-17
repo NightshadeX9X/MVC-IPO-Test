@@ -27,7 +27,7 @@ export default class Camera {
 	}
 
 	render(ctx: CanvasRenderingContext2D) {
-		ctx.drawImage(this.cnv, 0, 0)
+		ctx.drawImage(this.cnv, 0, 0);
 	}
 
 }

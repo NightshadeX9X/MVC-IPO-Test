@@ -3,7 +3,52 @@
 	"sizeInTiles": "26x16",
 	"tileDataGenerator": {
 		"defaultString": "0",
-		"overrides": [],
+		"overrides": [
+			{
+				"range": "0x0-25x15",
+				"value": "1"
+			},
+			{
+				"range": "1x1-24x15",
+				"value": "1"
+			},
+			{
+				"range": "2x2-23x14",
+				"value": "0"
+			},
+			{
+				"range": "11x2-12x2",
+				"value": "1"
+			},
+			{
+				"range": "15x4-16x6",
+				"value": "1"
+			},
+			{
+				"range": "17x5-19x6",
+				"value": "1"
+			},
+			{
+				"range": "10x15-15x15",
+				"value": "0"
+			},
+			{
+				"range": "2x4-9x9",
+				"value": "1"
+			},
+			{
+				"range": "5x2-6x9",
+				"value": "1"
+			},
+			{
+				"range": "3x8-4x9",
+				"value": "0"
+			},
+			{
+				"range": "7x8-8x9",
+				"value": "0"
+			}
+		],
 		"overrideMappings": {
 			"1": {
 				"type": "wall"
