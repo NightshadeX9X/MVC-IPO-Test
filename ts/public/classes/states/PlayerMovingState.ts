@@ -52,7 +52,6 @@ export default class PlayerMovingState extends State {
 	update(input: Input): void {
 		const spritesheet = this.roamState.player.spritesheet;
 		if (this.frames < 16) {
-			console.log("during movement", this.roamState.player.camera.pos);
 
 			if (spritesheet && this.frames % 4 === 0) {
 
@@ -61,7 +60,6 @@ export default class PlayerMovingState extends State {
 			this.roamState.player.spritesheet?.coords
 			this.roamState.player.pos.add(this.vec);
 		} else {
-			console.log(this.roamState.player.camera.pos);
 
 			this.roamState.player.pos = this.targetCoords;
 			// console.log(this.roamState.player.pos)
