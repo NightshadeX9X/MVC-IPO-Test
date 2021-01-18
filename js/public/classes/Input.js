@@ -27,13 +27,13 @@ export default class Input {
         this.keyStates.forEach((symbol, key) => {
             if (symbol === Input.keyUpSymbol)
                 return;
-            if (key === "W" || key === "ArrowUp")
+            if (key === "w" || key === "ArrowUp")
                 states.UP = true;
-            if (key === "A" || key === "ArrowLeft")
+            if (key === "a" || key === "ArrowLeft")
                 states.LEFT = true;
-            if (key === "S" || key === "ArrowDown")
+            if (key === "s" || key === "ArrowDown")
                 states.DOWN = true;
-            if (key === "D" || key === "ArrowRight")
+            if (key === "d" || key === "ArrowRight")
                 states.RIGHT = true;
         });
         return states;

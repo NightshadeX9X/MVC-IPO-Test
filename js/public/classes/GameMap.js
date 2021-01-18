@@ -1,5 +1,4 @@
 import Vector from "./Vector.js";
-import { generate2DArray } from '../Util.js';
 export default class GameMap {
     constructor(name, roamState) {
         this.name = name;
@@ -45,28 +44,37 @@ export default class GameMap {
     get sizeInPx() {
         return (this.json?.sizeInTiles || new Vector).prod(this.roamState.tileSize);
     }
-    get collisionDataStr() {
+    get wallData() {
         if (!this.json)
             return null;
-        const strData = generate2DArray(this.json.sizeInTiles.y, this.json.sizeInTiles.x, this.json.tileDataGenerator.defaultString, this.json.tileDataGenerator.overrides.map(x => ({ pos1: x.start, pos2: x.end, value: x.value })));
-        return strData;
-    }
-    get collisionData() {
-        const collisionDataStr = this.collisionDataStr;
-        if (!collisionDataStr)
-            return null;
-        return collisionDataStr.map(row => {
-            return row.map(str => {
-                if (!this.json)
-                    return null;
-                for (let i in this.json.tileDataGenerator.overrideMappings) {
-                    if (i === str) {
-                        return this.json.tileDataGenerator.overrideMappings[i];
-                    }
+        const arr = [];
+        this.json.walls.forEach(wall => {
+            const [pos1, pos2] = wall.range;
+            for (let y = pos1.y; y <= pos2.y; y++) {
+                if (typeof arr[y] === "undefined")
+                    arr[y] = [];
+                for (let x = pos1.x; x <= pos2.x; x++) {
+                    arr[y][x] = wall.value;
                 }
-                return null;
-            });
+            }
         });
+        return arr;
+    }
+    get portalData() {
+        if (!this.json)
+            return null;
+        const arr = [];
+        this.json.portals.forEach(portal => {
+            const [pos1, pos2] = portal.range;
+            for (let y = pos1.y; y <= pos2.y; y++) {
+                if (typeof arr[y] === "undefined")
+                    arr[y] = [];
+                for (let x = pos1.x; x <= pos2.x; x++) {
+                    arr[y][x] = portal.to;
+                }
+            }
+        });
+        return arr;
     }
 }
 export var JSONGameMap;
@@ -80,21 +88,34 @@ export var JSONGameMap;
     function strRangeToVec(str) {
         const arr = str.split("-");
         const [pos1, pos2] = arr.map(p => strToVec(p));
-        return {
-            start: pos1,
-            end: pos2
-        };
+        return [pos1, pos2];
     }
     JSONGameMap.strRangeToVec = strRangeToVec;
+    function getCoordInMap(str) {
+        const arr = str.split(" ");
+        const map = arr[0];
+        const pos = strToVec(arr[1]);
+        return {
+            map,
+            pos
+        };
+    }
+    JSONGameMap.getCoordInMap = getCoordInMap;
     function purify(raw) {
         let pure = { ...raw };
         pure.sizeInTiles = strToVec(pure.sizeInTiles);
-        pure.tileDataGenerator.overrides = pure.tileDataGenerator.overrides.map((o) => {
-            const { start, end } = strRangeToVec(o.range);
+        pure.walls = pure.walls.map((wall) => {
+            const [pos1, pos2] = strRangeToVec(wall.range);
             return {
-                value: o.value,
-                start,
-                end
+                value: wall.value,
+                range: [pos1, pos2]
+            };
+        });
+        pure.portals = pure.portals.map((portal) => {
+            const range = strRangeToVec(portal.range);
+            const to = getCoordInMap(portal.to);
+            return {
+                range, to
             };
         });
         return pure;

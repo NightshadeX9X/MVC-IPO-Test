@@ -54,32 +54,37 @@ export default class GameMap implements Entity {
 		return (this.json?.sizeInTiles || new Vector).prod(this.roamState.tileSize)
 	}
 
-	get collisionDataStr() {
-		if (!this.json) return null;
 
-		const strData = generate2DArray(
-			this.json.sizeInTiles.y, this.json.sizeInTiles.x,
-			this.json.tileDataGenerator.defaultString,
-			this.json.tileDataGenerator.overrides.map(x => ({ pos1: x.start, pos2: x.end, value: x.value }))
-		);
-		return strData;
+	get wallData() {
+		if (!this.json) return null;
+		const arr: boolean[][] = [];
+		this.json.walls.forEach(wall => {
+			const [pos1, pos2] = wall.range;
+
+			for (let y = pos1.y; y <= pos2.y; y++) {
+				if (typeof arr[y] === "undefined") arr[y] = [];
+				for (let x = pos1.x; x <= pos2.x; x++) {
+					arr[y][x] = wall.value;
+				}
+			}
+		});
+		return arr;
 	}
 
-	get collisionData() {
-		const collisionDataStr = this.collisionDataStr;
-		if (!collisionDataStr) return null;
+	get portalData() {
+		if (!this.json) return null;
+		const arr: JSONGameMap.PurePortal["to"][][] = [];
+		this.json.portals.forEach(portal => {
+			const [pos1, pos2] = portal.range;
 
-		return collisionDataStr.map(row => {
-			return row.map(str => {
-				if (!this.json) return null;
-				for (let i in this.json.tileDataGenerator.overrideMappings) {
-					if (i === str) {
-						return this.json.tileDataGenerator.overrideMappings[i]
-					}
+			for (let y = pos1.y; y <= pos2.y; y++) {
+				if (typeof arr[y] === "undefined") arr[y] = [];
+				for (let x = pos1.x; x <= pos2.x; x++) {
+					arr[y][x] = portal.to;
 				}
-				return null;
-			})
-		})
+			}
+		});
+		return arr;
 	}
 }
 
@@ -88,41 +93,38 @@ export type TileType = "wall" | "empty"
 export namespace JSONGameMap {
 	type VecAsString = `${number}x${number}`;
 	type VecRangeAsString = `${VecAsString}-${VecAsString}`;
+	type VecRange = [Vector, Vector];
+	type CoordInMap = `${string} ${VecAsString}`
 	export interface Raw {
 		name: string,
 		sizeInTiles: VecAsString,
-		tileDataGenerator: {
-			defaultString: string,
-			overrides: [
-				{
-					range: VecRangeAsString,
-					value: string
-				}
-			],
-			overrideMappings: {
-				[k: string]: {
-					type: TileType
-				}
-			}
-		}
+		walls:
+		{
+			range: VecRangeAsString,
+			value: boolean
+		}[];
+		portals:
+		{
+			range: VecRangeAsString,
+			to: CoordInMap
+		}[]
 	}
 	export interface Pure {
 		name: string,
 		sizeInTiles: Vector,
-		tileDataGenerator: {
-			defaultString: string,
-			overrides: [
-				{
-					start: Vector,
-					end: Vector,
-					value: string
-				}
-			],
-			overrideMappings: {
-				[k: string]: {
-					type: TileType
-				}
-			}
+		walls:
+		{
+			range: VecRange,
+			value: boolean
+		}[];
+		portals:
+		PurePortal[]
+	}
+	export interface PurePortal {
+		range: VecRange,
+		to: {
+			map: string;
+			pos: Vector
 		}
 	}
 
@@ -134,23 +136,36 @@ export namespace JSONGameMap {
 	export function strRangeToVec(str: VecRangeAsString) {
 		const arr = str.split("-");
 		const [pos1, pos2] = arr.map(p => strToVec(p as any))
+		return [pos1, pos2] as [Vector, Vector];
+	}
+	export function getCoordInMap(str: CoordInMap) {
+		const arr = str.split(" ");
+		const map = arr[0];
+		const pos = strToVec(arr[1] as any);
 		return {
-			start: pos1,
-			end: pos2
+			map,
+			pos
 		}
 	}
 
 	export function purify(raw: Raw): Pure {
 		let pure = { ...raw } as any;
 		pure.sizeInTiles = strToVec(pure.sizeInTiles)
-		pure.tileDataGenerator.overrides = pure.tileDataGenerator.overrides.map((o: any) => {
-			const { start, end } = strRangeToVec(o.range);
+		pure.walls = pure.walls.map((wall: any) => {
+			const [pos1, pos2] = strRangeToVec(wall.range);
 			return {
-				value: o.value,
-				start,
-				end
+				value: wall.value,
+				range: [pos1, pos2]
 			}
-		});
+		})
+		pure.portals = pure.portals.map((portal: any) => {
+			const range = strRangeToVec(portal.range);
+			const to = getCoordInMap(portal.to)
+
+			return {
+				range, to
+			}
+		})
 		return pure as Pure;
 	}
 }

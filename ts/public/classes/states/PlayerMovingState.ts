@@ -30,9 +30,9 @@ export default class PlayerMovingState extends State {
 
 
 		}
-		let cd = this.roamState.gameMap.collisionData;
-		if (cd && this.roamState.gameMap.json) {
-			if (cd[this.targetCoords.y]?.[this.targetCoords.x]?.type === "wall" ||
+		let wd = this.roamState.gameMap.wallData;
+		if (wd && this.roamState.gameMap.json) {
+			if (wd[this.targetCoords.y]?.[this.targetCoords.x] === true ||
 				this.targetCoords.x < 0 ||
 				this.targetCoords.x >= this.roamState.gameMap.json.sizeInTiles.x ||
 				this.targetCoords.y < 0 ||
@@ -61,11 +61,21 @@ export default class PlayerMovingState extends State {
 			this.roamState.player.pos.add(this.vec);
 		} else {
 
-			this.roamState.player.pos = this.targetCoords;
-			// console.log(this.roamState.player.pos)
-			this.roamState.toUpdate = null;
-			this.stateStack.pop();
-			return;
+			(async () => {
+
+				this.roamState.player.pos = this.targetCoords;
+				if (this.roamState.gameMap.portalData) {
+					const portalTo = this.roamState.gameMap.portalData?.[this.targetCoords.y]?.[this.targetCoords.x];
+					if (portalTo) {
+						this.roamState.gameMap.name = portalTo.map;
+						this.roamState.gameMap.load(this.stateStack.loader);
+						this.roamState.player.pos = portalTo.pos
+					}
+				}
+				// console.log(this.roamState.player.pos)
+				this.roamState.toUpdate = null;
+				this.stateStack.pop();
+			})()
 		}
 
 		this.frames++;
