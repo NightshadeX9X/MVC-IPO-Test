@@ -6,7 +6,7 @@ import Vector from "./Vector.js";
 export default class Player {
     constructor(roamState) {
         this.roamState = roamState;
-        this.pos = new Vector(10, 5);
+        this.pos = new Vector(16, 5);
         this.drawSize = new Vector(1, 2);
         this.drawOffset = new Vector(0, -1);
         this.image = null;

@@ -47,6 +47,8 @@ export default class GameMap {
     get wallData() {
         if (!this.json)
             return null;
+        if (!Array.isArray(this.json.walls))
+            return null;
         const arr = [];
         this.json.walls.forEach(wall => {
             const [pos1, pos2] = wall.range;
@@ -63,6 +65,8 @@ export default class GameMap {
     get portalData() {
         if (!this.json)
             return null;
+        if (!Array.isArray(this.json.portals))
+            return null;
         const arr = [];
         this.json.portals.forEach(portal => {
             const [pos1, pos2] = portal.range;
@@ -71,6 +75,24 @@ export default class GameMap {
                     arr[y] = [];
                 for (let x = pos1.x; x <= pos2.x; x++) {
                     arr[y][x] = portal.to;
+                }
+            }
+        });
+        return arr;
+    }
+    get grassData() {
+        if (!this.json)
+            return null;
+        if (!Array.isArray(this.json.grass))
+            return null;
+        const arr = [];
+        this.json.grass.forEach(grass => {
+            const [pos1, pos2] = grass.range;
+            for (let y = pos1.y; y <= pos2.y; y++) {
+                if (typeof arr[y] === "undefined")
+                    arr[y] = [];
+                for (let x = pos1.x; x <= pos2.x; x++) {
+                    arr[y][x] = grass;
                 }
             }
         });
@@ -117,6 +139,10 @@ export var JSONGameMap;
             return {
                 range, to
             };
+        });
+        pure.grass = pure.grass.map((grass) => {
+            const range = strRangeToVec(grass.range);
+            return { range };
         });
         return pure;
     }

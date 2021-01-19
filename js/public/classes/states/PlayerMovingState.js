@@ -1,6 +1,7 @@
 import { Direction, directionToVector } from "../../Util.js";
 import State from "../State.js";
 import Vector from "../Vector.js";
+import WildBattleState from "./WildBattleState.js";
 export default class PlayerMovingState extends State {
     constructor(stateStack, roamState, direction) {
         super(stateStack);
@@ -63,9 +64,21 @@ export default class PlayerMovingState extends State {
                         this.roamState.player.pos = portalTo.pos;
                     }
                 }
+                let toPushWildBattle = false;
+                if (this.roamState.gameMap.grassData) {
+                    const grassTo = this.roamState.gameMap.grassData?.[this.targetCoords.y]?.[this.targetCoords.x];
+                    if (grassTo) {
+                        console.log("in grass");
+                        toPushWildBattle = true;
+                    }
+                }
                 // console.log(this.roamState.player.pos)
                 this.roamState.toUpdate = null;
                 this.stateStack.pop();
+                if (toPushWildBattle) {
+                    this.stateStack.pop();
+                    this.stateStack.push(new WildBattleState(this.stateStack, "meadow"));
+                }
             })();
         }
         this.frames++;

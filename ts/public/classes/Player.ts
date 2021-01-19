@@ -9,7 +9,7 @@ import RoamState from "./states/RoamState.js";
 import Vector from "./Vector.js";
 
 export default class Player implements Entity {
-	public pos = new Vector(10, 5);
+	public pos = new Vector(16, 5);
 	public drawSize = new Vector(1, 2);
 	public drawOffset = new Vector(0, -1);
 	public image: HTMLImageElement | null = null;

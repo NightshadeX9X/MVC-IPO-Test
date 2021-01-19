@@ -5,6 +5,7 @@ import State from "../State.js";
 import StateStack from "../StateStack.js";
 import Vector from "../Vector.js";
 import RoamState from "./RoamState.js";
+import WildBattleState from "./WildBattleState.js";
 
 export default class PlayerMovingState extends State {
 	private frames = 0;
@@ -72,9 +73,23 @@ export default class PlayerMovingState extends State {
 						this.roamState.player.pos = portalTo.pos
 					}
 				}
+				let toPushWildBattle = false;
+
+				if (this.roamState.gameMap.grassData) {
+					const grassTo = this.roamState.gameMap.grassData?.[this.targetCoords.y]?.[this.targetCoords.x];
+					if (grassTo) {
+						console.log("in grass")
+						toPushWildBattle = true;
+					}
+				}
+
 				// console.log(this.roamState.player.pos)
 				this.roamState.toUpdate = null;
 				this.stateStack.pop();
+				if (toPushWildBattle) {
+					this.stateStack.pop();
+					this.stateStack.push(new WildBattleState(this.stateStack, "meadow"))
+				}
 			})()
 		}
 

@@ -57,6 +57,7 @@ export default class GameMap implements Entity {
 
 	get wallData() {
 		if (!this.json) return null;
+		if (!Array.isArray(this.json.walls)) return null;
 		const arr: boolean[][] = [];
 		this.json.walls.forEach(wall => {
 			const [pos1, pos2] = wall.range;
@@ -73,6 +74,7 @@ export default class GameMap implements Entity {
 
 	get portalData() {
 		if (!this.json) return null;
+		if (!Array.isArray(this.json.portals)) return null;
 		const arr: JSONGameMap.PurePortal["to"][][] = [];
 		this.json.portals.forEach(portal => {
 			const [pos1, pos2] = portal.range;
@@ -81,6 +83,23 @@ export default class GameMap implements Entity {
 				if (typeof arr[y] === "undefined") arr[y] = [];
 				for (let x = pos1.x; x <= pos2.x; x++) {
 					arr[y][x] = portal.to;
+				}
+			}
+		});
+		return arr;
+	}
+
+	get grassData() {
+		if (!this.json) return null;
+		if (!Array.isArray(this.json.grass)) return null;
+		const arr: JSONGameMap.Pure["grass"][] = [];
+		this.json.grass.forEach(grass => {
+			const [pos1, pos2] = grass.range;
+
+			for (let y = pos1.y; y <= pos2.y; y++) {
+				if (typeof arr[y] === "undefined") arr[y] = [];
+				for (let x = pos1.x; x <= pos2.x; x++) {
+					arr[y][x] = grass;
 				}
 			}
 		});
@@ -107,6 +126,10 @@ export namespace JSONGameMap {
 		{
 			range: VecRangeAsString,
 			to: CoordInMap
+		}[];
+		grass:
+		{
+			range: VecRangeAsString,
 		}[]
 	}
 	export interface Pure {
@@ -118,7 +141,11 @@ export namespace JSONGameMap {
 			value: boolean
 		}[];
 		portals:
-		PurePortal[]
+		PurePortal[];
+		grass:
+		{
+			range: VecRange,
+		}[]
 	}
 	export interface PurePortal {
 		range: VecRange,
@@ -165,6 +192,11 @@ export namespace JSONGameMap {
 			return {
 				range, to
 			}
+		});
+
+		pure.grass = pure.grass.map((grass: any) => {
+			const range = strRangeToVec(grass.range);
+			return { range }
 		})
 		return pure as Pure;
 	}

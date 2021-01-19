@@ -5,7 +5,7 @@ import Vector from "../Vector.js";
 export default class RoamState extends State {
     constructor() {
         super(...arguments);
-        this.gameMap = new GameMap('player_house', this);
+        this.gameMap = new GameMap('the_square', this);
         this.player = new Player(this);
         this.tileSize = new Vector(16);
     }

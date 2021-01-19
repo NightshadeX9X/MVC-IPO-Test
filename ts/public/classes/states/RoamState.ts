@@ -6,7 +6,7 @@ import State from "../State.js";
 import Vector from "../Vector.js";
 
 export default class RoamState extends State {
-	public gameMap = new GameMap('player_house', this);
+	public gameMap = new GameMap('the_square', this);
 	public player = new Player(this);
 	public tileSize = new Vector(16);
 	async preload(loader: Loader) {
