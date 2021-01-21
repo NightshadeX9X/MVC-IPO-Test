@@ -50,9 +50,11 @@ export default class MainMenuState extends State {
         if (!selector)
             return;
         ctx.save();
-        const pos = this.menuPos /* .sum(selector.pos) */;
-        // console.log(pos.x, pos.x, selector.size.x, selector.size.y)
-        ctx.fillRect(370, 370, 70, 25);
+        const pos = this.menuPos.sum(selector.pos);
+        // console.log(pos.x, pos.x, selector.size.x, selector.size.y);
+        ctx.strokeStyle = "#00f";
+        ctx.lineWidth = 2;
+        ctx.strokeRect(pos.x, pos.y, selector.size.x, selector.size.y);
         ctx.restore();
     }
     render(ctx) {
