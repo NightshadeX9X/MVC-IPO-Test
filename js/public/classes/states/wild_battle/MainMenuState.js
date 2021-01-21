@@ -10,6 +10,8 @@ export default class MainMenuState extends State {
         this.menuImg = null;
         this.selected = 0;
         this.selectorChangedLast = 0;
+        this.moving = false;
+        this.selectionStepPos = new Vector();
         this.selectorData = [
             {
                 pos: new Vector(0, 28),
@@ -18,8 +20,20 @@ export default class MainMenuState extends State {
             {
                 pos: new Vector(75, 18),
                 size: new Vector(22, 75)
+            },
+            {
+                pos: new Vector(13, 14),
+                size: new Vector(34, 1)
+            },
+            {
+                pos: new Vector(31, 83),
+                size: new Vector(6, 62)
             }
         ];
+        this.toDrawSelector = { pos: Vector.from(this.selector.pos), size: Vector.from(this.selector.size) };
+    }
+    get selector() {
+        return this.selectorData[this.selected];
     }
     async preload(loader) {
         const promises = [
@@ -31,13 +45,18 @@ export default class MainMenuState extends State {
     }
     update(input) {
         this.selectorChangedLast++;
-        if ((input.directionKeyStates.LEFT || input.directionKeyStates.RIGHT) && this.selectorChangedLast > 11) {
-            if (this.selected === 0)
+        const oldSelected = this.selected;
+        if ((input.directionKeyStates.LEFT || input.directionKeyStates.RIGHT) && this.selectorChangedLast > 11 && !this.moving) {
+            if (oldSelected === 0)
                 this.selected = 1;
-            else if (this.selected === 1)
+            else if (oldSelected === 1)
                 this.selected = 0;
-            console.log(this.selected);
+            this.selectionStepPos = this.selector.pos.diff(this.toDrawSelector.pos).quo(5).mapReturn(Math.round);
             this.selectorChangedLast = 0;
+        }
+        let toChangePos = !this.toDrawSelector.pos.equals(this.selector.pos);
+        if (toChangePos) {
+            this.toDrawSelector.pos.add(this.selectionStepPos);
         }
     }
     drawMenu(ctx) {
@@ -46,15 +65,14 @@ export default class MainMenuState extends State {
         }
     }
     drawSelector(ctx) {
-        const selector = this.selectorData[this.selected];
-        if (!selector)
+        if (!this.toDrawSelector)
             return;
         ctx.save();
-        const pos = this.menuPos.sum(selector.pos);
+        const pos = this.menuPos.sum(this.toDrawSelector.pos);
         // console.log(pos.x, pos.x, selector.size.x, selector.size.y);
         ctx.strokeStyle = "#00f";
         ctx.lineWidth = 2;
-        ctx.strokeRect(pos.x, pos.y, selector.size.x, selector.size.y);
+        ctx.strokeRect(pos.x, pos.y, this.toDrawSelector.size.x, this.toDrawSelector.size.y);
         ctx.restore();
     }
     render(ctx) {

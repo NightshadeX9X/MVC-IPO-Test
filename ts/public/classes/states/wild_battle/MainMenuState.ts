@@ -11,6 +11,8 @@ export default class MainMenuState extends State {
 	public menuImg: HTMLImageElement | null = null;
 	public selected = 0;
 	private selectorChangedLast = 0;
+	private moving = false;
+	private selectionStepPos = new Vector();
 
 	private readonly selectorData = [
 		{
@@ -20,11 +22,23 @@ export default class MainMenuState extends State {
 		{
 			pos: new Vector(75, 18),
 			size: new Vector(22, 75)
+		},
+		{
+			pos: new Vector(13, 14),
+			size: new Vector(34, 1)
+		},
+		{
+			pos: new Vector(31, 83),
+			size: new Vector(6, 62)
 		}
 	]
 	constructor(public stateStack: StateStack, public wildBattleState: WildBattleState) {
 		super(stateStack);
 	}
+	get selector() {
+		return this.selectorData[this.selected]
+	}
+	private toDrawSelector = { pos: Vector.from(this.selector.pos), size: Vector.from(this.selector.size) };
 	async preload(loader: Loader) {
 		const promises = [
 			loader.loadImage(`/assets/images/UI/BattleMenu.png`)
@@ -36,14 +50,21 @@ export default class MainMenuState extends State {
 	}
 	update(input: Input): void {
 		this.selectorChangedLast++;
+		const oldSelected = this.selected;
 
-		if ((input.directionKeyStates.LEFT || input.directionKeyStates.RIGHT) && this.selectorChangedLast > 11) {
-			if (this.selected === 0) this.selected = 1;
-			else if (this.selected === 1) this.selected = 0;
+		if ((input.directionKeyStates.LEFT || input.directionKeyStates.RIGHT) && this.selectorChangedLast > 11 && !this.moving) {
+			if (oldSelected === 0) this.selected = 1;
+			else if (oldSelected === 1) this.selected = 0;
 
 
-			console.log(this.selected);
+			this.selectionStepPos = this.selector.pos.diff(this.toDrawSelector.pos).quo(5).mapReturn(Math.round);
 			this.selectorChangedLast = 0;
+
+		}
+		let toChangePos = !this.toDrawSelector.pos.equals(this.selector.pos);
+		if (toChangePos) {
+
+			this.toDrawSelector.pos.add(this.selectionStepPos)
 		}
 	}
 	private drawMenu(ctx: CanvasRenderingContext2D) {
@@ -52,14 +73,13 @@ export default class MainMenuState extends State {
 		}
 	}
 	private drawSelector(ctx: CanvasRenderingContext2D) {
-		const selector = this.selectorData[this.selected];
-		if (!selector) return;
+		if (!this.toDrawSelector) return;
 		ctx.save();
-		const pos = this.menuPos.sum(selector.pos);
+		const pos = this.menuPos.sum(this.toDrawSelector.pos);
 		// console.log(pos.x, pos.x, selector.size.x, selector.size.y);
 		ctx.strokeStyle = "#00f";
 		ctx.lineWidth = 2;
-		ctx.strokeRect(pos.x, pos.y, selector.size.x, selector.size.y);
+		ctx.strokeRect(pos.x, pos.y, this.toDrawSelector.size.x, this.toDrawSelector.size.y);
 		ctx.restore();
 	}
 	render(ctx: CanvasRenderingContext2D): void {
