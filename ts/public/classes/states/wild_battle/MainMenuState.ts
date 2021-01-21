@@ -9,10 +9,11 @@ export default class MainMenuState extends State {
 	public menuPos = new Vector(370, 170);
 	public menuSize = new Vector(100, 130);
 	public menuImg: HTMLImageElement | null = null;
-	public selected = 0;
+	public selected = 2;
 	private selectorChangedLast = 0;
 	private moving = false;
 	private selectionStepPos = new Vector();
+	private selectionStepSize = new Vector(50);
 
 	private readonly selectorData = [
 		{
@@ -24,12 +25,12 @@ export default class MainMenuState extends State {
 			size: new Vector(22, 75)
 		},
 		{
-			pos: new Vector(13, 14),
-			size: new Vector(34, 1)
+			pos: new Vector(-3, 92),
+			size: new Vector(76, 17)
 		},
 		{
-			pos: new Vector(31, 83),
-			size: new Vector(6, 62)
+			pos: new Vector(41, 111),
+			size: new Vector(47, 19)
 		}
 	]
 	constructor(public stateStack: StateStack, public wildBattleState: WildBattleState) {
@@ -50,21 +51,50 @@ export default class MainMenuState extends State {
 	}
 	update(input: Input): void {
 		this.selectorChangedLast++;
-		const oldSelected = this.selected;
 
-		if ((input.directionKeyStates.LEFT || input.directionKeyStates.RIGHT) && this.selectorChangedLast > 11 && !this.moving) {
-			if (oldSelected === 0) this.selected = 1;
-			else if (oldSelected === 1) this.selected = 0;
+		if (this.selectorChangedLast > 11 && !this.moving) {
+			const oldSelected = this.selected;
+			let todo = true;
+			if (input.directionKeyStates.LEFT || input.directionKeyStates.RIGHT) {
 
+				if (oldSelected === 0) this.selected = 1;
+				else if (oldSelected === 1) this.selected = 0;
+				else if (oldSelected === 2) this.selected = 3;
+				else if (oldSelected === 3) this.selected = 2;
+			} else if (input.directionKeyStates.UP || input.directionKeyStates.DOWN) {
+				if (oldSelected === 0) this.selected = 2;
+				else if (oldSelected === 1) this.selected = 3;
+				else if (oldSelected === 2) this.selected = 0;
+				else if (oldSelected === 3) this.selected = 1;
+			} else {
+				todo = false;
+			}
+			if (todo) {
 
-			this.selectionStepPos = this.selector.pos.diff(this.toDrawSelector.pos).quo(5).mapReturn(Math.round);
-			this.selectorChangedLast = 0;
+				this.selectorChangedLast = 0;
+				this.selectionStepPos = this.selector.pos.diff(this.toDrawSelector.pos).quo(5)
+				this.selectionStepSize = this.selector.size.diff(this.toDrawSelector.size).quo(5)
+				console.log(this.selector.size, this.toDrawSelector.size, this.selectionStepSize)
+				this.moving = true;
+			}
+
 
 		}
-		let toChangePos = !this.toDrawSelector.pos.equals(this.selector.pos);
+		let toChangePos = !this.toDrawSelector.pos.diff(this.selector.pos).mapReturn(Math.round).lessThan(1);
+		let toChangeSize = !this.toDrawSelector.size.diff(this.selector.size).mapReturn(Math.round).lessThan(1);
 		if (toChangePos) {
 
 			this.toDrawSelector.pos.add(this.selectionStepPos)
+		}
+		if (this.toDrawSelector.pos.equals(this.selector.pos)) {
+			this.moving = false;
+		}
+		if (toChangeSize) {
+
+			this.toDrawSelector.size.add(this.selectionStepSize);
+		}
+		if (this.toDrawSelector.size.equals(this.selector.size)) {
+			this.moving = false;
 		}
 	}
 	private drawMenu(ctx: CanvasRenderingContext2D) {
