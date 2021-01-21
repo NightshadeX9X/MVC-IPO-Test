@@ -58,6 +58,12 @@ export default class Vector implements Vector {
 		this.x = fn(this.x);
 		this.y = fn(this.y);
 	}
+	mapReturn(fn: (n: number) => number) {
+		let vec = new Vector();
+		vec.x = fn(this.x);
+		vec.y = fn(this.y);
+		return vec;
+	}
 
 	equals(a: number | Vector, b?: number) {
 		const o = this.getVectorFromArgs(a, b);

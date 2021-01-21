@@ -39,3 +39,17 @@ export function generate2DArray<T>(rows: number, columns: number, defaultVal: T,
 	return arr;
 
 }
+
+export function random(min = 0, max = 1, whole = true) {
+	if (whole) {
+		return Math.floor(Math.random() * (max - min + 1) + min);
+	} else return Math.random() * (max - min) + min;
+}
+
+export function chance(x: number, outOfY = 100) {
+	const rand = random(0, outOfY);
+	if (rand <= x) {
+		return true
+	}
+	return false;
+}

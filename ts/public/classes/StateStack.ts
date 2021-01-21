@@ -1,4 +1,5 @@
 import Entity from "../Entity.js";
+import { AudioPlayer } from "./AudioPlayer.js";
 import Input from "./Input.js";
 import Loader from "./Loader.js";
 import State from "./State.js";
@@ -10,6 +11,7 @@ export default class StateStack implements Entity {
 
 	}
 	public states: State[] = [];
+	public audioPlayer = new AudioPlayer();
 
 	public toPreload: boolean | null = true;
 	public toUpdate: boolean | null = true;

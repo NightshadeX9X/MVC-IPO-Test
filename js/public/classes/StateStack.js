@@ -1,7 +1,9 @@
+import { AudioPlayer } from "./AudioPlayer.js";
 export default class StateStack {
     constructor(loader) {
         this.loader = loader;
         this.states = [];
+        this.audioPlayer = new AudioPlayer();
         this.toPreload = true;
         this.toUpdate = true;
         this.toRender = true;

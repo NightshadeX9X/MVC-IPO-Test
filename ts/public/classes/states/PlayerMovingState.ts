@@ -1,9 +1,10 @@
-import { Direction, directionToVector } from "../../Util.js";
+import { chance, Direction, directionToVector } from "../../Util.js";
 import Input from "../Input.js";
 import Loader from "../Loader.js";
 import State from "../State.js";
 import StateStack from "../StateStack.js";
 import Vector from "../Vector.js";
+import FadeState from "./FadeState.js";
 import RoamState from "./RoamState.js";
 import WildBattleState from "./WildBattleState.js";
 
@@ -79,7 +80,8 @@ export default class PlayerMovingState extends State {
 					const grassTo = this.roamState.gameMap.grassData?.[this.targetCoords.y]?.[this.targetCoords.x];
 					if (grassTo) {
 						console.log("in grass")
-						toPushWildBattle = true;
+						if (chance(70))
+							toPushWildBattle = true;
 					}
 				}
 
@@ -87,8 +89,9 @@ export default class PlayerMovingState extends State {
 				this.roamState.toUpdate = null;
 				this.stateStack.pop();
 				if (toPushWildBattle) {
-					this.stateStack.pop();
-					this.stateStack.push(new WildBattleState(this.stateStack, "meadow"))
+					const wbs = new WildBattleState(this.stateStack, "meadow");
+					this.stateStack.push(wbs)
+					this.stateStack.push(new FadeState(this.stateStack));
 				}
 			})()
 		}

@@ -57,6 +57,12 @@ export default class Vector {
         this.x = fn(this.x);
         this.y = fn(this.y);
     }
+    mapReturn(fn) {
+        let vec = new Vector();
+        vec.x = fn(this.x);
+        vec.y = fn(this.y);
+        return vec;
+    }
     equals(a, b) {
         const o = this.getVectorFromArgs(a, b);
         return this.x === o.x && this.y === o.y;
