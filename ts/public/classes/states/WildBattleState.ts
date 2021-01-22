@@ -20,6 +20,12 @@ export default class WildBattleState extends State {
 		super(stateStack);
 		this.battle = new WildBattle(PARTY, WILD);
 		this.substates.push(new IntroState(this.substates, this));
+
+		this.onPop = () => {
+			this.audio?.pause();
+
+			return this.substates.fromTop()?.onPop();
+		}
 	}
 	async preload(loader: Loader) {
 		const promises = [
@@ -39,25 +45,37 @@ export default class WildBattleState extends State {
 	}
 	init(): void {
 		if (this.audio) {
+			this.audio.currentTime = 0;
 			this.audio.loop = true;
 			this.audio?.play();
 		}
 	}
 	private pop() {
 		this.stateStack.pop();
-		this.audio?.pause();
+
 	}
+
 
 	public get partyHead() {
 		return this.battle.party[0];
 	}
 	update(input: Input): void {
 		if (input.keyIsDown("Enter")) {
-			this.pop();
+			this.stateStack.pop();
 		}
 
 		this.substates.update(input);
 
+	}
+	public drawPokemon(ctx: CanvasRenderingContext2D) {
+		if (this.partyHeadImage) {
+			const pokemonWidth = (this.partyHeadImage.width / this.partyHeadImage.height) * this.pokemonHeight;
+			ctx.drawImage(this.partyHeadImage, this.partyHeadPos.x, this.partyHeadPos.y, pokemonWidth, this.pokemonHeight)
+		}
+		if (this.wildImage) {
+			const pokemonWidth = (this.wildImage.width / this.wildImage.height) * this.pokemonHeight;
+			ctx.drawImage(this.wildImage, ctx.canvas.width - this.partyHeadPos.x - this.wildImage.width, ctx.canvas.height - this.partyHeadPos.y - this.wildImage.height, pokemonWidth * 0.7, this.pokemonHeight * 0.7)
+		}
 	}
 	render(ctx: CanvasRenderingContext2D): void {
 		if (this.toClearCanvas) {

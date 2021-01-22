@@ -6,5 +6,6 @@ export default class State {
         this.toRender = null;
         this.toPreload = null;
         this.substates = new StateStack(this.stateStack.loader);
+        this.onPop = () => { };
     }
 }

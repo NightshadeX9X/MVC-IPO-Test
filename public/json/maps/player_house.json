@@ -55,6 +55,11 @@
 		{
 			"range": "24x6-25x7",
 			"to": "player_bedroom 1x7"
+		},
+		{
+			"range": "10x15-15x15",
+			"to": "the_square 18x0"
 		}
-	]
+	],
+	"grass": []
 }

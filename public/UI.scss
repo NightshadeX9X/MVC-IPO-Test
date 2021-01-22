@@ -1,0 +1,50 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito&display=swap');
+
+@mixin UIComponent {
+	position: absolute;
+
+	&.hidden {
+		display: none !important;
+	}
+}
+#fight-menu {
+	@include UIComponent();
+	left: 363px;
+	top: 185px;
+	$font-family: Nunito, sans-serif, Arial, Helvetica;
+	// @include UIComponent();
+	width: 110px;
+	background-color: #eee;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border: 3px solid black;
+	flex-direction: column;
+	padding: 5px 0px;
+	gap: 2px;
+
+	.attack-box {
+		cursor: pointer;
+		background-color: #0cc;
+		width: 90%;
+		height: 26px;
+		transition: all ease-in-out 300ms;
+		
+		h2 {
+			font-size: 13px;
+			font-family: $font-family;
+			text-align: center;
+			color: black;
+			transition: all ease-in-out 300ms;
+			transform: translate(0, -25%);
+		}
+
+		&.selected {
+			background-color: rgb(235, 184, 18);
+			h2 {
+				color: white;
+			}
+		}
+	}
+}
+

@@ -1,0 +1,57 @@
+@import url("https://fonts.googleapis.com/css2?family=Nunito&display=swap");
+#fight-menu {
+  position: absolute;
+  left: 363px;
+  top: 185px;
+  width: 110px;
+  background-color: #eee;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  border: 3px solid black;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  padding: 5px 0px;
+  gap: 2px;
+}
+
+#fight-menu.hidden {
+  display: none !important;
+}
+
+#fight-menu .attack-box {
+  cursor: pointer;
+  background-color: #0cc;
+  width: 90%;
+  height: 26px;
+  -webkit-transition: all ease-in-out 300ms;
+  transition: all ease-in-out 300ms;
+}
+
+#fight-menu .attack-box h2 {
+  font-size: 13px;
+  font-family: Nunito, sans-serif, Arial, Helvetica;
+  text-align: center;
+  color: black;
+  -webkit-transition: all ease-in-out 300ms;
+  transition: all ease-in-out 300ms;
+  -webkit-transform: translate(0, -25%);
+          transform: translate(0, -25%);
+}
+
+#fight-menu .attack-box.selected {
+  background-color: #ebb812;
+}
+
+#fight-menu .attack-box.selected h2 {
+  color: white;
+}
+/*# sourceMappingURL=UI.css.map */

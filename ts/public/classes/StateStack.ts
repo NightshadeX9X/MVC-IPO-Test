@@ -51,6 +51,7 @@ export default class StateStack implements Entity {
 		s.init();
 	}
 	pop() {
-		return this.states.pop();
+		const state = this.states.pop();
+		return state ? state.onPop() : null;
 	}
 }

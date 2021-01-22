@@ -41,6 +41,7 @@ export default class StateStack {
         s.init();
     }
     pop() {
-        return this.states.pop();
+        const state = this.states.pop();
+        return state ? state.onPop() : null;
     }
 }

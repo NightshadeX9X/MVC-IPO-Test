@@ -1,9 +1,12 @@
+import { chance } from "../../../Util.js";
 import Input from "../../Input.js";
 import Loader from "../../Loader.js";
 import State from "../../State.js";
 import StateStack from "../../StateStack.js";
 import Vector from "../../Vector.js";
+import FadeState from "../FadeState.js";
 import WildBattleState from "../WildBattleState.js";
+import FightMenuState from "./FightMenuState.js";
 
 export default class MainMenuState extends State {
 	public menuPos = new Vector(370, 170);
@@ -11,6 +14,7 @@ export default class MainMenuState extends State {
 	public menuImg: HTMLImageElement | null = null;
 	public selected = 0;
 	private selectorChangedLast = 0;
+	private triedRunningLast = 0;
 
 	private readonly selectorData = [
 		{
@@ -20,6 +24,14 @@ export default class MainMenuState extends State {
 		{
 			pos: new Vector(75, 18),
 			size: new Vector(22, 75)
+		},
+		{
+			pos: new Vector(-3, 92),
+			size: new Vector(76, 17)
+		},
+		{
+			pos: new Vector(41, 111),
+			size: new Vector(47, 19)
 		}
 	]
 	constructor(public stateStack: StateStack, public wildBattleState: WildBattleState) {
@@ -36,14 +48,44 @@ export default class MainMenuState extends State {
 	}
 	update(input: Input): void {
 		this.selectorChangedLast++;
+		this.triedRunningLast++;
 
-		if ((input.directionKeyStates.LEFT || input.directionKeyStates.RIGHT) && this.selectorChangedLast > 11) {
-			if (this.selected === 0) this.selected = 1;
-			else if (this.selected === 1) this.selected = 0;
+		if (this.selectorChangedLast > 11) {
+			if ((input.directionKeyStates.LEFT || input.directionKeyStates.RIGHT)) {
+
+				if (this.selected === 0) this.selected = 1;
+				else if (this.selected === 1) this.selected = 0;
+				else if (this.selected === 2) this.selected = 3;
+				else if (this.selected === 3) this.selected = 2;
+				this.selectorChangedLast = 0;
+
+			} else if ((input.directionKeyStates.UP || input.directionKeyStates.DOWN)) {
+
+				if (this.selected === 0) this.selected = 2;
+				else if (this.selected === 1) this.selected = 3;
+				else if (this.selected === 2) this.selected = 0;
+				else if (this.selected === 3) this.selected = 1;
+				this.selectorChangedLast = 0;
+			}
 
 
-			console.log(this.selected);
-			this.selectorChangedLast = 0;
+		}
+
+
+		if (input.keyIsDown(" ")) {
+			if (this.selected === 0) {
+				this.stateStack.pop();
+				this.stateStack.push(new FightMenuState(this.stateStack, this.wildBattleState));
+
+			} else if (this.selected === 3 && this.triedRunningLast > 10) {
+				this.triedRunningLast = 0;
+				const canRunAway = chance(50);
+				if (canRunAway) {
+					console.log("You ran away safely!")
+					this.wildBattleState.stateStack.pop();
+					this.wildBattleState.stateStack.push(new FadeState(this.wildBattleState.stateStack))
+				} else console.log("You couldn't run away!")
+			}
 		}
 	}
 	private drawMenu(ctx: CanvasRenderingContext2D) {
@@ -55,21 +97,15 @@ export default class MainMenuState extends State {
 		const selector = this.selectorData[this.selected];
 		if (!selector) return;
 		ctx.save();
-		const pos = this.menuPos/* .sum(selector.pos) */;
-		// console.log(pos.x, pos.x, selector.size.x, selector.size.y)
-		ctx.fillRect(370, 370, 70, 25);
+		const pos = this.menuPos.sum(selector.pos);
+		ctx.lineWidth = 2;
+		ctx.strokeStyle = "#00f"
+		ctx.strokeRect(pos.x, pos.y, selector.size.x, selector.size.y);
 		ctx.restore();
 	}
 	render(ctx: CanvasRenderingContext2D): void {
 
-		if (this.wildBattleState.partyHeadImage) {
-			const pokemonWidth = (this.wildBattleState.partyHeadImage.width / this.wildBattleState.partyHeadImage.height) * this.wildBattleState.pokemonHeight;
-			ctx.drawImage(this.wildBattleState.partyHeadImage, this.wildBattleState.partyHeadPos.x, this.wildBattleState.partyHeadPos.y, pokemonWidth, this.wildBattleState.pokemonHeight)
-		}
-		if (this.wildBattleState.wildImage) {
-			const pokemonWidth = (this.wildBattleState.wildImage.width / this.wildBattleState.wildImage.height) * this.wildBattleState.pokemonHeight;
-			ctx.drawImage(this.wildBattleState.wildImage, ctx.canvas.width - this.wildBattleState.partyHeadPos.x - this.wildBattleState.wildImage.width, ctx.canvas.height - this.wildBattleState.partyHeadPos.y - this.wildBattleState.wildImage.height, pokemonWidth * 0.7, this.wildBattleState.pokemonHeight * 0.7)
-		}
+		this.wildBattleState.drawPokemon(ctx);
 
 
 		this.drawMenu(ctx);

@@ -15,4 +15,5 @@ export default abstract class State implements Entity {
 	abstract init(): void;
 	abstract update(input: Input): void;
 	abstract render(ctx: CanvasRenderingContext2D): void;
+	onPop: () => any = () => { };
 }
