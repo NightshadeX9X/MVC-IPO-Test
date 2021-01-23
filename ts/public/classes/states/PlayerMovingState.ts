@@ -80,7 +80,7 @@ export default class PlayerMovingState extends State {
 					const grassTo = this.roamState.gameMap.grassData?.[this.targetCoords.y]?.[this.targetCoords.x];
 					if (grassTo) {
 						console.log("in grass")
-						if (chance(10))
+						if (chance(100))
 							toPushWildBattle = true;
 					}
 				}

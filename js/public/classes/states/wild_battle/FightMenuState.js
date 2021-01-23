@@ -6,7 +6,7 @@ export default class FightMenuState extends State {
         this.wildBattleState = wildBattleState;
         this.menuEl = document.createElement('div');
         this.selected = -1;
-        this.sinceLastAttackChange = 10;
+        this.sinceLastAttackChange = -10;
     }
     async preload(loader) {
     }

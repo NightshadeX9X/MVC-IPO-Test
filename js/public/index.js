@@ -16,6 +16,7 @@ const stateStack = new StateStack(loader);
 const PIKACHU = new PokemonSpecies('pikachu', [PokemonType.ELECTRIC]);
 PIKACHU.stats.Atk = 30;
 PIKACHU.stats.Def = 20;
+PIKACHU.stats.HP = 20;
 document.querySelector('button')?.click();
 const THUNDER_BOLT = new PokemonMove(PokemonType.ELECTRIC, 90);
 export const SPECIES = {

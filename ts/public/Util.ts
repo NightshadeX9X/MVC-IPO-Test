@@ -53,3 +53,26 @@ export function chance(x: number, outOfY = 100) {
 	}
 	return false;
 }
+
+export function cloneObject<T extends Record<string, any>>(obj: T): T {
+	let clone: Partial<T> = {};
+
+	for (let i in obj) {
+		if (typeof obj[i] === "object") {
+			clone[i] = cloneObject(obj[i]);
+		} else {
+			clone[i] = obj[i];
+		}
+	}
+
+	return clone as T;
+}
+
+export function round(_n: number, toXDecimalPlaces: number) {
+	let n = _n
+	n *= 10 ** toXDecimalPlaces;
+	n = Math.round(n);
+	n /= 10 ** toXDecimalPlaces;
+
+	return n;
+}

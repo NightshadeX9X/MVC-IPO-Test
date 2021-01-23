@@ -5,6 +5,7 @@ import Vector from "../Vector.js";
 export default class RoamState extends State {
     constructor() {
         super(...arguments);
+        this.timeOfDay = TimeOfDay.NIGHT;
         this.gameMap = new GameMap('the_square', this);
         this.player = new Player(this);
         this.tileSize = new Vector(16);
@@ -31,3 +32,8 @@ export default class RoamState extends State {
         this.player.camera.render(ctx);
     }
 }
+var TimeOfDay;
+(function (TimeOfDay) {
+    TimeOfDay[TimeOfDay["NIGHT"] = 0] = "NIGHT";
+    TimeOfDay[TimeOfDay["DAY"] = 1] = "DAY";
+})(TimeOfDay || (TimeOfDay = {}));

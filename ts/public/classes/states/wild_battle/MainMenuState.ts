@@ -111,7 +111,7 @@ export default class MainMenuState extends State {
 		this.drawMenu(ctx);
 		this.drawSelector(ctx);
 
-
+		this.wildBattleState.drawHPBars(ctx);
 	}
 
 }

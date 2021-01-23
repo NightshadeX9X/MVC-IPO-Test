@@ -106,5 +106,6 @@ export default class MainMenuState extends State {
         this.wildBattleState.drawPokemon(ctx);
         this.drawMenu(ctx);
         this.drawSelector(ctx);
+        this.wildBattleState.drawHPBars(ctx);
     }
 }

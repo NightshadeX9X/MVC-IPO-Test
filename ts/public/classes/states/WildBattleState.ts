@@ -6,16 +6,21 @@ import WildBattle from "../WildBattle.js";
 import { PARTY, WILD } from '../../index.js';
 import Vector from "../Vector.js";
 import IntroState from "./wild_battle/IntroState.js";
+import { getHPBar } from "../../UI.js";
+import { round } from "../../Util.js";
+import FadeState from "./FadeState.js";
 
 export default class WildBattleState extends State {
 	private battleBg: HTMLImageElement | null = null;
 	public partyHeadImage: HTMLImageElement | null = null;
 	public wildImage: HTMLImageElement | null = null;
 	private audio: HTMLAudioElement | null = null;
+	public hpBarImage: HTMLImageElement | null = null;
 	private toClearCanvas = true;
 	public battle: WildBattle;
 	public pokemonHeight = 100;
 	public partyHeadPos = new Vector(-90, 150);
+
 	constructor(public stateStack: StateStack, public battleBgName: string) {
 		super(stateStack);
 		this.battle = new WildBattle(PARTY, WILD);
@@ -23,7 +28,7 @@ export default class WildBattleState extends State {
 
 		this.onPop = () => {
 			this.audio?.pause();
-
+			this.stateStack.push(new FadeState(this.stateStack))
 			return this.substates.fromTop()?.onPop();
 		}
 	}
@@ -31,11 +36,12 @@ export default class WildBattleState extends State {
 		const promises = [
 			loader.loadImage(`/assets/images/battle_backgrounds/${this.battleBgName}.png`),
 			this.stateStack.loader.loadAudio('/assets/sounds/battle_themes/wild.mp3'),
-			this.substates.preload()
+			this.substates.preload(),
+			loader.loadImage('/assets/images/UI/HPBar.png')
 		] as
-			[Promise<HTMLImageElement>, Promise<HTMLAudioElement>, Promise<void>];
+			[Promise<HTMLImageElement>, Promise<HTMLAudioElement>, Promise<void>, Promise<HTMLImageElement>];
 
-		[this.battleBg, this.audio] = await Promise.all(promises);
+		[this.battleBg, this.audio, , this.hpBarImage] = await Promise.all(promises);
 	}
 
 	private async loadPartyHeadImage(loader: Loader) {
@@ -50,11 +56,16 @@ export default class WildBattleState extends State {
 			this.audio?.play();
 		}
 	}
-	private pop() {
-		this.stateStack.pop();
 
+	public drawHPBars(ctx: CanvasRenderingContext2D) {
+		if (!this.hpBarImage) return;
+		const hpBar1 = getHPBar(this.hpBarImage, this.partyHead.stats.HP / this.partyHead.maxHP);
+		const hpBar2 = getHPBar(this.hpBarImage, this.battle.wild.stats.HP / this.battle.wild.maxHP);
+		const pos1 = this.partyHeadPos.sum(Number(this.partyHeadImage?.width) / 2, 90);
+		const pos2 = new Vector(ctx.canvas.width, ctx.canvas.height).diff(pos1)
+		ctx.drawImage(hpBar1, pos1.x - hpBar1.width / 2, pos1.y - hpBar1.height / 2 + 20);
+		ctx.drawImage(hpBar2, pos2.x - hpBar2.width / 2, pos2.y - hpBar2.height / 2);
 	}
-
 
 	public get partyHead() {
 		return this.battle.party[0];
@@ -63,8 +74,21 @@ export default class WildBattleState extends State {
 		if (input.keyIsDown("Enter")) {
 			this.stateStack.pop();
 		}
+		if (this.battle.wild.stats.HP >= 0.02) {
+			this.battle.wild.stats.HP -= 0.02;
+			this.battle.wild.stats.HP = round(this.battle.wild.stats.HP, 2)
+		}
+		if (this.partyHead.stats.HP >= 0.005) {
+			this.partyHead.stats.HP -= 0.005;
+			this.partyHead.stats.HP = round(this.partyHead.stats.HP, 3)
+		}
+
+		if (this.battle.wild.stats.HP <= 0) {
+			this.stateStack.pop();
+		}
 
 		this.substates.update(input);
+
 
 	}
 	public drawPokemon(ctx: CanvasRenderingContext2D) {
@@ -82,7 +106,6 @@ export default class WildBattleState extends State {
 			ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 			this.toClearCanvas = false;
 		}
-
 		ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height)
 		if (this.battleBg) {
 			const width = ctx.canvas.width;
@@ -91,6 +114,12 @@ export default class WildBattleState extends State {
 			ctx.drawImage(this.battleBg, 0, y, width, height);
 
 		}
+		ctx.save();
+		ctx.font = "12px Courier Prime";
+		ctx.fillStyle = "black"
+		ctx.fillText("Hello World", 40, 40)
+		ctx.restore();
+
 
 		this.substates.render(ctx);
 	}

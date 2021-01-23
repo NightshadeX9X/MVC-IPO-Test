@@ -7,7 +7,7 @@ import WildBattleState from "../WildBattleState.js";
 export default class FightMenuState extends State {
 	private menuEl = document.createElement('div');
 	private selected = -1;
-	private sinceLastAttackChange = 10;
+	private sinceLastAttackChange = -10;
 	constructor(public stateStack: StateStack, public wildBattleState: WildBattleState) {
 		super(stateStack);
 	}

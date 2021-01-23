@@ -4,8 +4,10 @@ import Loader from "../Loader.js";
 import Player from "../Player.js";
 import State from "../State.js";
 import Vector from "../Vector.js";
+import TextBoxState from "./TextBoxState.js";
 
 export default class RoamState extends State {
+	public timeOfDay = TimeOfDay.NIGHT;
 	public gameMap = new GameMap('the_square', this);
 	public player = new Player(this);
 	public tileSize = new Vector(16);
@@ -19,6 +21,7 @@ export default class RoamState extends State {
 	init(): void {
 		this.gameMap.init();
 		this.player.init();
+
 	}
 	update(input: Input): void {
 		this.player.update(input)
@@ -30,6 +33,14 @@ export default class RoamState extends State {
 		this.gameMap.render(ctx);
 		this.player.render(ctx);
 		this.player.camera.render(ctx);
+
+
 	}
 
+}
+
+
+enum TimeOfDay {
+	NIGHT,
+	DAY
 }
