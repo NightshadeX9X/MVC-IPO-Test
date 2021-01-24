@@ -1,7 +1,7 @@
 export default class PokemonSpecies {
 	public stats = generateEmptyStats();
 	public static list = new Map<string, PokemonSpecies>();
-	constructor(public name: string, public types: [PokemonType, PokemonType?]) {
+	constructor(public name: string, public displayName: string, public types: [PokemonTypes, PokemonTypes?]) {
 		PokemonSpecies.list.set(name, this);
 	}
 
@@ -23,7 +23,7 @@ export function generateEmptyStats() {
 	return stats;
 }
 
-export enum PokemonType {
+export enum PokemonTypes {
 	NORMAL,
 	FIGHTING,
 	FIRE,
@@ -43,6 +43,7 @@ export enum PokemonType {
 	FLYING,
 	PSYCHIC
 }
+export type PokemonType = keyof typeof PokemonTypes;
 
 export enum PokemonStat {
 	HP,

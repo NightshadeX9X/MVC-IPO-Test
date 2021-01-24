@@ -1,3 +1,4 @@
+import PokemonCreature from "./classes/PokemonCreature.js";
 import Vector from "./classes/Vector.js";
 
 export enum Direction {
@@ -39,11 +40,21 @@ export function generate2DArray<T>(rows: number, columns: number, defaultVal: T,
 	return arr;
 
 }
-
+/**
+ * 
+ * @param min 
+ * @param max 
+ * @param whole True by default.
+ */
 export function random(min = 0, max = 1, whole = true) {
 	if (whole) {
 		return Math.floor(Math.random() * (max - min + 1) + min);
 	} else return Math.random() * (max - min) + min;
+}
+
+export function randomArrayMember<T>(arr: T[]) {
+	const index = random(0, arr.length - 1);
+	return arr[index];
 }
 
 export function chance(x: number, outOfY = 100) {
@@ -75,4 +86,17 @@ export function round(_n: number, toXDecimalPlaces: number) {
 	n /= 10 ** toXDecimalPlaces;
 
 	return n;
+}
+
+export function getRandomCreatureMove(creature: PokemonCreature) {
+	// return 'quick_attack'
+	return randomArrayMember(creature.moves);
+}
+
+export function delay(ms: number) {
+	return new Promise((res, rej) => {
+		setTimeout(() => {
+			res(ms)
+		}, ms);
+	})
 }

@@ -35,12 +35,22 @@ export function generate2DArray(rows, columns, defaultVal, ranges) {
     });
     return arr;
 }
+/**
+ *
+ * @param min
+ * @param max
+ * @param whole True by default.
+ */
 export function random(min = 0, max = 1, whole = true) {
     if (whole) {
         return Math.floor(Math.random() * (max - min + 1) + min);
     }
     else
         return Math.random() * (max - min) + min;
+}
+export function randomArrayMember(arr) {
+    const index = random(0, arr.length - 1);
+    return arr[index];
 }
 export function chance(x, outOfY = 100) {
     const rand = random(0, outOfY);
@@ -67,4 +77,15 @@ export function round(_n, toXDecimalPlaces) {
     n = Math.round(n);
     n /= 10 ** toXDecimalPlaces;
     return n;
+}
+export function getRandomCreatureMove(creature) {
+    // return 'quick_attack'
+    return randomArrayMember(creature.moves);
+}
+export function delay(ms) {
+    return new Promise((res, rej) => {
+        setTimeout(() => {
+            res(ms);
+        }, ms);
+    });
 }

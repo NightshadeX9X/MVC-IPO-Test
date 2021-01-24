@@ -1,4 +1,7 @@
+import { getRandomCreatureMove } from "../../../Util.js";
+import PokemonMove from "../../PokemonMove.js";
 import State from "../../State.js";
+import InteractionState from "./InteractionState.js";
 export default class FightMenuState extends State {
     constructor(stateStack, wildBattleState) {
         super(stateStack);
@@ -12,28 +15,40 @@ export default class FightMenuState extends State {
     }
     init() {
         this.menuEl.id = "fight-menu";
-        this.menuEl.innerHTML = `
-		<div class="attack-box">
-			<h2>Thunderbolt</h2>
-		</div>
-		<div class="attack-box">
-			<h2>Iron Tail</h2>
-		</div>
-		<div class="attack-box">
-			<h2>Quick Attack</h2>
-		</div>
-		<div class="attack-box">
-			<h2>Electroball</h2>
-		</div>
-		`;
-        const children = Array.from(this.menuEl.children);
-        children.forEach((child, i) => {
-            child.addEventListener('mouseover', () => {
+        this.menuEl.style.width = "110px";
+        let partyHead = this.wildBattleState.partyHead;
+        if (partyHead) {
+            partyHead.moves.forEach(moveName => {
+                const move = PokemonMove.list.get(moveName);
+                if (move) {
+                    this.menuEl.innerHTML += `
+					<div class="attack-box">
+						<h2>${move.displayName}</h2>
+					</div>
+					`;
+                }
+            });
+        }
+        const attackBoxes = Array.from(this.menuEl.children);
+        attackBoxes.forEach((atkBox, i) => {
+            atkBox.addEventListener('mouseover', () => {
                 this.selected = i;
             });
-            child.addEventListener('click', () => {
-                this.chooseAttack();
+            atkBox.addEventListener('click', () => {
+                if (this.sinceLastAttackChange >= 10)
+                    this.chooseAttack();
             });
+            const h2 = atkBox.firstElementChild;
+            if (h2) {
+                h2.style.fontSize = "13px";
+                if (h2.innerHTML.length > 16) {
+                    const diff = h2.innerHTML.length - 16;
+                    const fontSize = Number(h2.style.fontSize.slice(0, -2));
+                    let str = `${fontSize - (diff / 1.5)}px`;
+                    console.log(str);
+                    h2.style.fontSize = str;
+                }
+            }
         });
         document.body.appendChild(this.menuEl);
         this.onPop = () => {
@@ -41,10 +56,22 @@ export default class FightMenuState extends State {
         };
     }
     chooseAttack() {
-        if (this.selected === -1)
+        if (this.selected === -1 || !this.wildBattleState.partyHead || !this.wildBattleState.battle)
             return;
         console.log(`Chose attack number ${this.selected + 1}`);
         this.stateStack.pop();
+        const wildMoveName = getRandomCreatureMove(this.wildBattleState.battle.wild);
+        this.stateStack.push(new InteractionState(this.stateStack, this.wildBattleState, {
+            type: 'attack',
+            attack: this.wildBattleState.partyHead.moves[this.selected],
+            user: this.wildBattleState.partyHead,
+            target: this.wildBattleState.battle?.wild || null
+        }, {
+            type: 'attack',
+            attack: wildMoveName,
+            user: this.wildBattleState.battle.wild,
+            target: this.wildBattleState.partyHead
+        }));
     }
     update(input) {
         const children = Array.from(this.menuEl.children);
@@ -71,13 +98,13 @@ export default class FightMenuState extends State {
                 this.selected = newVal;
                 this.sinceLastAttackChange = 0;
             }
-        }
-        if (input.keyIsDown(' ')) {
-            this.chooseAttack();
+            if (input.interactionKey) {
+                this.chooseAttack();
+            }
         }
         this.sinceLastAttackChange++;
     }
     render(ctx) {
-        this.wildBattleState.drawPokemon(ctx);
+        this.wildBattleState.drawBattleGraphics(ctx);
     }
 }

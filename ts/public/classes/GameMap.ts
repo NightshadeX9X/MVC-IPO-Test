@@ -4,6 +4,7 @@ import Loader, { JSON } from "./Loader.js";
 import RoamState from "./states/RoamState.js";
 import Vector from "./Vector.js";
 import { generate2DArray } from '../Util.js';
+import EncounterTable from "../JSONConversions/EncounterTable.js";
 
 export default class GameMap implements Entity {
 	toUpdate: boolean | null = true;
@@ -26,7 +27,6 @@ export default class GameMap implements Entity {
 		const [raw, image]
 			= await Promise.all(promises) as
 			[JSONGameMap.Raw, HTMLImageElement];
-
 		const pure = JSONGameMap.purify(raw);
 		this.json = pure;
 		this.image = image;
@@ -130,6 +130,7 @@ export namespace JSONGameMap {
 		grass:
 		{
 			range: VecRangeAsString,
+			table: string;
 		}[]
 	}
 	export interface Pure {
@@ -145,6 +146,7 @@ export namespace JSONGameMap {
 		grass:
 		{
 			range: VecRange,
+			table: string
 		}[]
 	}
 	export interface PurePortal {
@@ -196,7 +198,7 @@ export namespace JSONGameMap {
 
 		pure.grass = pure.grass.map((grass: any) => {
 			const range = strRangeToVec(grass.range);
-			return { range }
+			return { range, table: grass.table }
 		})
 		return pure as Pure;
 	}

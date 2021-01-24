@@ -142,7 +142,7 @@ export var JSONGameMap;
         });
         pure.grass = pure.grass.map((grass) => {
             const range = strRangeToVec(grass.range);
-            return { range };
+            return { range, table: grass.table };
         });
         return pure;
     }

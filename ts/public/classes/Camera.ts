@@ -11,8 +11,15 @@ export default class Camera {
 	public cnv = document.createElement('canvas');
 	public ctx = this.cnv.getContext('2d') as CanvasRenderingContext2D;
 
-	update() {
+	setPos() {
 		this.pos = this.targetPos;
+
+	}
+	init() {
+		this.setPos();
+	}
+	update() {
+		this.setPos();
 	}
 
 	convertCoords(pos: Vector) {

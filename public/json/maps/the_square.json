@@ -46,22 +46,28 @@
 	"portals": [],
 	"grass": [
 		{
-			"range": "0x13-17x15"
+			"range": "0x13-17x15",
+			"table": "0"
 		},
 		{
-			"range": "21x17-22x23"
+			"range": "21x17-22x23",
+			"table": "0"
 		},
 		{
-			"range": "23x15-24x23"
+			"range": "23x15-24x23",
+			"table": "0"
 		},
 		{
-			"range": "25x8-28x23"
+			"range": "25x8-28x23",
+			"table": "0"
 		},
 		{
-			"range": "29x17-30x22"
+			"range": "29x17-30x22",
+			"table": "0"
 		},
 		{
-			"range": "31x17-32x18"
+			"range": "31x17-32x18",
+			"table": "0"
 		}
 	]
 }

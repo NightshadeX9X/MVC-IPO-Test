@@ -12,7 +12,6 @@
 	left: 363px;
 	top: 185px;
 	$font-family: Nunito, sans-serif, Arial, Helvetica;
-	// @include UIComponent();
 	width: 110px;
 	background-color: #eee;
 	display: flex;
@@ -29,6 +28,7 @@
 		width: 90%;
 		height: 26px;
 		transition: all ease-in-out 300ms;
+
 		
 		h2 {
 			font-size: 13px;

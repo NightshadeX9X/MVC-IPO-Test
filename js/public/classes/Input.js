@@ -38,6 +38,9 @@ export default class Input {
         });
         return states;
     }
+    get interactionKey() {
+        return this.keyIsDown(' ') || this.keyIsDown('Enter');
+    }
 }
 Input.keyDownSymbol = Symbol('key down');
 Input.keyUpSymbol = Symbol('key up');

@@ -1,0 +1,13 @@
+{
+	"id": "0",
+	"encounters": [
+		{
+			"species": "pikachu",
+			"levelRange": [
+				7,
+				10
+			],
+			"chits": 10
+		}
+	]
+}

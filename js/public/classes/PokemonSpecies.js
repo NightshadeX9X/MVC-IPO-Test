@@ -1,6 +1,7 @@
 export default class PokemonSpecies {
-    constructor(name, types) {
+    constructor(name, displayName, types) {
         this.name = name;
+        this.displayName = displayName;
         this.types = types;
         this.stats = generateEmptyStats();
         PokemonSpecies.list.set(name, this);
@@ -20,27 +21,27 @@ export function generateEmptyStats() {
     };
     return stats;
 }
-export var PokemonType;
-(function (PokemonType) {
-    PokemonType[PokemonType["NORMAL"] = 0] = "NORMAL";
-    PokemonType[PokemonType["FIGHTING"] = 1] = "FIGHTING";
-    PokemonType[PokemonType["FIRE"] = 2] = "FIRE";
-    PokemonType[PokemonType["WATER"] = 3] = "WATER";
-    PokemonType[PokemonType["GRASS"] = 4] = "GRASS";
-    PokemonType[PokemonType["ELECTRIC"] = 5] = "ELECTRIC";
-    PokemonType[PokemonType["ICE"] = 6] = "ICE";
-    PokemonType[PokemonType["GROUND"] = 7] = "GROUND";
-    PokemonType[PokemonType["ROCK"] = 8] = "ROCK";
-    PokemonType[PokemonType["STEEL"] = 9] = "STEEL";
-    PokemonType[PokemonType["FAIRY"] = 10] = "FAIRY";
-    PokemonType[PokemonType["DRAGON"] = 11] = "DRAGON";
-    PokemonType[PokemonType["DARK"] = 12] = "DARK";
-    PokemonType[PokemonType["GHOST"] = 13] = "GHOST";
-    PokemonType[PokemonType["BUG"] = 14] = "BUG";
-    PokemonType[PokemonType["POISON"] = 15] = "POISON";
-    PokemonType[PokemonType["FLYING"] = 16] = "FLYING";
-    PokemonType[PokemonType["PSYCHIC"] = 17] = "PSYCHIC";
-})(PokemonType || (PokemonType = {}));
+export var PokemonTypes;
+(function (PokemonTypes) {
+    PokemonTypes[PokemonTypes["NORMAL"] = 0] = "NORMAL";
+    PokemonTypes[PokemonTypes["FIGHTING"] = 1] = "FIGHTING";
+    PokemonTypes[PokemonTypes["FIRE"] = 2] = "FIRE";
+    PokemonTypes[PokemonTypes["WATER"] = 3] = "WATER";
+    PokemonTypes[PokemonTypes["GRASS"] = 4] = "GRASS";
+    PokemonTypes[PokemonTypes["ELECTRIC"] = 5] = "ELECTRIC";
+    PokemonTypes[PokemonTypes["ICE"] = 6] = "ICE";
+    PokemonTypes[PokemonTypes["GROUND"] = 7] = "GROUND";
+    PokemonTypes[PokemonTypes["ROCK"] = 8] = "ROCK";
+    PokemonTypes[PokemonTypes["STEEL"] = 9] = "STEEL";
+    PokemonTypes[PokemonTypes["FAIRY"] = 10] = "FAIRY";
+    PokemonTypes[PokemonTypes["DRAGON"] = 11] = "DRAGON";
+    PokemonTypes[PokemonTypes["DARK"] = 12] = "DARK";
+    PokemonTypes[PokemonTypes["GHOST"] = 13] = "GHOST";
+    PokemonTypes[PokemonTypes["BUG"] = 14] = "BUG";
+    PokemonTypes[PokemonTypes["POISON"] = 15] = "POISON";
+    PokemonTypes[PokemonTypes["FLYING"] = 16] = "FLYING";
+    PokemonTypes[PokemonTypes["PSYCHIC"] = 17] = "PSYCHIC";
+})(PokemonTypes || (PokemonTypes = {}));
 export var PokemonStat;
 (function (PokemonStat) {
     PokemonStat[PokemonStat["HP"] = 0] = "HP";

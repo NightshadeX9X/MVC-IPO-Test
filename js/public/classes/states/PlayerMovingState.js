@@ -1,3 +1,4 @@
+import { PARTY } from "../../index.js";
 import { chance, Direction, directionToVector } from "../../Util.js";
 import State from "../State.js";
 import Vector from "../Vector.js";
@@ -66,19 +67,22 @@ export default class PlayerMovingState extends State {
                     }
                 }
                 let toPushWildBattle = false;
+                let encounterTable = "";
                 if (this.roamState.gameMap.grassData) {
                     const grassTo = this.roamState.gameMap.grassData?.[this.targetCoords.y]?.[this.targetCoords.x];
                     if (grassTo) {
                         console.log("in grass");
-                        if (chance(100))
+                        if (chance(100)) {
                             toPushWildBattle = true;
+                            encounterTable = grassTo.table;
+                        }
                     }
                 }
                 // console.log(this.roamState.player.pos)
                 this.roamState.toUpdate = null;
                 this.stateStack.pop();
-                if (toPushWildBattle) {
-                    const wbs = new WildBattleState(this.stateStack, "meadow");
+                if (toPushWildBattle && encounterTable && PARTY.some(p => p.canBattle())) {
+                    const wbs = new WildBattleState(this.stateStack, "meadow", encounterTable);
                     this.stateStack.push(wbs);
                     this.stateStack.push(new FadeState(this.stateStack));
                 }

@@ -17,7 +17,7 @@ export default class IntroState extends State {
 	}
 	async preload(loader: Loader) {
 		const promises = [
-			loader.loadImage(`/assets/images/pokemon/${this.wildBattleState.battle.wild.species?.name}.png`),
+			loader.loadImage(`/assets/images/pokemon/${this.wildBattleState.battle?.wild.species?.name}.png`),
 			loader.loadImage(`/assets/images/pokemon/${this.wildBattleState.partyHead?.species?.name}.png`)
 		] as
 			[Promise<HTMLImageElement>, Promise<HTMLImageElement>];

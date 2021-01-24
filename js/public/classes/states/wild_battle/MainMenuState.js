@@ -1,8 +1,7 @@
-import { chance } from "../../../Util.js";
 import State from "../../State.js";
 import Vector from "../../Vector.js";
-import FadeState from "../FadeState.js";
 import FightMenuState from "./FightMenuState.js";
+import InteractionState from "./InteractionState.js";
 export default class MainMenuState extends State {
     constructor(stateStack, wildBattleState) {
         super(stateStack);
@@ -68,21 +67,16 @@ export default class MainMenuState extends State {
                 this.selectorChangedLast = 0;
             }
         }
-        if (input.keyIsDown(" ")) {
+        if (input.interactionKey) {
             if (this.selected === 0) {
                 this.stateStack.pop();
                 this.stateStack.push(new FightMenuState(this.stateStack, this.wildBattleState));
             }
             else if (this.selected === 3 && this.triedRunningLast > 10) {
                 this.triedRunningLast = 0;
-                const canRunAway = chance(50);
-                if (canRunAway) {
-                    console.log("You ran away safely!");
-                    this.wildBattleState.stateStack.pop();
-                    this.wildBattleState.stateStack.push(new FadeState(this.wildBattleState.stateStack));
-                }
-                else
-                    console.log("You couldn't run away!");
+                this.stateStack.push(new InteractionState(this.stateStack, this.wildBattleState, {
+                    type: 'run'
+                }));
             }
         }
     }
@@ -103,9 +97,8 @@ export default class MainMenuState extends State {
         ctx.restore();
     }
     render(ctx) {
-        this.wildBattleState.drawPokemon(ctx);
         this.drawMenu(ctx);
         this.drawSelector(ctx);
-        this.wildBattleState.drawHPBars(ctx);
+        this.wildBattleState.drawBattleGraphics(ctx);
     }
 }

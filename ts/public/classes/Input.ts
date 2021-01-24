@@ -41,4 +41,8 @@ export default class Input {
 
 		return states;
 	}
+
+	public get interactionKey() {
+		return this.keyIsDown(' ') || this.keyIsDown('Enter')
+	}
 }

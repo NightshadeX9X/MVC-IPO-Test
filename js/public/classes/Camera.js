@@ -10,8 +10,14 @@ export default class Camera {
         this.cnv.width = size.x;
         this.cnv.height = size.y;
     }
-    update() {
+    setPos() {
         this.pos = this.targetPos;
+    }
+    init() {
+        this.setPos();
+    }
+    update() {
+        this.setPos();
     }
     convertCoords(pos) {
         return pos.diff(this.pos).sum(this.size.quo(2));
