@@ -4,6 +4,7 @@ import Loader from "../../Loader.js";
 import PokemonMove from "../../PokemonMove.js";
 import State from "../../State.js";
 import StateStack from "../../StateStack.js";
+import TextBoxState from "../TextBoxState.js";
 import WildBattleState from "../WildBattleState.js";
 import InteractionState from "./InteractionState.js";
 
@@ -80,7 +81,7 @@ export default class FightMenuState extends State {
 			attack: wildMoveName,
 			user: this.wildBattleState.battle.wild,
 			target: this.wildBattleState.partyHead
-		}))
+		}));
 	}
 	update(input: Input): void {
 		const children = Array.from(this.menuEl.children) as HTMLDivElement[];

@@ -15,10 +15,12 @@ export default class TextBoxState extends State {
             character: 0,
             doneWithParagraph: false
         };
+        this.setText(text);
+    }
+    setText(text) {
+        this.text = text;
         this.rows = this.splitTextIntoRows(this.text);
         this.paragraphs = this.splitRowsIntoParagraphs(this.rows);
-        console.log(this.paragraphs[this.currentParagraphIndex]);
-        console.log(this.renderedParagraph);
     }
     get renderedParagraph() {
         const paragraph = Array.from(this.paragraphs[this.currentParagraphIndex] || []);

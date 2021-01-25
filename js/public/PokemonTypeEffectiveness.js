@@ -82,6 +82,7 @@ const typeEffectiveness = {
 export var TypeRelation;
 (function (TypeRelation) {
     TypeRelation[TypeRelation["WEAK_TO"] = 2] = "WEAK_TO";
+    TypeRelation[TypeRelation["NEUTRAL"] = 1] = "NEUTRAL";
     TypeRelation[TypeRelation["RESISTS"] = 0.5] = "RESISTS";
     TypeRelation[TypeRelation["IMMUNE_TO"] = 0] = "IMMUNE_TO";
 })(TypeRelation || (TypeRelation = {}));

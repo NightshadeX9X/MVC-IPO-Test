@@ -6,6 +6,15 @@ export default class State {
         this.toRender = null;
         this.toPreload = null;
         this.substates = new StateStack(this.stateStack.loader);
+        this.poppedEvent = new Event('popped');
+        this.evtSource = new EventTarget();
         this.onPop = () => { };
+    }
+    async pop() {
+        return new Promise((res, rej) => {
+            this.evtSource.addEventListener('popped', () => {
+                res();
+            });
+        });
     }
 }

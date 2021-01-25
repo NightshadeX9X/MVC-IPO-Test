@@ -3,7 +3,7 @@ import Loader, { JSON } from "../Loader.js";
 import State from "../State.js";
 import StateStack from "../StateStack.js";
 import WildBattle from "../WildBattle.js";
-import { PARTY, WILD } from '../../index.js';
+import { PARTY } from '../../index.js';
 import Vector from "../Vector.js";
 import IntroState from "./wild_battle/IntroState.js";
 import { getHPBar } from "../../UI.js";
@@ -33,29 +33,28 @@ export default class WildBattleState extends State {
 		}
 	}
 	async preload(loader: Loader) {
-		// @ts-expect-error
 		const promises = [
 			loader.loadImage(`/assets/images/battle_backgrounds/${this.battleBgName}.png`),
 			this.stateStack.loader.loadAudio('/assets/sounds/battle_themes/wild.mp3'),
 			loader.loadImage('/assets/images/UI/HPBar.png'),
-			loader.loadJSON(`/json/encounter_tables/${this.tableId}.json`)
+			loader.loadJSON(`/json/encounter_tables/${this.tableId}.json`),
 		] as
-			[Promise<HTMLImageElement>, Promise<HTMLAudioElement>, Promise<HTMLImageElement>, EncounterTable.Raw];
+			[Promise<HTMLImageElement>, Promise<HTMLAudioElement>, Promise<HTMLImageElement>, Promise<EncounterTable.Raw>,];
 		let table: EncounterTable.Raw;
-		[this.battleBg, this.audio, this.hpBarImage, table] = await Promise.all(promises);
+		[this.battleBg, this.audio, this.hpBarImage, table,] = await Promise.all(promises);
 		this.table = EncounterTable.purify(table);
-
 		if (this.table)
-			this.battle = new WildBattle(PARTY, this.table)
+			this.battle = new WildBattle(PARTY, this.table);
+		await this.substates.preload();
+
 
 		await this.substates.push(new IntroState(this.substates, this));
 
 	}
 
 	private async loadPartyHeadImage(loader: Loader) {
-		if (this.partyHead) {
-			return await loader.loadImage(`/assets/images/pokemon/${this.partyHead.species?.name}.png`)
-		}
+		console.log(`/assets/images/pokemon/${this.partyHead?.species?.name}.png`)
+		return await loader.loadImage(`/assets/images/pokemon/${this.partyHead?.species?.name}.png`)
 	}
 	init(): void {
 
@@ -68,8 +67,8 @@ export default class WildBattleState extends State {
 	}
 
 	private getHpBarPositions(ctx: CanvasRenderingContext2D) {
-		const pos1 = this.partyHeadPos.sum(Number(this.partyHeadImage?.width) / 2, 90);
-		const pos2 = new Vector(ctx.canvas.width, ctx.canvas.height).diff(pos1)
+		const pos1 = this.partyHeadPos.sum(50, 120);
+		const pos2 = new Vector(ctx.canvas.width, ctx.canvas.height).diff(pos1).sum(0, 35)
 		return { pos1, pos2 }
 	}
 
@@ -89,8 +88,8 @@ export default class WildBattleState extends State {
 		const wildLevel = this.battle.wild.level;
 		const rectSize = new Vector(64, 16)
 		const { pos1: bar1, pos2: bar2 } = this.getHpBarPositions(ctx);
-		const textPos1 = new Vector(10 + rectSize.x / 2, bar1.y - rectSize.y / 2 + 10);
-		const textPos2 = new Vector(ctx.canvas.width - 10 - rectSize.x / 2, bar2.y - rectSize.y / 2 - 10);
+		const textPos1 = new Vector(25 + rectSize.x / 2, bar1.y - rectSize.y / 2 + 10);
+		const textPos2 = new Vector(ctx.canvas.width - 25 - rectSize.x / 2, bar2.y - rectSize.y / 2 - 10);
 		ctx.save();
 		ctx.font = "12px monospace";
 		ctx.textAlign = "center";
@@ -106,7 +105,7 @@ export default class WildBattleState extends State {
 	public drawNicknames(ctx: CanvasRenderingContext2D) {
 		const image1 = this.partyHeadImage;
 		if (!image1 || !this.partyHead || !this.battle) return;
-		let pos1 = new Vector(this.partyHeadPos.x + image1.height / 2 + 10, this.partyHeadPos.y - 10);
+		let pos1 = new Vector(this.partyHeadPos.x + 50, this.partyHeadPos.y - 15);
 		let pos2 = new Vector(ctx.canvas.width - 70, 37);
 		ctx.save();
 		ctx.font = "20px Nunito";
@@ -164,12 +163,13 @@ export default class WildBattleState extends State {
 	}
 	public drawPokemon(ctx: CanvasRenderingContext2D) {
 		if (this.partyHeadImage) {
-			const pokemonWidth = (this.partyHeadImage.width / this.partyHeadImage.height) * this.pokemonHeight;
-			ctx.drawImage(this.partyHeadImage, this.partyHeadPos.x, this.partyHeadPos.y, pokemonWidth, this.pokemonHeight)
+			// const pokemonWidth = (this.partyHeadImage.width / this.partyHeadImage.height) * this.pokemonHeight;
+			ctx.drawImage(this.partyHeadImage, this.partyHeadPos.x, this.partyHeadPos.y, 100, 100)
 		}
 		if (this.wildImage) {
-			const pokemonWidth = (this.wildImage.width / this.wildImage.height) * this.pokemonHeight;
-			ctx.drawImage(this.wildImage, ctx.canvas.width - this.partyHeadPos.x - this.wildImage.width, ctx.canvas.height - this.partyHeadPos.y - this.wildImage.height, pokemonWidth * 0.7, this.pokemonHeight * 0.7)
+			// const pokemonWidth = (this.wildImage.width / this.wildImage.height) * this.pokemonHeight;
+
+			ctx.drawImage(this.wildImage, ctx.canvas.width - this.partyHeadPos.x - 64, ctx.canvas.height - this.partyHeadPos.y - 64, 70, 70)
 		}
 	}
 	render(ctx: CanvasRenderingContext2D): void {

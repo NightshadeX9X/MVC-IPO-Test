@@ -8,6 +8,8 @@ export default abstract class State implements Entity {
 	public toRender: boolean | null = null;
 	public toPreload: boolean | null = null;
 	public substates = new StateStack(this.stateStack.loader);
+	public poppedEvent = new Event('popped');
+	public evtSource = new EventTarget();
 
 	constructor(public stateStack: StateStack) { }
 
@@ -15,5 +17,12 @@ export default abstract class State implements Entity {
 	abstract init(): void;
 	abstract update(input: Input): void;
 	abstract render(ctx: CanvasRenderingContext2D): void;
+	async pop() {
+		return new Promise<void>((res, rej) => {
+			this.evtSource.addEventListener('popped', () => {
+				res();
+			})
+		})
+	}
 	onPop: () => any = () => { };
 }

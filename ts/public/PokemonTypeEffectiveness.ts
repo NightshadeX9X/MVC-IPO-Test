@@ -83,6 +83,7 @@ const typeEffectiveness: TypeEffectiveness = {
 }
 export enum TypeRelation {
 	WEAK_TO = 2,
+	NEUTRAL = 1,
 	RESISTS = 0.5,
 	IMMUNE_TO = 0
 }

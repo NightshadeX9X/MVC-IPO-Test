@@ -1,3 +1,4 @@
+import { getRandomCreatureMove } from "../../../Util.js";
 import State from "../../State.js";
 import Vector from "../../Vector.js";
 import FightMenuState from "./FightMenuState.js";
@@ -13,6 +14,7 @@ export default class MainMenuState extends State {
         this.selected = 0;
         this.selectorChangedLast = 0;
         this.triedRunningLast = 0;
+        this.frames = 0;
         this.selectorData = [
             {
                 pos: new Vector(0, 28),
@@ -42,6 +44,7 @@ export default class MainMenuState extends State {
     }
     update(input) {
         this.selectorChangedLast++;
+        this.frames++;
         this.triedRunningLast++;
         if (this.selectorChangedLast > 11) {
             if ((input.directionKeyStates.LEFT || input.directionKeyStates.RIGHT)) {
@@ -67,15 +70,23 @@ export default class MainMenuState extends State {
                 this.selectorChangedLast = 0;
             }
         }
-        if (input.interactionKey) {
+        if (input.interactionKey && this.frames > 20) {
             if (this.selected === 0) {
                 this.stateStack.pop();
                 this.stateStack.push(new FightMenuState(this.stateStack, this.wildBattleState));
             }
             else if (this.selected === 3 && this.triedRunningLast > 10) {
                 this.triedRunningLast = 0;
+                if (!this.wildBattleState.partyHead || !this.wildBattleState.battle)
+                    return;
                 this.stateStack.push(new InteractionState(this.stateStack, this.wildBattleState, {
-                    type: 'run'
+                    type: 'run',
+                    user: this.wildBattleState.partyHead
+                }, {
+                    type: 'attack',
+                    attack: getRandomCreatureMove(this.wildBattleState.battle.wild),
+                    target: this.wildBattleState.partyHead,
+                    user: this.wildBattleState.battle.wild
                 }));
             }
         }

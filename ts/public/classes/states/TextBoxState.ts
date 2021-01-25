@@ -18,10 +18,12 @@ export default class TextBoxState extends State {
 	}
 	constructor(stateStack: StateStack, public text: string) {
 		super(stateStack);
+		this.setText(text);
+	}
+	public setText(text: string) {
+		this.text = text;
 		this.rows = this.splitTextIntoRows(this.text);
 		this.paragraphs = this.splitRowsIntoParagraphs(this.rows);
-		console.log(this.paragraphs[this.currentParagraphIndex])
-		console.log(this.renderedParagraph)
 	}
 	private get renderedParagraph() {
 		const paragraph = Array.from(this.paragraphs[this.currentParagraphIndex] || []);

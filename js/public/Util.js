@@ -89,3 +89,22 @@ export function delay(ms) {
         }, ms);
     });
 }
+export function generateHPBarColor(_hp) {
+    // hp should be between 0.00 and 1.00
+    let hp = round(_hp, 2);
+    let red = 0, green = 0;
+    if (hp < 0.5) {
+        red = 255;
+        green = hp * 510;
+    }
+    else if (hp > 0.5) {
+        green = 255;
+        red = 255 - ((hp - 0.5) * 510);
+    }
+    else {
+        red = 255;
+        green = 255;
+    }
+    return [red, green];
+}
+console.log(generateHPBarColor(0.51));

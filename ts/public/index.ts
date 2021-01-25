@@ -15,27 +15,41 @@ export const FPS = 60;
 const loader = new Loader();
 const input = new Input();
 const stateStack = new StateStack(loader);
-const PIKACHU = new PokemonSpecies('pikachu', "Pikachu", [PokemonTypes.ELECTRIC]);
-PIKACHU.stats.Atk = 30;
-PIKACHU.stats.Def = 100;
-PIKACHU.stats.HP = 20;
+const PIKACHU = new PokemonSpecies('pikachu', "Pikachu", [PokemonTypes.ELECTRIC, PokemonTypes.GHOST]);
+const GRENINJA = new PokemonSpecies('greninja', "Greninja", [PokemonTypes.WATER, PokemonTypes.GROUND]);
+PIKACHU.stats.Atk = 20;
+PIKACHU.stats.Def = 20;
+PIKACHU.stats.HP = 200;
+
+GRENINJA.stats.Atk = 50;
+GRENINJA.stats.Def = 30;
+GRENINJA.stats.HP = 100;
 
 document.querySelector('button')?.click();
 
 const THUNDERBOLT = new PokemonMove('thunderbolt', 'Thunderbolt', PokemonTypes.ELECTRIC, 90);
 const QUICK_ATTACK = new PokemonMove('quick_attack', 'Quick Attack', PokemonTypes.NORMAL, 40);
 const IRON_TAIL = new PokemonMove('iron_tail', 'Iron Tail', PokemonTypes.STEEL, 100);
+const EARTHQUAKE = new PokemonMove('earthquake', 'Earthquake', PokemonTypes.GROUND, 100);
 const ELECTROBALL = new PokemonMove('electroball', 'Electroball', PokemonTypes.ELECTRIC, 80);
+const DARK_PULSE = new PokemonMove('dark_pulse', 'Dark Pulse', PokemonTypes.DARK, 80);
+const U_TURN = new PokemonMove('u_turn', 'U-Turn', PokemonTypes.BUG, 70);
+QUICK_ATTACK.priority = 1;
 export const SPECIES = {
-	PIKACHU
+	PIKACHU,
+	GRENINJA
 }
 
 export const PARTY = [
-	new PokemonCreature('pikachu')
+	new PokemonCreature('greninja')
 ];
-PARTY[0].nickname = "Pikaboy"
-export const WILD = new PokemonCreature('pikachu')
-
+PARTY[0].nickname = "Ninja"
+PARTY[0].moves = [
+	"dark_pulse",
+	"u_turn",
+	"quick_attack",
+	"earthquake"
+]
 async function setup() {
 	document.querySelector('button')?.click();
 	input.start(document)

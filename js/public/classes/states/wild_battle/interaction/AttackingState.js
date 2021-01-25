@@ -1,6 +1,8 @@
 import { calcTypeEffectiveness } from "../../../../PokemonTypeEffectiveness.js";
 import PokemonMove from "../../../PokemonMove.js";
 import State from "../../../State.js";
+import TextBoxState from "../../TextBoxState.js";
+import { TypeRelation } from '../../../../PokemonTypeEffectiveness.js';
 export default class AttackingState extends State {
     constructor(stateStack, interactionState, decision) {
         super(stateStack);
@@ -25,41 +27,58 @@ export default class AttackingState extends State {
     get damageToBeDone() {
         if (!this.attackChosen || !this.decision.target)
             return undefined;
-        return this.attackChosen.getDamageDoneTo(this.decision.user, this.decision.target);
+        let amount = this.attackChosen.getDamageDoneTo(this.decision.user, this.decision.target);
+        // if (amount > this.decision.target.stats.HP) return this.decision.target.stats.HP;
+        return amount;
     }
     init() {
-        if (this.damageToBeDone === undefined || !this.attackChosen || !this.decision.target)
-            return;
-        const te = calcTypeEffectiveness(this.attackChosen.type, this.decision.target.species.types);
-        if (te === 0.5)
-            console.log("It's not very effective.");
-        if (te === 2)
-            console.log("It's super effective!");
-        if (te === 0) {
-            console.log(`It doesn't affect ${this.decision.target.nickname}...`);
-            return;
-        }
-        console.log(`${this.decision.user.nickname} did ${this.damageToBeDone} damage to ${this.decision.target.nickname}`);
+        this.displayText(`${this.decision.user.nickname} used ${this.attackChosen?.displayName}!`);
     }
     update(input) {
         this.frames++;
-        if (this.frames % 10 !== 1)
+        if (!this.attackChosen || this.damageToBeDone === undefined)
             return;
-        if (this.damageToBeDone === undefined)
-            return;
-        if (this.damageDone < this.damageToBeDone) {
-            if (this.interactionState.wildBattleState.shouldEnd) {
-                this.interactionState.wildBattleState.stateStack.pop();
-            }
-            if (this.decision.target) {
-                this.decision.target.stats.HP--;
-            }
-            this.damageDone++;
+        if (this.damageDone < this.damageToBeDone && this.decision.target?.canBattle()) {
+            this.do1Damage();
         }
         else {
-            this.stateStack.pop();
+            this.onDamageDealt();
+        }
+    }
+    async onDamageDealt() {
+        if (!this.attackChosen || !this.decision.target || this.damageToBeDone === undefined)
+            return;
+        const te = calcTypeEffectiveness(this.attackChosen.type, this.decision.target.species.types);
+        const damage = this.damageToBeDone > this.originalDefenderHp ? this.originalDefenderHp : this.damageToBeDone;
+        let teText = new TextBoxState(this.interactionState.wildBattleState.stateStack, "It's super effective!");
+        const damageText = new TextBoxState(this.interactionState.wildBattleState.stateStack, `${this.decision.target.nickname} lost ${damage} HP!`);
+        if (te === TypeRelation.RESISTS) {
+            teText.setText("It's not very effective...");
+        }
+        else if (te === TypeRelation.IMMUNE_TO) {
+            teText.setText(`It doesn't affect ${this.decision.target.nickname}...`);
+        }
+        if (te !== TypeRelation.NEUTRAL) {
+            this.interactionState.wildBattleState.stateStack.push(teText);
+            await teText.pop();
+        }
+        if (te !== TypeRelation.IMMUNE_TO) {
+            this.interactionState.wildBattleState.stateStack.push(damageText);
+            await damageText.pop();
+        }
+        this.stateStack.pop();
+    }
+    do1Damage() {
+        if (this.decision.target) {
+            this.damageDone++;
+            this.decision.target.stats.HP--;
         }
     }
     render(ctx) {
+    }
+    displayText(text) {
+        let tbs = new TextBoxState(this.interactionState.wildBattleState.stateStack, text);
+        this.interactionState.wildBattleState.stateStack.push(tbs);
+        return tbs;
     }
 }
