@@ -7,12 +7,55 @@
 		display: none !important;
 	}
 }
+@mixin Flex() {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	
+}
+@mixin MiniButton($color) {
+	@include Flex;
+	font-size: 12px;
+	position: absolute;
+	
+	width: 15px;
+	height: 15px;
+	background: $color;
+	color: white;
+	border-radius: 50%;
+	cursor: pointer;
+	top: 2px;
+	left: 2px;
+	transition: background ease-in-out 100ms;
+	&:hover {
+		background: lighten($color, 10);
+	}
+}
+@mixin PillButton ($color, $textColor) {
+	cursor: pointer;
+	background-color: $color;
+	color: $textColor;
+	&:hover {
+		background-color: lighten($color, 15);
+	}
+	transition: all ease-in-out 300ms;
+	
+	border-radius: 9999px;
+	border: none;
+	width: 100px;
+	height: 30px;
+}
+
+
+
+
+$font-family: Nunito, sans-serif, Arial, Helvetica;
 #fight-menu {
 	@include UIComponent();
 	left: 363px;
 	top: 185px;
-	$font-family: Nunito, sans-serif, Arial, Helvetica;
 	width: 110px;
+	font-family: $font-family;
 	background-color: #eee;
 	display: flex;
 	justify-content: center;
@@ -48,3 +91,170 @@
 	}
 }
 
+#party-display {
+	@include UIComponent();
+	opacity: 85%;
+	width: 440px;
+	height: 280px;
+	top: 23px;
+	left: 23px;
+	background: linear-gradient(to right, #0cc, #0f7);
+	font-family: $font-family;
+	padding: 5px;
+	box-shadow: 6px 3px 10px black;
+	display: flex;
+	flex-direction: column;
+
+	div.close {
+		@include MiniButton(red);
+		position: absolute;
+		top: 2px;
+		left: 2px;
+	}
+
+
+	h2.title {
+		margin: 0px;
+		text-align: center;
+		padding: 3px;
+		border: 2px solid black;
+		background-color: rgba(255, 255, 255, 0.5);
+		margin-bottom: 5px;
+
+	}
+
+	div.grid {
+		flex-grow: 4;
+
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		grid-template-rows: repeat(3, 1fr);
+		gap: 10px;
+		background-color: rgba(255, 255, 255, 0.3);
+		padding: 10px;
+
+		
+		div.card {
+			cursor: pointer;
+			height: 55px;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			flex-direction: column;
+			background: rgba(255, 255, 255, 0.8);
+			h3 {
+				font-size: 14px;
+				text-align: center;
+				height: 10px;
+				margin-bottom: 5px;
+			}
+			h4 {
+				font-size: 7px;
+				padding: 0px;
+				margin: 0px;
+			}
+			
+			border: 5px solid black;
+			.hint-view {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				background-color: rgb(47, 50, 214);
+				width: 100%;
+				height: 0px;
+				overflow: hidden;
+				transition: height ease-in-out 200ms;
+
+				p {
+					color: white;
+					text-align: center;
+					font-size: 40%;
+				}
+			}
+
+			transition: all ease-in-out 500ms;
+			transition: border-color ease-in-out 100ms;
+
+			&:hover {
+				background: rgba(100, 255, 100, 0.85);
+				.hint-view {
+					height: 10px;
+				}
+			}
+
+		}
+		div.card.fainted {
+			cursor:default;
+			background-color: rgba(0, 0, 0, 0.4);
+			.hint-view {
+				display: none;
+			}
+			transition: none;
+			
+			h4 {
+				position: relative;
+				bottom: 8px;
+			}
+		}
+		div.card.selected:not(.fained) {
+			border-color: rgb(209, 184, 42);
+		}
+	}
+}
+
+#pokemon-details {
+	@include UIComponent();
+	width: 440px;
+	height: 280px;
+	top: 23px;
+	left: 23px;
+	background: linear-gradient(15deg , lime, yellow, lime);
+	opacity: 85%;
+	border: 5px solid green;
+	font-family: $font-family;
+	@include Flex;
+	flex-direction: column;
+	div.return {
+		@include MiniButton(blue);
+
+		position: absolute;
+		top: -8px;
+		left: -8px;
+	}
+
+	h1 {
+		position: relative;
+		bottom: 10px;
+		margin: 0;
+		text-align: center;
+	}
+
+	.fields {
+		align-self: center;
+		justify-self: center;
+		border: 2px solid black;
+		padding: 10px;
+		@include Flex;
+		display: inline-flex;
+		gap: 20px;
+		flex-direction: column;
+		.field {
+			@include Flex;
+			gap: 5px;
+			
+			label, p {
+				font-size: 13px;
+				margin: 0;
+
+			}
+			label {
+				font-size: 15px;
+			}
+		}
+	}
+
+	button.switch {
+		@include PillButton(black, white);
+		margin-top: 15px;
+	}
+}

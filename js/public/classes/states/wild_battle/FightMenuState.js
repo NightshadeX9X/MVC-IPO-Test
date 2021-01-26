@@ -66,11 +66,6 @@ export default class FightMenuState extends State {
             attack: this.wildBattleState.partyHead.moves[this.selected],
             user: this.wildBattleState.partyHead,
             target: this.wildBattleState.battle?.wild || null
-        }, {
-            type: 'attack',
-            attack: wildMoveName,
-            user: this.wildBattleState.battle.wild,
-            target: this.wildBattleState.partyHead
         }));
     }
     update(input) {

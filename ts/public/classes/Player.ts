@@ -14,7 +14,8 @@ export default class Player implements Entity {
 	public drawOffset = new Vector(0, -1);
 	public image: HTMLImageElement | null = null;
 	public spritesheet: Spritesheet | null = null;
-	public camera = new Camera(this, new Vector(400, 250));
+	// public camera = new Camera(this, new Vector(400, 250));
+	public camera = new Camera(this, new Vector(480, 320));
 	toUpdate: boolean | null = true;
 	toRender: boolean | null = true;
 	toPreload: boolean | null = true;

@@ -107,4 +107,13 @@ export function generateHPBarColor(_hp) {
     }
     return [red, green];
 }
-console.log(generateHPBarColor(0.51));
+export function* IDGenerator() {
+    let i = 0;
+    while (true) {
+        yield i++;
+    }
+}
+export function upperCaseStart(string) {
+    let chars = string.split("");
+    return [chars[0].toUpperCase(), ...(chars.slice(0, -1).map(c => c.toLowerCase()))];
+}

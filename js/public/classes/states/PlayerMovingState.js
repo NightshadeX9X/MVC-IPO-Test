@@ -1,4 +1,3 @@
-import { PARTY } from "../../index.js";
 import { chance, Direction, directionToVector } from "../../Util.js";
 import State from "../State.js";
 import Vector from "../Vector.js";
@@ -81,7 +80,7 @@ export default class PlayerMovingState extends State {
                 // console.log(this.roamState.player.pos)
                 this.roamState.toUpdate = null;
                 this.stateStack.pop();
-                if (toPushWildBattle && encounterTable && PARTY.some(p => p.canBattle())) {
+                if (toPushWildBattle /*  && encounterTable && PARTY.some(p => p.canBattle()) */) {
                     const wbs = new WildBattleState(this.stateStack, "meadow", encounterTable);
                     this.stateStack.push(wbs);
                     this.stateStack.push(new FadeState(this.stateStack));

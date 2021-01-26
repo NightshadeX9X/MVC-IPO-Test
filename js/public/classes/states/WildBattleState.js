@@ -95,7 +95,7 @@ export default class WildBattleState extends State {
         let pos1 = new Vector(this.partyHeadPos.x + 50, this.partyHeadPos.y - 15);
         let pos2 = new Vector(ctx.canvas.width - 70, 37);
         ctx.save();
-        ctx.font = "20px Nunito";
+        ctx.font = "13px monospace";
         ctx.lineWidth = 4;
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";

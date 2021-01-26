@@ -5,9 +5,9 @@
 			"species": "pikachu",
 			"levelRange": [
 				1,
-				2
+				1
 			],
-			"chits": 10
+			"chits": 0
 		},
 		{
 			"species": "greninja",
@@ -15,7 +15,7 @@
 				15,
 				20
 			],
-			"chits": 0
+			"chits": 10
 		}
 	]
 }

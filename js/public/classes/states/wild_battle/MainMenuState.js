@@ -3,6 +3,7 @@ import State from "../../State.js";
 import Vector from "../../Vector.js";
 import FightMenuState from "./FightMenuState.js";
 import InteractionState from "./InteractionState.js";
+import PokemonViewState from "./PokemonViewState.js";
 export default class MainMenuState extends State {
     constructor(stateStack, wildBattleState) {
         super(stateStack);
@@ -35,6 +36,7 @@ export default class MainMenuState extends State {
         ];
     }
     async preload(loader) {
+        console.log("new main menu state added");
         const promises = [
             loader.loadImage(`/assets/images/UI/BattleMenu.png`)
         ];
@@ -74,6 +76,10 @@ export default class MainMenuState extends State {
             if (this.selected === 0) {
                 this.stateStack.pop();
                 this.stateStack.push(new FightMenuState(this.stateStack, this.wildBattleState));
+            }
+            else if (this.selected === 2) {
+                this.stateStack.pop();
+                this.stateStack.push(new PokemonViewState(this.stateStack, this.wildBattleState));
             }
             else if (this.selected === 3 && this.triedRunningLast > 10) {
                 this.triedRunningLast = 0;

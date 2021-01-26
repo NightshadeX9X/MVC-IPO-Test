@@ -11,7 +11,8 @@ export default class Player {
         this.drawOffset = new Vector(0, -1);
         this.image = null;
         this.spritesheet = null;
-        this.camera = new Camera(this, new Vector(400, 250));
+        // public camera = new Camera(this, new Vector(400, 250));
+        this.camera = new Camera(this, new Vector(480, 320));
         this.toUpdate = true;
         this.toRender = true;
         this.toPreload = true;

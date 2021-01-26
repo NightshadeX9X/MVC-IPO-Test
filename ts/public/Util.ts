@@ -1,5 +1,6 @@
 import PokemonCreature from "./classes/PokemonCreature.js";
 import Vector from "./classes/Vector.js";
+import { PARTY } from "./index.js";
 
 export enum Direction {
 	LEFT,
@@ -118,4 +119,15 @@ export function generateHPBarColor(_hp: number) {
 	}
 	return [red, green]
 }
-console.log(generateHPBarColor(0.51))
+
+export function* IDGenerator() {
+	let i = 0;
+	while (true) {
+		yield i++;
+	}
+}
+
+export function upperCaseStart(string: string) {
+	let chars = string.split("")
+	return [chars[0].toUpperCase(), ...(chars.slice(0, -1).map(c => c.toLowerCase()))]
+}

@@ -1,7 +1,8 @@
-import { cloneObject } from '../Util.js';
+import { cloneObject, IDGenerator } from '../Util.js';
 import PokemonSpecies, { generateEmptyStats } from './PokemonSpecies.js';
 export default class PokemonCreature {
     constructor(speciesName) {
+        this.id = PokemonCreature.idGen.next().value;
         this.level = 20;
         this.moves = [
             "thunderbolt",
@@ -21,3 +22,4 @@ export default class PokemonCreature {
         return this.stats.HP > 0;
     }
 }
+PokemonCreature.idGen = IDGenerator();

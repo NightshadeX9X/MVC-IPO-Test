@@ -27,7 +27,7 @@ export default class Camera {
 	}
 
 	get targetPos() {
-		return this.player.pos.prod(this.player.roamState.tileSize);
+		return this.player.pos.sum(this.player.drawSize.quo(2)).prod(this.player.roamState.tileSize);
 	}
 	clear() {
 		this.ctx.clearRect(0, 0, this.size.x, this.size.y);

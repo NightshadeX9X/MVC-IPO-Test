@@ -1,6 +1,8 @@
-import { cloneObject } from '../Util.js';
+import { cloneObject, IDGenerator } from '../Util.js';
 import PokemonSpecies, { generateEmptyStats, PokemonStats } from './PokemonSpecies.js';
 export default class PokemonCreature {
+	public static idGen = IDGenerator();
+	public id = PokemonCreature.idGen.next().value as number;
 	public species: PokemonSpecies;
 	public nickname: string;
 	public stats: PokemonStats;

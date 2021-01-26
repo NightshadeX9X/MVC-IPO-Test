@@ -1,8 +1,9 @@
-import { chance, randomArrayMember } from "../../../Util.js";
+import { chance, getRandomCreatureMove, randomArrayMember } from "../../../Util.js";
 import PokemonMove from "../../PokemonMove.js";
 import State from "../../State.js";
 import TextBoxState from "../TextBoxState.js";
 import AttackingState from './interaction/AttackingState.js';
+import SwitchingState from "./interaction/SwitchingState.js";
 import MainMenuState from "./MainMenuState.js";
 export default class InteractionState extends State {
     constructor(stateStack, wildBattleState, trainerDecision, wildDecision) {
@@ -13,10 +14,19 @@ export default class InteractionState extends State {
         this.wildDecision = wildDecision;
         this.sortedDecisions = [];
         this.end = false;
-        console.log(this.trainerDecision);
-        const decisions = [wildDecision, trainerDecision];
+        if (!this.wildDecision && this.wildBattleState.battle && this.wildBattleState.partyHead) {
+            this.wildDecision =
+                {
+                    type: 'attack',
+                    attack: getRandomCreatureMove(this.wildBattleState.battle.wild),
+                    user: this.wildBattleState.battle.wild,
+                    target: this.wildBattleState.partyHead
+                };
+        }
+        const decisions = [this.wildDecision, this.trainerDecision];
         // @ts-ignore
         this.sortDecisions(decisions);
+        console.log(this.sortedDecisions);
     }
     sortDecisions(decisions) {
         // @ts-ignore
@@ -30,7 +40,6 @@ export default class InteractionState extends State {
                 return b.user.stats.Spe - a.user.stats.Spe;
             else
                 return randomArrayMember([-1, 1]);
-            return 0;
         });
     }
     static getPriority(decision) {
@@ -41,6 +50,9 @@ export default class InteractionState extends State {
             }
         }
         else if (decision.type === "run") {
+            return 8;
+        }
+        else if (decision.type === "switch") {
             return 7;
         }
         return 0;
@@ -48,14 +60,14 @@ export default class InteractionState extends State {
     async preload(loader) {
         await this.performNextDecision();
     }
-    endBattleIfNecessary() {
-        if (!this.wildBattleState.battle?.party.some(p => p.canBattle())) {
+    async endBattleIfNecessary() {
+        if (this.wildBattleState.battle?.party.every(p => !p.canBattle())) {
             let tbs = new TextBoxState(this.wildBattleState.stateStack, "You have no more Pokémon that can battle.");
             tbs.onPop = () => {
                 this.wildBattleState.stateStack.pop();
             };
-            this.wildBattleState.stateStack.push(tbs);
             this.end = true;
+            await this.wildBattleState.stateStack.push(tbs);
         }
         if (!this.wildBattleState.battle?.wild.canBattle()) {
             console.log("wild faint");
@@ -63,12 +75,12 @@ export default class InteractionState extends State {
             tbs.onPop = () => {
                 this.wildBattleState.stateStack.pop();
             };
-            this.wildBattleState.stateStack.push(tbs);
             this.end = true;
+            await this.wildBattleState.stateStack.push(tbs);
         }
     }
     async performNextDecision() {
-        this.endBattleIfNecessary();
+        await this.endBattleIfNecessary();
         if (this.end) {
             return;
         }
@@ -99,6 +111,9 @@ export default class InteractionState extends State {
         }
         else if (decision.type === "attack") {
             await this.substates.push(new AttackingState(this.substates, this, decision));
+        }
+        else if (decision.type === "switch") {
+            await this.substates.push(new SwitchingState(this.substates, this, decision));
         }
     }
     init() {

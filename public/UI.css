@@ -3,6 +3,7 @@
   left: 363px;
   top: 185px;
   width: 110px;
+  font-family: Nunito, sans-serif, Arial, Helvetica;
   background-color: #eee;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -52,5 +53,306 @@
 
 #fight-menu .attack-box.selected h2 {
   color: white;
+}
+
+#party-display {
+  position: absolute;
+  opacity: 85%;
+  width: 440px;
+  height: 280px;
+  top: 23px;
+  left: 23px;
+  background: -webkit-gradient(linear, left top, right top, from(#0cc), to(#0f7));
+  background: linear-gradient(to right, #0cc, #0f7);
+  font-family: Nunito, sans-serif, Arial, Helvetica;
+  padding: 5px;
+  -webkit-box-shadow: 6px 3px 10px black;
+          box-shadow: 6px 3px 10px black;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+#party-display.hidden {
+  display: none !important;
+}
+
+#party-display div.close {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  font-size: 12px;
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  background: red;
+  color: white;
+  border-radius: 50%;
+  cursor: pointer;
+  top: 2px;
+  left: 2px;
+  -webkit-transition: background ease-in-out 100ms;
+  transition: background ease-in-out 100ms;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+}
+
+#party-display div.close:hover {
+  background: #ff3333;
+}
+
+#party-display h2.title {
+  margin: 0px;
+  text-align: center;
+  padding: 3px;
+  border: 2px solid black;
+  background-color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 5px;
+}
+
+#party-display div.grid {
+  -webkit-box-flex: 4;
+      -ms-flex-positive: 4;
+          flex-grow: 4;
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: (1fr)[2];
+      grid-template-columns: repeat(2, 1fr);
+  -ms-grid-rows: (1fr)[3];
+      grid-template-rows: repeat(3, 1fr);
+  gap: 10px;
+  background-color: rgba(255, 255, 255, 0.3);
+  padding: 10px;
+}
+
+#party-display div.grid div.card {
+  cursor: pointer;
+  height: 55px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  background: rgba(255, 255, 255, 0.8);
+  border: 5px solid black;
+  -webkit-transition: all ease-in-out 500ms;
+  transition: all ease-in-out 500ms;
+  -webkit-transition: border-color ease-in-out 100ms;
+  transition: border-color ease-in-out 100ms;
+}
+
+#party-display div.grid div.card h3 {
+  font-size: 14px;
+  text-align: center;
+  height: 10px;
+  margin-bottom: 5px;
+}
+
+#party-display div.grid div.card h4 {
+  font-size: 7px;
+  padding: 0px;
+  margin: 0px;
+}
+
+#party-display div.grid div.card .hint-view {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  background-color: #2f32d6;
+  width: 100%;
+  height: 0px;
+  overflow: hidden;
+  -webkit-transition: height ease-in-out 200ms;
+  transition: height ease-in-out 200ms;
+}
+
+#party-display div.grid div.card .hint-view p {
+  color: white;
+  text-align: center;
+  font-size: 40%;
+}
+
+#party-display div.grid div.card:hover {
+  background: rgba(100, 255, 100, 0.85);
+}
+
+#party-display div.grid div.card:hover .hint-view {
+  height: 10px;
+}
+
+#party-display div.grid div.card.fainted {
+  cursor: default;
+  background-color: rgba(0, 0, 0, 0.4);
+  -webkit-transition: none;
+  transition: none;
+}
+
+#party-display div.grid div.card.fainted .hint-view {
+  display: none;
+}
+
+#party-display div.grid div.card.fainted h4 {
+  position: relative;
+  bottom: 8px;
+}
+
+#party-display div.grid div.card.selected:not(.fained) {
+  border-color: #d1b82a;
+}
+
+#pokemon-details {
+  position: absolute;
+  width: 440px;
+  height: 280px;
+  top: 23px;
+  left: 23px;
+  background: linear-gradient(15deg, lime, yellow, lime);
+  opacity: 85%;
+  border: 5px solid green;
+  font-family: Nunito, sans-serif, Arial, Helvetica;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+#pokemon-details.hidden {
+  display: none !important;
+}
+
+#pokemon-details div.return {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  font-size: 12px;
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  background: blue;
+  color: white;
+  border-radius: 50%;
+  cursor: pointer;
+  top: 2px;
+  left: 2px;
+  -webkit-transition: background ease-in-out 100ms;
+  transition: background ease-in-out 100ms;
+  position: absolute;
+  top: -8px;
+  left: -8px;
+}
+
+#pokemon-details div.return:hover {
+  background: #3333ff;
+}
+
+#pokemon-details h1 {
+  position: relative;
+  bottom: 10px;
+  margin: 0;
+  text-align: center;
+}
+
+#pokemon-details .fields {
+  -ms-flex-item-align: center;
+      align-self: center;
+  justify-self: center;
+  border: 2px solid black;
+  padding: 10px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  gap: 20px;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+#pokemon-details .fields .field {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  gap: 5px;
+}
+
+#pokemon-details .fields .field label, #pokemon-details .fields .field p {
+  font-size: 13px;
+  margin: 0;
+}
+
+#pokemon-details .fields .field label {
+  font-size: 15px;
+}
+
+#pokemon-details button.switch {
+  cursor: pointer;
+  background-color: black;
+  color: white;
+  -webkit-transition: all ease-in-out 300ms;
+  transition: all ease-in-out 300ms;
+  border-radius: 9999px;
+  border: none;
+  width: 100px;
+  height: 30px;
+  margin-top: 15px;
+}
+
+#pokemon-details button.switch:hover {
+  background-color: #262626;
 }
 /*# sourceMappingURL=UI.css.map */
