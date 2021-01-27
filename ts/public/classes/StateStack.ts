@@ -1,5 +1,6 @@
 import Entity from "../Entity.js";
 import { AudioPlayer } from "./AudioPlayer.js";
+import Game from "./Game.js";
 import Input from "./Input.js";
 import Loader from "./Loader.js";
 import State from "./State.js";
@@ -7,9 +8,10 @@ import RoamState from "./states/RoamState.js";
 
 export default class StateStack implements Entity {
 
-	constructor(public loader: Loader) {
+	constructor(public game: Game) {
 
 	}
+	public loader = this.game.loader;
 	public states: State[] = [];
 	public audioPlayer = new AudioPlayer();
 
@@ -54,7 +56,6 @@ export default class StateStack implements Entity {
 		const state = this.states.pop();
 		state?.evtSource.dispatchEvent(state.popEvent);
 		let subStateAmount = Number(state?.substates?.states.length)
-		console.log(state?.constructor.name, subStateAmount)
 		for (let i = 0; i < subStateAmount; i++) {
 			state?.substates.pop();
 		}

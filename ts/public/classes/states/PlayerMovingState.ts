@@ -1,4 +1,3 @@
-import { PARTY } from "../../index.js";
 import EncounterTable from "../../JSONConversions/EncounterTable.js";
 import { chance, Direction, directionToVector } from "../../Util.js";
 import Input from "../Input.js";

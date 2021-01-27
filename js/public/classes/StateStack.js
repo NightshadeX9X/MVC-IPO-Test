@@ -1,7 +1,8 @@
 import { AudioPlayer } from "./AudioPlayer.js";
 export default class StateStack {
-    constructor(loader) {
-        this.loader = loader;
+    constructor(game) {
+        this.game = game;
+        this.loader = this.game.loader;
         this.states = [];
         this.audioPlayer = new AudioPlayer();
         this.toPreload = true;
@@ -44,7 +45,6 @@ export default class StateStack {
         const state = this.states.pop();
         state?.evtSource.dispatchEvent(state.popEvent);
         let subStateAmount = Number(state?.substates?.states.length);
-        console.log(state?.constructor.name, subStateAmount);
         for (let i = 0; i < subStateAmount; i++) {
             state?.substates.pop();
         }

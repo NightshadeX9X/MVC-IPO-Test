@@ -7,7 +7,7 @@ export default abstract class State implements Entity {
 	public toUpdate: boolean | null = null;
 	public toRender: boolean | null = null;
 	public toPreload: boolean | null = null;
-	public substates = new StateStack(this.stateStack.loader);
+	public substates = new StateStack(this.stateStack.game);
 	public popEvent = new Event('pop');
 	public evtSource = new EventTarget();
 

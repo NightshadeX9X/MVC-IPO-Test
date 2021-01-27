@@ -12,7 +12,7 @@ export default class PokemonCreature {
         ];
         this.species = PokemonSpecies.list.get(speciesName);
         this.stats = generateEmptyStats();
-        if (this.species?.stats) {
+        if (this.species.stats) {
             this.stats = cloneObject(this.species.stats);
         }
         this.nickname = this.species?.displayName || "Pokemon";

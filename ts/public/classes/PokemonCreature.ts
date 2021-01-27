@@ -17,7 +17,7 @@ export default class PokemonCreature {
 	constructor(speciesName: string) {
 		this.species = PokemonSpecies.list.get(speciesName) as PokemonSpecies;
 		this.stats = generateEmptyStats();
-		if (this.species?.stats) {
+		if (this.species.stats) {
 			this.stats = cloneObject(this.species.stats) as PokemonStats;
 		}
 		this.nickname = this.species?.displayName || "Pokemon";

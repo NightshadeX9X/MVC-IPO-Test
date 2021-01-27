@@ -98,4 +98,8 @@ export default class Vector implements Vector {
 
 		return dist;
 	}
+	static fromString(string: string) {
+		const { x, y } = JSON.parse(string);
+		return new Vector(Number(x), Number(y))
+	}
 }

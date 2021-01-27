@@ -1,6 +1,5 @@
 import State from "../State.js";
 import WildBattle from "../WildBattle.js";
-import { PARTY } from '../../index.js';
 import Vector from "../Vector.js";
 import IntroState from "./wild_battle/IntroState.js";
 import { getHPBar } from "../../UI.js";
@@ -38,7 +37,7 @@ export default class WildBattleState extends State {
         [this.battleBg, this.audio, this.hpBarImage, table,] = await Promise.all(promises);
         this.table = EncounterTable.purify(table);
         if (this.table)
-            this.battle = new WildBattle(PARTY, this.table);
+            this.battle = new WildBattle(this.stateStack.game.party, this.table);
         await this.substates.preload();
         await this.substates.push(new IntroState(this.substates, this));
     }

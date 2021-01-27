@@ -93,4 +93,8 @@ export default class Vector {
         const dist = Math.sqrt(xDiffSq + yDiffSq);
         return dist;
     }
+    static fromString(string) {
+        const { x, y } = JSON.parse(string);
+        return new Vector(Number(x), Number(y));
+    }
 }

@@ -5,7 +5,7 @@ export default class State {
         this.toUpdate = null;
         this.toRender = null;
         this.toPreload = null;
-        this.substates = new StateStack(this.stateStack.loader);
+        this.substates = new StateStack(this.stateStack.game);
         this.popEvent = new Event('pop');
         this.evtSource = new EventTarget();
     }

@@ -3,8 +3,9 @@ import Player from "../Player.js";
 import State from "../State.js";
 import Vector from "../Vector.js";
 export default class RoamState extends State {
-    constructor() {
-        super(...arguments);
+    constructor(stateStack) {
+        super(stateStack);
+        this.stateStack = stateStack;
         this.timeOfDay = TimeOfDay.NIGHT;
         this.gameMap = new GameMap('the_square', this);
         this.player = new Player(this);

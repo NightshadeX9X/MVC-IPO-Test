@@ -119,6 +119,5 @@ export function upperCaseStart(string) {
     return [chars[0].toUpperCase(), ...(chars.slice(1).map(c => c.toLowerCase()))].join("");
 }
 export function typesToString(types) {
-    console.log(upperCaseStart("aPpLe"));
     return types.filter(t => t).map(t => PokemonTypes[t]).map(s => upperCaseStart(s)).join("/");
 }

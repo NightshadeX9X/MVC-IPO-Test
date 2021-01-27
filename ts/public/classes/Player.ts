@@ -9,12 +9,11 @@ import RoamState from "./states/RoamState.js";
 import Vector from "./Vector.js";
 
 export default class Player implements Entity {
-	public pos = new Vector(16, 14);
+	public pos = new Vector(16, 12);
 	public drawSize = new Vector(1, 2);
 	public drawOffset = new Vector(0, -1);
 	public image: HTMLImageElement | null = null;
 	public spritesheet: Spritesheet | null = null;
-	// public camera = new Camera(this, new Vector(400, 250));
 	public camera = new Camera(this, new Vector(480, 320));
 	toUpdate: boolean | null = true;
 	toRender: boolean | null = true;

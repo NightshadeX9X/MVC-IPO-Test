@@ -1,19 +1,11 @@
-import Input from "./classes/Input.js";
-import Loader from "./classes/Loader.js";
 import PokemonSpecies from "./classes/PokemonSpecies.js";
 import RoamState from "./classes/states/RoamState.js";
-import StateStack from "./classes/StateStack.js";
 import { PokemonTypes } from './classes/PokemonSpecies.js';
-import PokemonCreature from "./classes/PokemonCreature.js";
 import PokemonMove from "./classes/PokemonMove.js";
-import Party from "./classes/Party.js";
+import Game from "./classes/Game.js";
 const cnv = document.getElementById('screen');
 const ctx = cnv.getContext('2d');
 ctx.imageSmoothingEnabled = false;
-export const FPS = 60;
-const loader = new Loader();
-const input = new Input();
-const stateStack = new StateStack(loader);
 const PIKACHU = new PokemonSpecies('pikachu', "Pikachu", [PokemonTypes.ELECTRIC]);
 const GRENINJA = new PokemonSpecies('greninja', "Greninja", [PokemonTypes.WATER, PokemonTypes.DARK]);
 PIKACHU.stats.Atk = 20;
@@ -36,47 +28,27 @@ export const SPECIES = {
     PIKACHU,
     GRENINJA
 };
-export const PARTY = new Party();
-PARTY.pokemon = [
-    new PokemonCreature('greninja'),
-    new PokemonCreature('pikachu')
-];
-PARTY.pokemon[0].nickname = "Ninja";
-PARTY.pokemon[0].moves = [
-    "dark_pulse",
-    "u_turn",
-    "quick_attack",
-    "psychic"
-];
-PARTY.pokemon[1].nickname = "Mega Pichu Man";
-PARTY.pokemon[1].moves = [
-    "dark_pulse",
-    "u_turn",
-    "iron_tail",
-    "thunderbolt"
-];
-PARTY.pokemon[1].level = 80;
+const game = new Game();
 async function setup() {
-    document.querySelector('button')?.click();
-    input.start(document);
-    const r = new RoamState(stateStack);
-    stateStack.states.push(r);
+    game.input.start(document);
+    const r = new RoamState(game.stateStack);
+    game.stateStack.states.push(r);
     await preload();
     init();
-    setInterval(update, 1000 / FPS);
+    setInterval(update, 1000 / game.fps);
     render();
 }
 async function preload() {
-    await stateStack.preload();
+    await game.stateStack.preload();
 }
 function init() {
-    stateStack.init();
+    game.stateStack.init();
 }
 function update() {
-    stateStack.update(input);
+    game.stateStack.update(game.input);
 }
 function render() {
-    stateStack.render(ctx);
+    game.stateStack.render(ctx);
     requestAnimationFrame(render);
 }
 window.onload = () => setup();

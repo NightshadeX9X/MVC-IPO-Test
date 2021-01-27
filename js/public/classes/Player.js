@@ -6,12 +6,11 @@ import Vector from "./Vector.js";
 export default class Player {
     constructor(roamState) {
         this.roamState = roamState;
-        this.pos = new Vector(16, 14);
+        this.pos = new Vector(16, 12);
         this.drawSize = new Vector(1, 2);
         this.drawOffset = new Vector(0, -1);
         this.image = null;
         this.spritesheet = null;
-        // public camera = new Camera(this, new Vector(400, 250));
         this.camera = new Camera(this, new Vector(480, 320));
         this.toUpdate = true;
         this.toRender = true;

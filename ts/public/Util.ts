@@ -1,7 +1,6 @@
 import PokemonCreature from "./classes/PokemonCreature.js";
 import { PokemonTypes } from "./classes/PokemonSpecies.js";
 import Vector from "./classes/Vector.js";
-import { PARTY } from "./index.js";
 
 export enum Direction {
 	LEFT,
@@ -134,6 +133,5 @@ export function upperCaseStart(string: string) {
 }
 
 export function typesToString(types: [PokemonTypes, PokemonTypes?]) {
-	console.log(upperCaseStart("aPpLe"))
 	return types.filter(t => t).map(t => PokemonTypes[t as PokemonTypes]).map(s => upperCaseStart(s)).join("/")
 }

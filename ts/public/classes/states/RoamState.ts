@@ -1,16 +1,22 @@
+import { TEMP_SAVE_DATA } from "../../index.js";
+import { getSaveData } from "../../SaveData.js";
 import GameMap from "../GameMap.js";
 import Input from "../Input.js";
 import Loader from "../Loader.js";
 import Player from "../Player.js";
 import State from "../State.js";
+import StateStack from "../StateStack.js";
 import Vector from "../Vector.js";
 import TextBoxState from "./TextBoxState.js";
-
 export default class RoamState extends State {
 	public timeOfDay = TimeOfDay.NIGHT;
 	public gameMap = new GameMap('the_square', this);
 	public player = new Player(this);
 	public tileSize = new Vector(16);
+	constructor(public stateStack: StateStack) {
+		super(stateStack);
+
+	}
 	async preload(loader: Loader) {
 		await Promise.all(
 			[
