@@ -27,4 +27,8 @@ export default class PokemonCreature {
 	canBattle() {
 		return this.stats.HP > 0;
 	}
+
+	heal() {
+		this.stats.HP = this.maxHP;
+	}
 }

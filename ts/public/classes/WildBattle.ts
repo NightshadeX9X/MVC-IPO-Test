@@ -1,9 +1,10 @@
 import EncounterTable from '../JSONConversions/EncounterTable.js';
 import { random, randomArrayMember } from '../Util.js';
+import Party from './Party.js';
 import PokemonCreature from './PokemonCreature.js';
 export default class WildBattle {
 	public wild: PokemonCreature;
-	constructor(public party: PokemonCreature[], public table: EncounterTable.Pure) {
+	constructor(public party: Party, public table: EncounterTable.Pure) {
 
 		const bucket: EncounterTable.Pure["encounters"] = [];
 		table.encounters.forEach(e => {

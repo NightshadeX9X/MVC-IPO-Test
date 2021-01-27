@@ -8,11 +8,12 @@ export default class SwitchingState extends State {
 	private switched = false;
 	constructor(public stateStack: StateStack, public interactionState: InteractionState, public decision: TrainerDecisionSwitch) {
 		super(stateStack);
-		this.onPop = () => {
+		this.evtSource.addEventListener('pop', () => {
 			if (this.switched)
 				this.interactionState.sortedDecisions.shift();
 			this.interactionState.performNextDecision();
-		}
+		})
+
 	}
 
 	async preload(loader: Loader) {
@@ -24,9 +25,7 @@ export default class SwitchingState extends State {
 			return;
 
 		};
-		const index = party.indexOf(this.decision.into);
-		party.splice(index, 1);
-		this.interactionState.wildBattleState.battle.party = [this.decision.into, ...party];
+		this.interactionState.wildBattleState.battle.party.head = into;
 		this.switched = true;
 		this.stateStack.pop();
 		this.interactionState.wildBattleState.partyHeadImage = await loader.loadImage(`/assets/images/pokemon/${this.decision.into.species?.name}.png`);

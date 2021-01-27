@@ -7,20 +7,23 @@ import State from "../../../State.js";
 import StateStack from "../../../StateStack.js";
 import TextBoxState from "../../TextBoxState.js";
 import FightMenuState from "../FightMenuState.js";
-import InteractionState, { TrainerDecisionAttack } from "../InteractionState.js";
+import InteractionState, { TrainerDecisionAttack, WildDecision } from "../InteractionState.js";
 import MainMenuState from "../MainMenuState.js";
 import { TypeRelation } from '../../../../PokemonTypeEffectiveness.js';
 
 export default class AttackingState extends State {
 	private frames = 0;
-	constructor(public stateStack: StateStack, public interactionState: InteractionState, public decision: TrainerDecisionAttack) {
+	constructor(public stateStack: StateStack, public interactionState: InteractionState, public decision: TrainerDecisionAttack | WildDecision) {
 		super(stateStack);
-		this.onPop = () => {
+		this.evtSource.addEventListener('pop', () => {
 			this.interactionState.sortedDecisions.shift();
 			this.interactionState.performNextDecision();
-		}
+		});
 	}
-	private originalDefenderHp = this.decision.target?.stats.HP || 0;
+	private get target() {
+		return this.decision.target === 'partyhead' ? this.interactionState.wildBattleState.partyHead : this.decision.target
+	}
+	private originalDefenderHp = this.target?.stats.HP || 0;
 
 	async preload(loader: Loader) {
 
@@ -31,37 +34,41 @@ export default class AttackingState extends State {
 		return move;
 	}
 	private get damageToBeDone() {
-		if (!this.attackChosen || !this.decision.target) return undefined;
-		let amount = this.attackChosen.getDamageDoneTo(this.decision.user, this.decision.target);
+		if (!this.attackChosen || !this.target) return undefined;
+		let amount = this.attackChosen.getDamageDoneTo(this.decision.user, this.target);
 		// if (amount > this.decision.target.stats.HP) return this.decision.target.stats.HP;
 		return amount;
 	}
 	private damageDone = 0;
 
 	init(): void {
+		if (!this.decision.user.canBattle()) {
+			this.stateStack.pop();
+			return;
+		}
 		this.displayText(`${this.decision.user.nickname} used ${this.attackChosen?.displayName}!`)
 	}
 	update(input: Input): void {
 		this.frames++
 		if (!this.attackChosen || this.damageToBeDone === undefined) return;
 
-		if (this.damageDone < this.damageToBeDone && this.decision.target?.canBattle()) {
+		if (this.damageDone < this.damageToBeDone && this.target?.canBattle()) {
 			this.do1Damage();
 		} else {
 			this.onDamageDealt();
 		}
 	}
 	private async onDamageDealt() {
-		if (!this.attackChosen || !this.decision.target || this.damageToBeDone === undefined) return
-		const te = calcTypeEffectiveness(this.attackChosen.type, this.decision.target.species.types)
+		if (!this.attackChosen || !this.target || this.damageToBeDone === undefined) return
+		const te = calcTypeEffectiveness(this.attackChosen.type, this.target.species.types)
 		const damage = this.damageToBeDone > this.originalDefenderHp ? this.originalDefenderHp : this.damageToBeDone;
 		let teText = new TextBoxState(this.interactionState.wildBattleState.stateStack, "It's super effective!")
-		const damageText = new TextBoxState(this.interactionState.wildBattleState.stateStack, `${this.decision.target.nickname} lost ${damage} HP!`)
+		const damageText = new TextBoxState(this.interactionState.wildBattleState.stateStack, `${this.target.nickname} lost ${damage} HP!`)
 		if (te === TypeRelation.RESISTS) {
 			teText.setText("It's not very effective...");
 		}
 		else if (te === TypeRelation.IMMUNE_TO) {
-			teText.setText(`It doesn't affect ${this.decision.target.nickname}...`);
+			teText.setText(`It doesn't affect ${this.target.nickname}...`);
 		}
 
 		if (te !== TypeRelation.NEUTRAL) {
@@ -79,9 +86,9 @@ export default class AttackingState extends State {
 		this.stateStack.pop();
 	}
 	private do1Damage() {
-		if (this.decision.target) {
+		if (this.target) {
 			this.damageDone++;
-			this.decision.target.stats.HP--;
+			this.target.stats.HP--;
 		}
 	}
 	render(ctx: CanvasRenderingContext2D): void {

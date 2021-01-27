@@ -7,14 +7,17 @@ import MainMenuState from "./MainMenuState.js";
 import PartyDisplayState from "./pokemon_view/PartyDisplayState.js";
 
 export default class PokemonViewState extends State {
-	constructor(public stateStack: StateStack, public wildBattleState: WildBattleState) {
+	constructor(public stateStack: StateStack, public wildBattleState: WildBattleState, public purpose = PokemonViewStatePurpose.PLAYER_CHOICE) {
 		super(stateStack);
-		this.onPop = () => {
-			this.stateStack.push(new MainMenuState(this.stateStack, this.wildBattleState))
-		}
+		this.evtSource.addEventListener('pop', () => {
+			if (!(this.stateStack.fromTop() instanceof MainMenuState))
+				this.stateStack.push(new MainMenuState(this.stateStack, this.wildBattleState))
+
+			console.log(this.stateStack)
+		});
 	}
 	public get notFaintedParty() {
-		return this.wildBattleState.battle?.party.filter(p => p.canBattle())
+		return this.wildBattleState.battle?.party.onlyUsable()
 	}
 
 	async preload(loader: Loader) {
@@ -31,4 +34,9 @@ export default class PokemonViewState extends State {
 
 	}
 
+}
+
+export enum PokemonViewStatePurpose {
+	PLAYER_CHOICE,
+	PARTY_HEAD_FAINTED
 }

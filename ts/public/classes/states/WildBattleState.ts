@@ -18,7 +18,7 @@ export default class WildBattleState extends State {
 	private audio: HTMLAudioElement | null = null;
 	public hpBarImage: HTMLImageElement | null = null;
 	private toClearCanvas = true;
-	public battle: WildBattle | null = null;
+	public battle: WildBattle = null as any;
 	public pokemonHeight = 100;
 	public partyHeadPos = new Vector(-90, 150);
 	private table: EncounterTable.Pure | null = null;
@@ -26,11 +26,10 @@ export default class WildBattleState extends State {
 	constructor(public stateStack: StateStack, public battleBgName: string, public tableId: string) {
 		super(stateStack);
 
-		this.onPop = () => {
+		this.evtSource.addEventListener('pop', () => {
 			this.audio?.pause();
 			this.stateStack.push(new FadeState(this.stateStack))
-			return this.substates.fromTop()?.onPop();
-		}
+		})
 	}
 	async preload(loader: Loader) {
 		const promises = [
@@ -108,33 +107,33 @@ export default class WildBattleState extends State {
 		let pos1 = new Vector(this.partyHeadPos.x + 50, this.partyHeadPos.y - 15);
 		let pos2 = new Vector(ctx.canvas.width - 70, 37);
 		ctx.save();
-		ctx.font = "13px monospace";
+		ctx.font = "12px monospace";
 		ctx.lineWidth = 4;
 		ctx.textAlign = "center";
 		ctx.textBaseline = "middle"
 		ctx.fillStyle = "white"
 
-		ctx.fillRect(pos1.x - 45, pos1.y - 12, 90, 24)
+		ctx.fillRect(pos1.x - 50, pos1.y - 12, 100, 24)
 
 		ctx.fillStyle = "black"
 		ctx.strokeStyle = "black"
 		ctx.fillText(this.partyHead.nickname, pos1.x, pos1.y)
 
 		ctx.lineWidth = 5;
-		ctx.strokeRect(pos1.x - 47, pos1.y - 15, 93, 26)
+		ctx.strokeRect(pos1.x - 53, pos1.y - 15, 103, 26)
 
 
 
 		ctx.fillStyle = "white"
 
-		ctx.fillRect(pos2.x - 45, pos2.y - 12, 90, 24)
+		ctx.fillRect(pos2.x - 50, pos2.y - 12, 100, 24)
 
 		ctx.fillStyle = "black"
 		ctx.strokeStyle = "black"
 		ctx.fillText(this.battle.wild.nickname, pos2.x, pos2.y)
 
 		ctx.lineWidth = 5;
-		ctx.strokeRect(pos2.x - 47, pos2.y - 15, 93, 26)
+		ctx.strokeRect(pos2.x - 52, pos2.y - 15, 103, 26)
 
 		ctx.restore();
 	}
@@ -147,11 +146,11 @@ export default class WildBattleState extends State {
 	}
 
 	public get partyHead() {
-		return this.battle?.party?.[0];
+		return this.battle.party.head;
 	}
 	public get shouldEnd() {
 		if (!this.battle) return true;
-		return !this.battle.wild.canBattle() || !this.battle.party.some(p => p.canBattle());
+		return !this.battle.wild.canBattle() || !this.battle.party.usable();
 	}
 	update(input: Input): void {
 

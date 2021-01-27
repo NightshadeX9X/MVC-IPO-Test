@@ -6,6 +6,7 @@ import StateStack from "./classes/StateStack.js";
 import { PokemonTypes } from './classes/PokemonSpecies.js';
 import PokemonCreature from "./classes/PokemonCreature.js";
 import PokemonMove from "./classes/PokemonMove.js";
+import Party from "./classes/Party.js";
 const cnv = document.getElementById('screen');
 const ctx = cnv.getContext('2d');
 ctx.imageSmoothingEnabled = false;
@@ -35,25 +36,26 @@ export const SPECIES = {
     PIKACHU,
     GRENINJA
 };
-export const PARTY = [
+export const PARTY = new Party();
+PARTY.pokemon = [
     new PokemonCreature('greninja'),
     new PokemonCreature('pikachu')
 ];
-PARTY[0].nickname = "Ninja";
-PARTY[0].moves = [
+PARTY.pokemon[0].nickname = "Ninja";
+PARTY.pokemon[0].moves = [
     "dark_pulse",
     "u_turn",
     "quick_attack",
     "psychic"
 ];
-PARTY[1].nickname = "Mega Pichu Man";
-PARTY[1].moves = [
+PARTY.pokemon[1].nickname = "Mega Pichu Man";
+PARTY.pokemon[1].moves = [
     "dark_pulse",
     "u_turn",
     "iron_tail",
     "thunderbolt"
 ];
-PARTY[1].level = 80;
+PARTY.pokemon[1].level = 80;
 async function setup() {
     document.querySelector('button')?.click();
     input.start(document);

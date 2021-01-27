@@ -11,6 +11,7 @@ import WildBattleState from "../WildBattleState.js";
 import AttackingState from './interaction/AttackingState.js';
 import SwitchingState from "./interaction/SwitchingState.js";
 import MainMenuState from "./MainMenuState.js";
+import PokemonViewState, { PokemonViewStatePurpose } from "./PokemonViewState.js";
 
 export default class InteractionState extends State {
 	public sortedDecisions: Decision[] = [];
@@ -23,7 +24,8 @@ export default class InteractionState extends State {
 				type: 'attack',
 				attack: getRandomCreatureMove(this.wildBattleState.battle.wild),
 				user: this.wildBattleState.battle.wild,
-				target: this.wildBattleState.partyHead
+				target: 'partyhead',
+				team: 'wild'
 			}
 
 		}
@@ -66,30 +68,40 @@ export default class InteractionState extends State {
 		await this.performNextDecision();
 
 	}
-	private async endBattleIfNecessary() {
-		if (this.wildBattleState.battle?.party.every(p => !p.canBattle())) {
+	private async checkBattleShouldEnd() {
+		if (!this.wildBattleState.battle.party.usable()) {
 			let tbs = new TextBoxState(this.wildBattleState.stateStack, "You have no more Pokémon that can battle.")
-			tbs.onPop = () => {
+			tbs.evtSource.addEventListener('pop', () => {
 				this.wildBattleState.stateStack.pop();
-			}
+			});
 			this.end = true;
 			await this.wildBattleState.stateStack.push(tbs)
 		}
-		if (!this.wildBattleState.battle?.wild.canBattle()) {
-			console.log("wild faint")
+		if (!this.wildBattleState.battle.wild.canBattle()) {
 			let tbs = new TextBoxState(this.wildBattleState.stateStack, "The wild Pokémon fainted!")
-			tbs.onPop = () => {
+			tbs.evtSource.addEventListener('pop', () => {
 				this.wildBattleState.stateStack.pop();
-
-			}
+			});
 			this.end = true;
 			await this.wildBattleState.stateStack.push(tbs)
 		}
 	}
+	private handlePartyHeadFaint() {
+		if (!this.wildBattleState.battle.party.head.canBattle()) {
+			this.stateStack.pop();
+			this.stateStack.push(new PokemonViewState(this.stateStack, this.wildBattleState, PokemonViewStatePurpose.PARTY_HEAD_FAINTED));
+			return true;
+		}
+		return false;
+	}
 	public async performNextDecision() {
-		await this.endBattleIfNecessary();
+		await this.checkBattleShouldEnd();
 		if (this.end) {
 			return;
+		}
+		if (this.sortedDecisions.length === 0) {
+			if (this.handlePartyHeadFaint())
+				return;
 		}
 		const decision = this.sortedDecisions[0];
 		if (!decision) {
@@ -102,18 +114,17 @@ export default class InteractionState extends State {
 			const canRunAway = chance(50);
 			if (canRunAway) {
 				const tbs = new TextBoxState(this.wildBattleState.stateStack, "You ran away safely!");
-				tbs.onPop = () => {
-
+				tbs.evtSource.addEventListener('pop', () => {
 					this.wildBattleState.stateStack.pop();
-				}
+				});
 				this.wildBattleState.stateStack.push(tbs);
 			} else {
 				const tbs = new TextBoxState(this.wildBattleState.stateStack, "You couldn't run away!");
-				tbs.onPop = () => {
-
+				tbs.evtSource.addEventListener('pop', () => {
 					this.sortedDecisions.shift();
 					this.performNextDecision();
-				}
+				});
+
 				this.wildBattleState.stateStack.push(tbs);
 
 
@@ -143,24 +154,31 @@ export interface TrainerDecisionAttack {
 	type: 'attack'
 	attack: string;
 	user: PokemonCreature,
-	target: PokemonCreature | null
+	target: PokemonCreature | null,
+	team: 'trainer'
 }
 
 export interface TrainerDecisionRun {
 	type: 'run',
 	user: PokemonCreature;
+	team: 'trainer'
 }
 
 export interface TrainerDecisionSwitch {
 	type: 'switch',
 	user: PokemonCreature
 	into: PokemonCreature;
+	team: 'trainer'
 }
 
 export type TrainerDecision = TrainerDecisionAttack | TrainerDecisionRun | TrainerDecisionSwitch;
 
-export interface WildDecision extends TrainerDecisionAttack {
-
+export interface WildDecision {
+	type: 'attack'
+	attack: string;
+	user: PokemonCreature,
+	target: PokemonCreature | null | 'partyhead'
+	team: 'wild'
 }
 
 type Decision = WildDecision | TrainerDecision;

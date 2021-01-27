@@ -5,6 +5,7 @@ import TextBoxState from "../TextBoxState.js";
 import AttackingState from './interaction/AttackingState.js';
 import SwitchingState from "./interaction/SwitchingState.js";
 import MainMenuState from "./MainMenuState.js";
+import PokemonViewState, { PokemonViewStatePurpose } from "./PokemonViewState.js";
 export default class InteractionState extends State {
     constructor(stateStack, wildBattleState, trainerDecision, wildDecision) {
         super(stateStack);
@@ -20,7 +21,8 @@ export default class InteractionState extends State {
                     type: 'attack',
                     attack: getRandomCreatureMove(this.wildBattleState.battle.wild),
                     user: this.wildBattleState.battle.wild,
-                    target: this.wildBattleState.partyHead
+                    target: 'partyhead',
+                    team: 'wild'
                 };
         }
         const decisions = [this.wildDecision, this.trainerDecision];
@@ -60,29 +62,40 @@ export default class InteractionState extends State {
     async preload(loader) {
         await this.performNextDecision();
     }
-    async endBattleIfNecessary() {
-        if (this.wildBattleState.battle?.party.every(p => !p.canBattle())) {
+    async checkBattleShouldEnd() {
+        if (!this.wildBattleState.battle.party.usable()) {
             let tbs = new TextBoxState(this.wildBattleState.stateStack, "You have no more Pokémon that can battle.");
-            tbs.onPop = () => {
+            tbs.evtSource.addEventListener('pop', () => {
                 this.wildBattleState.stateStack.pop();
-            };
+            });
             this.end = true;
             await this.wildBattleState.stateStack.push(tbs);
         }
-        if (!this.wildBattleState.battle?.wild.canBattle()) {
-            console.log("wild faint");
+        if (!this.wildBattleState.battle.wild.canBattle()) {
             let tbs = new TextBoxState(this.wildBattleState.stateStack, "The wild Pokémon fainted!");
-            tbs.onPop = () => {
+            tbs.evtSource.addEventListener('pop', () => {
                 this.wildBattleState.stateStack.pop();
-            };
+            });
             this.end = true;
             await this.wildBattleState.stateStack.push(tbs);
         }
     }
+    handlePartyHeadFaint() {
+        if (!this.wildBattleState.battle.party.head.canBattle()) {
+            this.stateStack.pop();
+            this.stateStack.push(new PokemonViewState(this.stateStack, this.wildBattleState, PokemonViewStatePurpose.PARTY_HEAD_FAINTED));
+            return true;
+        }
+        return false;
+    }
     async performNextDecision() {
-        await this.endBattleIfNecessary();
+        await this.checkBattleShouldEnd();
         if (this.end) {
             return;
+        }
+        if (this.sortedDecisions.length === 0) {
+            if (this.handlePartyHeadFaint())
+                return;
         }
         const decision = this.sortedDecisions[0];
         if (!decision) {
@@ -95,17 +108,17 @@ export default class InteractionState extends State {
             const canRunAway = chance(50);
             if (canRunAway) {
                 const tbs = new TextBoxState(this.wildBattleState.stateStack, "You ran away safely!");
-                tbs.onPop = () => {
+                tbs.evtSource.addEventListener('pop', () => {
                     this.wildBattleState.stateStack.pop();
-                };
+                });
                 this.wildBattleState.stateStack.push(tbs);
             }
             else {
                 const tbs = new TextBoxState(this.wildBattleState.stateStack, "You couldn't run away!");
-                tbs.onPop = () => {
+                tbs.evtSource.addEventListener('pop', () => {
                     this.sortedDecisions.shift();
                     this.performNextDecision();
-                };
+                });
                 this.wildBattleState.stateStack.push(tbs);
             }
         }

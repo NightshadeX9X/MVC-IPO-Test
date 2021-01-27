@@ -4,7 +4,7 @@ import State from "../../../State.js";
 import StateStack from "../../../StateStack.js";
 import WildBattleState from "../../WildBattleState.js";
 import MainMenuState from "../MainMenuState.js";
-import PokemonViewState from "../PokemonViewState.js";
+import PokemonViewState, { PokemonViewStatePurpose } from "../PokemonViewState.js";
 import PokemonDetailsState from "./PokemonDetailsState.js";
 
 export default class PartyDisplayState extends State {
@@ -17,9 +17,10 @@ export default class PartyDisplayState extends State {
 	private frames = 0;
 	constructor(public stateStack: StateStack, public pokemonViewState: PokemonViewState) {
 		super(stateStack);
-		this.onPop = () => {
+		this.evtSource.addEventListener('pop', () => {
 			this.displayEl.remove();
-		}
+
+		});
 	}
 
 	get numberSelected() {
@@ -43,7 +44,7 @@ export default class PartyDisplayState extends State {
 		</div>
 		`;
 
-		this.pokemonViewState.wildBattleState.battle?.party.forEach(p => {
+		this.pokemonViewState.wildBattleState.battle?.party.pokemon.forEach(p => {
 			const grid = this.displayEl.querySelector('.grid');
 			if (grid)
 				grid.innerHTML +=
@@ -59,9 +60,11 @@ export default class PartyDisplayState extends State {
 		})
 
 		const closeBtn = this.displayEl.getElementsByClassName('close')[0] as HTMLDivElement;
+		if (this.pokemonViewState.purpose === PokemonViewStatePurpose.PARTY_HEAD_FAINTED) {
+			closeBtn.style.display = "none";
+		}
 		closeBtn.addEventListener('click', () => {
-			if (this.frames > 20) {
-				console.log(this.pokemonViewState.stateStack)
+			if (this.frames > 20 && this.pokemonViewState.purpose === PokemonViewStatePurpose.PLAYER_CHOICE) {
 				this.pokemonViewState.stateStack.pop();
 			}
 		});
@@ -70,7 +73,7 @@ export default class PartyDisplayState extends State {
 
 
 		this.cards.forEach((card, i) => {
-			const creature = this.pokemonViewState.wildBattleState.battle?.party[i];
+			const creature = this.pokemonViewState.wildBattleState.battle.party.pokemon[i];
 			if (creature) {
 				if (!creature.canBattle()) {
 					card.classList.add("fainted");
@@ -126,6 +129,9 @@ export default class PartyDisplayState extends State {
 		}
 		if (this.frames > 20 && input.interactionKey && this.numberSelected >= 0 && this.numberSelected < this.notFaintedCards.length) {
 			this.select(this.numberSelected);
+		}
+		if (this.frames > 20 && this.pokemonViewState.purpose === PokemonViewStatePurpose.PLAYER_CHOICE && input.escapeKey) {
+			this.pokemonViewState.stateStack.pop();
 		}
 		this.lastChanged++;
 		this.frames++;

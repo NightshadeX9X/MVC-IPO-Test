@@ -87,12 +87,14 @@ export default class MainMenuState extends State {
                     return;
                 this.stateStack.push(new InteractionState(this.stateStack, this.wildBattleState, {
                     type: 'run',
-                    user: this.wildBattleState.partyHead
+                    user: this.wildBattleState.partyHead,
+                    team: 'trainer'
                 }, {
                     type: 'attack',
                     attack: getRandomCreatureMove(this.wildBattleState.battle.wild),
                     target: this.wildBattleState.partyHead,
-                    user: this.wildBattleState.battle.wild
+                    user: this.wildBattleState.battle.wild,
+                    team: 'wild'
                 }));
             }
         }

@@ -41,6 +41,9 @@ export default class Input {
     get interactionKey() {
         return this.keyIsDown(' ') || this.keyIsDown('Enter');
     }
+    get escapeKey() {
+        return this.keyIsDown('Escape') || this.keyIsDown('Return');
+    }
 }
 Input.keyDownSymbol = Symbol('key down');
 Input.keyUpSymbol = Symbol('key up');

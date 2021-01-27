@@ -15,6 +15,7 @@
 }
 @mixin MiniButton($color) {
 	@include Flex;
+	@include UIComponent();
 	font-size: 12px;
 	position: absolute;
 	
@@ -64,6 +65,12 @@ $font-family: Nunito, sans-serif, Arial, Helvetica;
 	flex-direction: column;
 	padding: 5px 0px;
 	gap: 2px;
+
+	div.return {
+		@include MiniButton(blue);
+		top: -8px;
+		left: -8px;
+	}
 
 	.attack-box {
 		cursor: pointer;

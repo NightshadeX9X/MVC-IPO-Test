@@ -84,8 +84,10 @@ export default class TextBoxState extends State {
     update(input) {
         const paragraph = this.paragraphs?.[this.currentParagraphIndex];
         let row = paragraph?.[this.revealing.row];
-        if (!paragraph)
-            return this.stateStack.pop();
+        if (!paragraph) {
+            this.stateStack.pop();
+            return;
+        }
         let onLastCharacter = (this.revealing.character >= row?.length);
         let onLastRow = (this.revealing.row === paragraph?.length - 1);
         if (!onLastCharacter) {

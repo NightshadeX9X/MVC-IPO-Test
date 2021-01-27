@@ -7,20 +7,35 @@ import StateStack from "../../StateStack.js";
 import TextBoxState from "../TextBoxState.js";
 import WildBattleState from "../WildBattleState.js";
 import InteractionState from "./InteractionState.js";
+import MainMenuState from "./MainMenuState.js";
 
 export default class FightMenuState extends State {
 	private menuEl = document.createElement('div');
 	private selected = -1;
 	private sinceLastAttackChange = -10;
+	private frames = 0;
 	constructor(public stateStack: StateStack, public wildBattleState: WildBattleState) {
 		super(stateStack);
 	}
 	async preload(loader: Loader) {
 
 	}
+	private get attackBoxes() {
+		return Array.from(this.menuEl.getElementsByClassName('attack-box')) as HTMLDivElement[]
+	}
+	private get returnButton() {
+		return this.menuEl.getElementsByClassName('return')[0] as HTMLDivElement;
+	}
+	private return() {
+		this.stateStack.pop();
+		this.stateStack.push(new MainMenuState(this.stateStack, this.wildBattleState));
+	}
 	init(): void {
 		this.menuEl.id = "fight-menu";
 		this.menuEl.style.width = "110px"
+		this.menuEl.innerHTML = `
+			<div class="return">&larr;</div>
+		`
 		let partyHead = this.wildBattleState.partyHead;
 		if (partyHead) {
 			partyHead.moves.forEach(moveName => {
@@ -35,7 +50,11 @@ export default class FightMenuState extends State {
 			})
 		}
 
-		const attackBoxes = Array.from(this.menuEl.children) as HTMLDivElement[];
+		this.returnButton.addEventListener('click', () => {
+			this.return();
+		})
+
+		const attackBoxes = this.attackBoxes;
 		attackBoxes.forEach((atkBox, i) => {
 			atkBox.addEventListener('mouseover', () => {
 				this.selected = i;
@@ -62,27 +81,27 @@ export default class FightMenuState extends State {
 		document.body.appendChild(this.menuEl);
 
 
-		this.onPop = () => {
+		this.evtSource.addEventListener('pop', () => {
 			this.menuEl.classList.add("hidden")
-		}
+		});
 	}
 	private chooseAttack() {
 		if (this.selected === -1 || !this.wildBattleState.partyHead || !this.wildBattleState.battle) return;
 		console.log(`Chose attack number ${this.selected + 1}`);
 		this.stateStack.pop();
-		const wildMoveName = getRandomCreatureMove(this.wildBattleState.battle.wild);
 		this.stateStack.push(new InteractionState(this.stateStack, this.wildBattleState, {
 			type: 'attack',
 			attack: this.wildBattleState.partyHead.moves[this.selected],
 			user: this.wildBattleState.partyHead,
-			target: this.wildBattleState.battle?.wild || null
+			target: this.wildBattleState.battle?.wild || null,
+			team: 'trainer'
 		}));
 	}
 	update(input: Input): void {
-		const children = Array.from(this.menuEl.children) as HTMLDivElement[];
-		children.forEach((child, i) => {
-			if (i === this.selected) child.classList.add('selected')
-			else child.classList.remove('selected')
+
+		this.attackBoxes.forEach((atkBox, i) => {
+			if (i === this.selected) atkBox.classList.add('selected')
+			else atkBox.classList.remove('selected')
 		});
 
 		if (this.sinceLastAttackChange >= 10) {
@@ -107,7 +126,12 @@ export default class FightMenuState extends State {
 			}
 		}
 
+		if (this.frames > 20 && input.escapeKey) {
+			this.return();
+		}
+
 		this.sinceLastAttackChange++;
+		this.frames++;
 	}
 	render(ctx: CanvasRenderingContext2D): void {
 		this.wildBattleState.drawBattleGraphics(ctx)

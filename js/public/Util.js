@@ -1,3 +1,4 @@
+import { PokemonTypes } from "./classes/PokemonSpecies.js";
 import Vector from "./classes/Vector.js";
 export var Direction;
 (function (Direction) {
@@ -115,5 +116,9 @@ export function* IDGenerator() {
 }
 export function upperCaseStart(string) {
     let chars = string.split("");
-    return [chars[0].toUpperCase(), ...(chars.slice(0, -1).map(c => c.toLowerCase()))];
+    return [chars[0].toUpperCase(), ...(chars.slice(1).map(c => c.toLowerCase()))].join("");
+}
+export function typesToString(types) {
+    console.log(upperCaseStart("aPpLe"));
+    return types.filter(t => t).map(t => PokemonTypes[t]).map(s => upperCaseStart(s)).join("/");
 }

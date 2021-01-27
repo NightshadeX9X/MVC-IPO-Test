@@ -45,4 +45,8 @@ export default class Input {
 	public get interactionKey() {
 		return this.keyIsDown(' ') || this.keyIsDown('Enter')
 	}
+
+	public get escapeKey() {
+		return this.keyIsDown('Escape') || this.keyIsDown('Return');
+	}
 }
