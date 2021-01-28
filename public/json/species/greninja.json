@@ -1,0 +1,16 @@
+{
+	"name": "greninja",
+	"displayName": "Greninja",
+	"types": [
+		"WATER",
+		"DARK"
+	],
+	"stats": {
+		"HP": 72,
+		"Atk": 95,
+		"Def": 67,
+		"SpA": 103,
+		"SpD": 71,
+		"Spe": 122
+	}
+}

@@ -11,7 +11,6 @@ export default class Game {
         this.loader = new Loader();
         this.stateStack = new StateStack(this);
         this.party = new Party();
-        console.log("new code");
     }
     async loadPartySpecies() {
         const speciesNames = ['pikachu', 'greninja'];
@@ -23,12 +22,23 @@ export default class Game {
             new PokemonCreature('pikachu')
         ];
         this.party.pokemon[0].nickname = "Ninja";
+        this.party.pokemon[0].moves = [
+            "dark_pulse",
+            "u_turn",
+            "quick_attack",
+            "psychic"
+        ];
         this.party.pokemon[1].nickname = "Mega Pichu Man";
+        this.party.pokemon[1].moves = [
+            "dark_pulse",
+            "u_turn",
+            "iron_tail",
+            "thunderbolt"
+        ];
         this.party.pokemon[1].level = 60;
     }
     async preload() {
         await this.loadPartySpecies();
-        this.initParty();
         await this.stateStack.preload();
     }
 }

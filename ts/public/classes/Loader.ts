@@ -3,7 +3,9 @@ export type Loadable = HTMLImageElement | HTMLAudioElement | JSON;
 export default class Loader {
 	private alreadyLoaded = new Map<string, Loadable>();
 
-	constructor() { }
+	constructor() {
+		console.log("new loader")
+	}
 
 	async loadJSON(src: string, name = src, dynamic = false) {
 		const loaded = this.alreadyLoaded.get(name);
@@ -36,5 +38,10 @@ export default class Loader {
 		if (!dynamic)
 			this.alreadyLoaded.set(name, audio)
 		return audio;
+	}
+
+	async loadJS<T = any>(path: string) {
+		const imported = await import(path) as T;
+		return imported;
 	}
 }

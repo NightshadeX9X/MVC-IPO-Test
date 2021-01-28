@@ -3,6 +3,8 @@ import StateStack from "./StateStack.js";
 import Loader from './Loader.js';
 import Input from "./Input.js";
 import PokemonCreature from "./PokemonCreature.js";
+import PokemonSpecies, { generateEmptyStats, JSONSpecies, PokemonType } from "./PokemonSpecies.js";
+import { PokemonTypes } from './PokemonSpecies.js';
 
 export default class Game {
 	fps = 60;
@@ -11,24 +13,27 @@ export default class Game {
 	stateStack = new StateStack(this)
 	party = new Party()
 	constructor() {
+		console.log("new code")
+	}
+
+	private async loadPartySpecies() {
+		const speciesNames = ['pikachu', 'greninja'];
+		await Promise.all(speciesNames.map(n => PokemonSpecies.load(this.loader, n)))
+	}
+
+	private initParty() {
 		this.party.pokemon = [
 			new PokemonCreature('greninja'),
 			new PokemonCreature('pikachu')
 		];
 		this.party.pokemon[0].nickname = "Ninja"
-		this.party.pokemon[0].moves = [
-			"dark_pulse",
-			"u_turn",
-			"quick_attack",
-			"psychic"
-		];
 		this.party.pokemon[1].nickname = "Mega Pichu Man"
-		this.party.pokemon[1].moves = [
-			"dark_pulse",
-			"u_turn",
-			"iron_tail",
-			"thunderbolt"
-		]
-		this.party.pokemon[1].level = 80;
+		this.party.pokemon[1].level = 60;
+	}
+
+	async preload() {
+		await this.loadPartySpecies();
+		this.initParty();
+		await this.stateStack.preload();
 	}
 }

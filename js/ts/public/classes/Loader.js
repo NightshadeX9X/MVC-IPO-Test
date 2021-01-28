@@ -1,7 +1,6 @@
 export default class Loader {
     constructor() {
         this.alreadyLoaded = new Map();
-        console.log("new loader");
     }
     async loadJSON(src, name = src, dynamic = false) {
         const loaded = this.alreadyLoaded.get(name);

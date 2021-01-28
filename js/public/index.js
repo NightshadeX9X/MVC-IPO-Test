@@ -1,33 +1,9 @@
-import PokemonSpecies from "./classes/PokemonSpecies.js";
 import RoamState from "./classes/states/RoamState.js";
-import { PokemonTypes } from './classes/PokemonSpecies.js';
-import PokemonMove from "./classes/PokemonMove.js";
 import Game from "./classes/Game.js";
 const cnv = document.getElementById('screen');
 const ctx = cnv.getContext('2d');
 ctx.imageSmoothingEnabled = false;
-const PIKACHU = new PokemonSpecies('pikachu', "Pikachu", [PokemonTypes.ELECTRIC]);
-const GRENINJA = new PokemonSpecies('greninja', "Greninja", [PokemonTypes.WATER, PokemonTypes.DARK]);
-PIKACHU.stats.Atk = 20;
-PIKACHU.stats.Def = 20;
-PIKACHU.stats.HP = 200;
-GRENINJA.stats.Atk = 50;
-GRENINJA.stats.Def = 30;
-GRENINJA.stats.HP = 100;
 document.querySelector('button')?.click();
-const THUNDERBOLT = new PokemonMove('thunderbolt', 'Thunderbolt', PokemonTypes.ELECTRIC, 90);
-const QUICK_ATTACK = new PokemonMove('quick_attack', 'Quick Attack', PokemonTypes.NORMAL, 40);
-const IRON_TAIL = new PokemonMove('iron_tail', 'Iron Tail', PokemonTypes.STEEL, 100);
-const EARTHQUAKE = new PokemonMove('earthquake', 'Earthquake', PokemonTypes.GROUND, 100);
-const ELECTROBALL = new PokemonMove('electroball', 'Electroball', PokemonTypes.ELECTRIC, 80);
-const PSYCHIC = new PokemonMove('psychic', 'Psychic', PokemonTypes.PSYCHIC, 90);
-const DARK_PULSE = new PokemonMove('dark_pulse', 'Dark Pulse', PokemonTypes.DARK, 80);
-const U_TURN = new PokemonMove('u_turn', 'U-Turn', PokemonTypes.BUG, 70);
-QUICK_ATTACK.priority = 1;
-export const SPECIES = {
-    PIKACHU,
-    GRENINJA
-};
 const game = new Game();
 async function setup() {
     game.input.start(document);
@@ -39,7 +15,7 @@ async function setup() {
     render();
 }
 async function preload() {
-    await game.stateStack.preload();
+    await game.preload();
 }
 function init() {
     game.stateStack.init();

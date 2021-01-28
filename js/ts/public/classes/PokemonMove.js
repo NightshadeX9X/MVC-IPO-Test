@@ -10,10 +10,9 @@ export default class PokemonMove {
         PokemonMove.list.set(name, this);
     }
     static async load(loader, name) {
-        const imp = await loader.loadJS(`/js/moves/${name}.js`);
-        const moveData = imp.default;
-        const move = new PokemonMove(moveData.name, moveData.displayName, moveData.type, moveData.damage);
-        move.priority = Number(moveData.priority);
+        const imp = await loader.loadJS(`/tson/moves/${name}`);
+        const move = imp.default;
+        new PokemonMove(move.name, move.displayName, move.type, move.damage);
     }
     getDamageDoneTo(attacker, defender) {
         let amount = (this.damage + attacker.stats.Atk - defender.stats.Def);
