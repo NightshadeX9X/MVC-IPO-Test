@@ -25,8 +25,10 @@ export default class Game {
         this.party.pokemon[0].nickname = "Ninja";
         this.party.pokemon[1].nickname = "Mega Pichu Man";
         this.party.pokemon[1].level = 60;
+        [this.party.pokemon[0], this.party.pokemon[1]] = [this.party.pokemon[1], this.party.pokemon[0]];
     }
     async preload() {
+        // Remove these next two lines in production
         await this.loadPartySpecies();
         this.initParty();
         await this.stateStack.preload();

@@ -32,7 +32,7 @@ export default class WildBattle {
     }
     async preload(loader) {
         await PokemonSpecies.load(loader, this.selected.species);
-        await Promise.all(this.allMoves.map(m => PokemonMove.load(loader, m)));
         this.wild = new PokemonCreature(this.selected.species);
+        await Promise.all(this.allMoves.map(m => PokemonMove.load(loader, m)));
     }
 }

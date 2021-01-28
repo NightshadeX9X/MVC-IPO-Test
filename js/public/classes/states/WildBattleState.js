@@ -47,6 +47,7 @@ export default class WildBattleState extends State {
         return await loader.loadImage(`/assets/images/pokemon/${this.partyHead?.species?.name}.png`);
     }
     init() {
+        console.log(this.battle.wild, this.battle.party.head);
         if (this.audio) {
             this.audio.currentTime = 0;
             this.audio.loop = true;

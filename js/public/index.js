@@ -3,7 +3,6 @@ import Game from "./classes/Game.js";
 const cnv = document.getElementById('screen');
 const ctx = cnv.getContext('2d');
 ctx.imageSmoothingEnabled = false;
-document.querySelector('button')?.click();
 const game = new Game();
 async function setup() {
     game.input.start(document);

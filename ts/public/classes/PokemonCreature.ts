@@ -1,5 +1,5 @@
-import { cloneObject, IDGenerator } from '../Util.js';
-import PokemonSpecies, { generateEmptyStats, PokemonStats } from './PokemonSpecies.js';
+import { cloneObject, IDGenerator, random } from '../Util.js';
+import PokemonSpecies, { generateEmptyStats, PokemonStats, PokemonStat } from './PokemonSpecies.js';
 export default class PokemonCreature {
 	public static idGen = IDGenerator();
 	public id = PokemonCreature.idGen.next().value as number;
@@ -13,15 +13,46 @@ export default class PokemonCreature {
 		"electroball",
 		"iron_tail",
 		"quick_attack"
-	]
+	];
+	public EVs = generateEmptyStats();
+	public IVs: PokemonStats = {
+		HP: random(0, 31),
+		Atk: random(0, 31),
+		Def: random(0, 31),
+		SpA: random(0, 31),
+		SpD: random(0, 31),
+		Spe: random(0, 31),
+	};
 	constructor(speciesName: string) {
 		this.species = PokemonSpecies.list.get(speciesName) as PokemonSpecies;
-		this.stats = generateEmptyStats();
-		if (this.species.stats) {
-			this.stats = cloneObject(this.species.stats) as PokemonStats;
-		}
+		this.stats = this.calcStats();
 		this.nickname = this.species?.displayName || "Pokemon";
-		this.maxHP = this.stats.HP;
+		this.maxHP = Number(this.stats.HP);
+	}
+
+	calcStats() {
+		const stats = generateEmptyStats();
+		const nonHpStats = ["Atk", "Def", "SpA", "SpD", "Spe"] as (keyof typeof PokemonStat)[]
+		const level = this.level;
+		const floor = Math.floor;
+		nonHpStats.forEach((statName) => {
+			const base = this.species.stats[statName];
+			const IV = this.IVs[statName];
+			const EV = this.EVs[statName];
+			stats[statName] = floor(
+				floor(floor(2 * base + IV + floor(EV / 4)) * level / 100)
+				+ 5
+			)
+		});
+		const HPBase = this.species.stats.HP;
+		const HPIV = this.IVs.HP;
+		const HPEV = this.EVs.HP;
+		stats.HP = floor(
+			floor(floor(2 * HPBase + HPIV + floor(HPEV / 4)) * level / 100)
+			+ level + 10
+		)
+
+		return stats;
 	}
 
 	canBattle() {

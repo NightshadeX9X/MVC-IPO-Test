@@ -46,7 +46,8 @@ export default class InteractionState extends State {
 			if (b.user.stats.Spe !== a.user.stats.Spe)
 				return b.user.stats.Spe - a.user.stats.Spe
 			else return randomArrayMember([-1, 1]);
-		})
+		});
+		console.log(this.sortedDecisions)
 	}
 
 	public static getPriority(decision: Decision) {
@@ -54,7 +55,7 @@ export default class InteractionState extends State {
 		if (decision.type === "attack") {
 			const attack = PokemonMove.list.get(decision.attack);
 			if (attack) {
-				return attack.priority;
+				return attack.priority || 0;
 			}
 		} else if (decision.type === "run") {
 			return 8;

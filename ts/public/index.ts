@@ -1,20 +1,10 @@
-import Input from "./classes/Input.js";
-import Loader from "./classes/Loader.js";
-import PokemonSpecies from "./classes/PokemonSpecies.js";
 import RoamState from "./classes/states/RoamState.js";
-import StateStack from "./classes/StateStack.js";
-import Vector from "./classes/Vector.js";
-import { PokemonTypes } from './classes/PokemonSpecies.js';
-import PokemonCreature from "./classes/PokemonCreature.js";
-import PokemonMove from "./classes/PokemonMove.js";
-import Party from "./classes/Party.js";
 import Game from "./classes/Game.js";
 
 const cnv = document.getElementById('screen') as HTMLCanvasElement;
 const ctx = cnv.getContext('2d') as CanvasRenderingContext2D;
 ctx.imageSmoothingEnabled = false;
 
-document.querySelector('button')?.click();
 
 
 const game = new Game();
