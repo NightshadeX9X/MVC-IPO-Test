@@ -94,7 +94,7 @@ export default class Vector {
         return dist;
     }
     static fromString(string) {
-        const { x, y } = JSON.parse(string);
-        return new Vector(Number(x), Number(y));
+        const [x, y] = string.split("x").map(Number);
+        return new Vector(x, y);
     }
 }

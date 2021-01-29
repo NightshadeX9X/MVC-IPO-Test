@@ -18,7 +18,7 @@ export default class GameMap {
             loader.loadImage(`/assets/images/maps/${this.name}.png`)
         ];
         const [raw, image] = await Promise.all(promises);
-        this.json = pure;
+        this.json = raw;
         this.image = image;
     }
     init() {
@@ -32,15 +32,11 @@ export default class GameMap {
             return;
         const pos = this.roamState.player.camera.convertCoords(new Vector());
         this.roamState.player.camera.ctx.drawImage(this.image, pos.x, pos.y);
-        /* this.collisionData?.forEach((cd, y) => {
-            cd.forEach((val, x) => {
-                if (val?.type === "wall") {
-                    ctx.fillRect(x * 16, y * 16, 16, 16)
-                }
-            })
-        }); */
     }
     get sizeInPx() {
-        return (this.json?.sizeInTiles || new Vector).prod(this.roamState.tileSize);
+        if (!this.json)
+            return new Vector;
+        const size = Vector.fromString(this.json.sizeInTiles);
+        return size.prod(this.roamState.tileSize);
     }
 }

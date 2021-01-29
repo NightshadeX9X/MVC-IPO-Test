@@ -99,10 +99,7 @@ export default class Vector implements Vector {
 		return dist;
 	}
 	static fromString(string: string) {
-		const { x, y } = JSON.parse(string);
-		return new Vector(Number(x), Number(y))
+		const [x, y] = string.split("x").map(Number);
+		return new Vector(x, y)
 	}
 }
-
-export type StringVector = `${number}x${number}`;
-export type StringVectorRange = `${StringVector}-${StringVector}`;

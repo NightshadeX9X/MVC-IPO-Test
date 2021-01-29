@@ -2,23 +2,22 @@ import Entity from "../Entity.js";
 import Input from "./Input.js";
 import Loader, { JSON } from "./Loader.js";
 import RoamState from "./states/RoamState.js";
-import Vector, { StringVector, StringVectorRange } from "./Vector.js";
+import Vector from "./Vector.js";
 
 export type TileType = "wall" | "empty";
 
 export interface RangedTileSettings<T> {
-	range: StringVectorRange;
+	range: string;
 	value: T;
 
 }
-export type CoordInMap = `${string} ${StringVector}`
 export interface JSONGameMap {
 	name: string;
-	sizeInTiles: StringVector;
+	sizeInTiles: string;
 	layers: {
 		walls: RangedTileSettings<boolean>[];
 		grass: RangedTileSettings<{ table: string }>[];
-		portals: RangedTileSettings<{ to: CoordInMap }>[];
+		portals: RangedTileSettings<{ to: string }>[];
 	}
 }
 
@@ -56,17 +55,12 @@ export default class GameMap implements Entity {
 		if (!this.image) return;
 		const pos = this.roamState.player.camera.convertCoords(new Vector());
 		this.roamState.player.camera.ctx.drawImage(this.image, pos.x, pos.y);
-		/* this.collisionData?.forEach((cd, y) => {
-			cd.forEach((val, x) => {
-				if (val?.type === "wall") {
-					ctx.fillRect(x * 16, y * 16, 16, 16)
-				}
-			})
-		}); */
 	}
 
 	get sizeInPx() {
-		return (this.json?.sizeInTiles || new Vector).prod(this.roamState.tileSize)
+		if (!this.json) return new Vector;
+		const size = Vector.fromString(this.json.sizeInTiles)
+		return size.prod(this.roamState.tileSize)
 	}
 
 
