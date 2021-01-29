@@ -2,15 +2,31 @@ import Entity from "../Entity.js";
 import Input from "./Input.js";
 import Loader, { JSON } from "./Loader.js";
 import RoamState from "./states/RoamState.js";
-import Vector from "./Vector.js";
-import { generate2DArray } from '../Util.js';
-import EncounterTable from "../JSONConversions/EncounterTable.js";
+import Vector, { StringVector, StringVectorRange } from "./Vector.js";
+
+export type TileType = "wall" | "empty";
+
+export interface RangedTileSettings<T> {
+	range: StringVectorRange;
+	value: T;
+
+}
+export type CoordInMap = `${string} ${StringVector}`
+export interface JSONGameMap {
+	name: string;
+	sizeInTiles: StringVector;
+	layers: {
+		walls: RangedTileSettings<boolean>[];
+		grass: RangedTileSettings<{ table: string }>[];
+		portals: RangedTileSettings<{ to: CoordInMap }>[];
+	}
+}
 
 export default class GameMap implements Entity {
 	toUpdate: boolean | null = true;
 	toRender: boolean | null = true;
 	toPreload: boolean | null = true;
-	json: JSONGameMap.Pure | null = null;
+	json: JSONGameMap | null = null;
 	image: HTMLImageElement | null = null;
 	constructor(public name: string, public roamState: RoamState) {
 	}
@@ -26,9 +42,8 @@ export default class GameMap implements Entity {
 
 		const [raw, image]
 			= await Promise.all(promises) as
-			[JSONGameMap.Raw, HTMLImageElement];
-		const pure = JSONGameMap.purify(raw);
-		this.json = pure;
+			[JSONGameMap, HTMLImageElement];
+		this.json = raw;
 		this.image = image;
 	}
 	init(): void {
@@ -55,151 +70,7 @@ export default class GameMap implements Entity {
 	}
 
 
-	get wallData() {
-		if (!this.json) return null;
-		if (!Array.isArray(this.json.walls)) return null;
-		const arr: boolean[][] = [];
-		this.json.walls.forEach(wall => {
-			const [pos1, pos2] = wall.range;
 
-			for (let y = pos1.y; y <= pos2.y; y++) {
-				if (typeof arr[y] === "undefined") arr[y] = [];
-				for (let x = pos1.x; x <= pos2.x; x++) {
-					arr[y][x] = wall.value;
-				}
-			}
-		});
-		return arr;
-	}
-
-	get portalData() {
-		if (!this.json) return null;
-		if (!Array.isArray(this.json.portals)) return null;
-		const arr: JSONGameMap.PurePortal["to"][][] = [];
-		this.json.portals.forEach(portal => {
-			const [pos1, pos2] = portal.range;
-
-			for (let y = pos1.y; y <= pos2.y; y++) {
-				if (typeof arr[y] === "undefined") arr[y] = [];
-				for (let x = pos1.x; x <= pos2.x; x++) {
-					arr[y][x] = portal.to;
-				}
-			}
-		});
-		return arr;
-	}
-
-	get grassData() {
-		if (!this.json) return null;
-		if (!Array.isArray(this.json.grass)) return null;
-		const arr: JSONGameMap.Pure["grass"][] = [];
-		this.json.grass.forEach(grass => {
-			const [pos1, pos2] = grass.range;
-
-			for (let y = pos1.y; y <= pos2.y; y++) {
-				if (typeof arr[y] === "undefined") arr[y] = [];
-				for (let x = pos1.x; x <= pos2.x; x++) {
-					arr[y][x] = grass;
-				}
-			}
-		});
-		return arr;
-	}
 }
 
-export type TileType = "wall" | "empty"
 
-export namespace JSONGameMap {
-	type VecAsString = `${number}x${number}`;
-	type VecRangeAsString = `${VecAsString}-${VecAsString}`;
-	type VecRange = [Vector, Vector];
-	type CoordInMap = `${string} ${VecAsString}`
-	export interface Raw {
-		name: string,
-		sizeInTiles: VecAsString,
-		walls:
-		{
-			range: VecRangeAsString,
-			value: boolean
-		}[];
-		portals:
-		{
-			range: VecRangeAsString,
-			to: CoordInMap
-		}[];
-		grass:
-		{
-			range: VecRangeAsString,
-			table: string;
-		}[]
-	}
-	export interface Pure {
-		name: string,
-		sizeInTiles: Vector,
-		walls:
-		{
-			range: VecRange,
-			value: boolean
-		}[];
-		portals:
-		PurePortal[];
-		grass:
-		{
-			range: VecRange,
-			table: string
-		}[]
-	}
-	export interface PurePortal {
-		range: VecRange,
-		to: {
-			map: string;
-			pos: Vector
-		}
-	}
-
-	export function strToVec(str: VecAsString) {
-		const arr = str.split("x");
-		const [x, y] = arr.map(n => Number(n));
-		return new Vector(x, y)
-	}
-	export function strRangeToVec(str: VecRangeAsString) {
-		const arr = str.split("-");
-		const [pos1, pos2] = arr.map(p => strToVec(p as any))
-		return [pos1, pos2] as [Vector, Vector];
-	}
-	export function getCoordInMap(str: CoordInMap) {
-		const arr = str.split(" ");
-		const map = arr[0];
-		const pos = strToVec(arr[1] as any);
-		return {
-			map,
-			pos
-		}
-	}
-
-	export function purify(raw: Raw): Pure {
-		let pure = { ...raw } as any;
-		pure.sizeInTiles = strToVec(pure.sizeInTiles)
-		pure.walls = pure.walls.map((wall: any) => {
-			const [pos1, pos2] = strRangeToVec(wall.range);
-			return {
-				value: wall.value,
-				range: [pos1, pos2]
-			}
-		})
-		pure.portals = pure.portals.map((portal: any) => {
-			const range = strRangeToVec(portal.range);
-			const to = getCoordInMap(portal.to)
-
-			return {
-				range, to
-			}
-		});
-
-		pure.grass = pure.grass.map((grass: any) => {
-			const range = strRangeToVec(grass.range);
-			return { range, table: grass.table }
-		})
-		return pure as Pure;
-	}
-}

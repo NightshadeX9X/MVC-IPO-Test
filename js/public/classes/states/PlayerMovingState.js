@@ -1,4 +1,4 @@
-import { chance, Direction, directionToVector } from "../../Util.js";
+import { Direction, directionToVector } from "../../Util.js";
 import State from "../State.js";
 import Vector from "../Vector.js";
 import FadeState from "./FadeState.js";
@@ -27,17 +27,6 @@ export default class PlayerMovingState extends State {
             else if (this.direction === Direction.UP)
                 this.roamState.player.spritesheet.coords.y = 3;
         }
-        let wd = this.roamState.gameMap.wallData;
-        if (wd && this.roamState.gameMap.json) {
-            if (wd[this.targetCoords.y]?.[this.targetCoords.x] === true ||
-                this.targetCoords.x < 0 ||
-                this.targetCoords.x >= this.roamState.gameMap.json.sizeInTiles.x ||
-                this.targetCoords.y < 0 ||
-                this.targetCoords.y >= this.roamState.gameMap.json.sizeInTiles.y) {
-                this.stateStack.pop();
-                return;
-            }
-        }
     }
     get vec() {
         return directionToVector(this.direction).quo(this.roamState.tileSize);
@@ -57,26 +46,8 @@ export default class PlayerMovingState extends State {
         else {
             (async () => {
                 this.roamState.player.pos = this.targetCoords;
-                if (this.roamState.gameMap.portalData) {
-                    const portalTo = this.roamState.gameMap.portalData?.[this.targetCoords.y]?.[this.targetCoords.x];
-                    if (portalTo) {
-                        this.roamState.gameMap.name = portalTo.map;
-                        this.roamState.gameMap.load(this.stateStack.loader);
-                        this.roamState.player.pos = portalTo.pos;
-                    }
-                }
                 let toPushWildBattle = false;
                 let encounterTable = "";
-                if (this.roamState.gameMap.grassData) {
-                    const grassTo = this.roamState.gameMap.grassData?.[this.targetCoords.y]?.[this.targetCoords.x];
-                    if (grassTo) {
-                        console.log("in grass");
-                        if (chance(100)) {
-                            toPushWildBattle = true;
-                            encounterTable = grassTo.table;
-                        }
-                    }
-                }
                 // console.log(this.roamState.player.pos)
                 this.roamState.toUpdate = null;
                 this.stateStack.pop();

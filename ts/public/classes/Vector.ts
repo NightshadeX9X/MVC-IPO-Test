@@ -103,3 +103,6 @@ export default class Vector implements Vector {
 		return new Vector(Number(x), Number(y))
 	}
 }
+
+export type StringVector = `${number}x${number}`;
+export type StringVectorRange = `${StringVector}-${StringVector}`;
