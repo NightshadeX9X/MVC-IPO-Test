@@ -1,73 +1,88 @@
 {
 	"name": "the_square",
 	"sizeInTiles": "40x25",
-	"walls": [
-		{
-			"range": "0x0-15x2",
-			"value": true
-		},
-		{
-			"range": "0x3-3x11",
-			"value": true
-		},
-		{
-			"range": "0x0-15x2",
-			"value": true
-		},
-		{
-			"range": "5x4-15x12",
-			"value": true
-		},
-		{
-			"range": "0x16-3x21",
-			"value": true
-		},
-		{
-			"range": "24x0-39x2",
-			"value": true
-		},
-		{
-			"range": "31x3-39x12",
-			"value": true
-		},
-		{
-			"range": "18x12-22x14",
-			"value": true
-		},
-		{
-			"range": "19x11-21x15",
-			"value": true
-		},
-		{
-			"range": "6x3-14x3",
-			"value": true
-		}
-	],
-	"portals": [],
-	"grass": [
-		{
-			"range": "0x13-17x15",
-			"table": "0"
-		},
-		{
-			"range": "21x17-22x23",
-			"table": "0"
-		},
-		{
-			"range": "23x15-24x23",
-			"table": "0"
-		},
-		{
-			"range": "25x8-28x23",
-			"table": "0"
-		},
-		{
-			"range": "29x17-30x22",
-			"table": "0"
-		},
-		{
-			"range": "31x17-32x18",
-			"table": "0"
-		}
-	]
+	"layers": {
+		"walls": [
+			{
+				"range": "0x0-15x2",
+				"value": true
+			},
+			{
+				"range": "0x3-3x11",
+				"value": true
+			},
+			{
+				"range": "0x0-15x2",
+				"value": true
+			},
+			{
+				"range": "5x4-15x12",
+				"value": true
+			},
+			{
+				"range": "0x16-3x21",
+				"value": true
+			},
+			{
+				"range": "24x0-39x2",
+				"value": true
+			},
+			{
+				"range": "31x3-39x12",
+				"value": true
+			},
+			{
+				"range": "18x12-22x14",
+				"value": true
+			},
+			{
+				"range": "19x11-21x15",
+				"value": true
+			},
+			{
+				"range": "6x3-14x3",
+				"value": true
+			}
+		],
+		"portals": [],
+		"grass": [
+			{
+				"range": "0x13-17x15",
+				"value": {
+					"table": "0",
+					"image": "transparent"
+				}
+			},
+			{
+				"range": "21x17-22x23",
+				"value": {
+					"table": "0"
+				}
+			},
+			{
+				"range": "23x15-24x23",
+				"value": {
+					"table": "0"
+				}
+			},
+			{
+				"range": "25x8-28x23",
+				"value": {
+					"table": "0"
+				}
+			},
+			{
+				"range": "29x17-30x22",
+				"value": {
+					"table": "0"
+				}
+			},
+			{
+				"range": "31x17-32x18",
+				"value": {
+					"table": "0"
+				}
+			}
+		]
+	}
 }

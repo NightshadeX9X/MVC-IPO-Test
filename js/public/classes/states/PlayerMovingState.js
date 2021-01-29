@@ -1,4 +1,4 @@
-import { Direction, directionToVector } from "../../Util.js";
+import { chance, Direction, directionToVector } from "../../Util.js";
 import State from "../State.js";
 import Vector from "../Vector.js";
 import FadeState from "./FadeState.js";
@@ -27,6 +27,17 @@ export default class PlayerMovingState extends State {
             else if (this.direction === Direction.UP)
                 this.roamState.player.spritesheet.coords.y = 3;
         }
+        const destination = this.targetCoords;
+        const wallData = this.roamState.gameMap.layers.get('wall')?.getData();
+        if (this.roamState.gameMap.json && wallData) {
+            if (destination.x < 0 ||
+                destination.y < 0 ||
+                destination.x >= this.roamState.gameMap.size.x ||
+                destination.y >= this.roamState.gameMap.size.y ||
+                wallData[destination.y]?.[destination.x]) {
+                this.stateStack.pop();
+            }
+        }
     }
     get vec() {
         return directionToVector(this.direction).quo(this.roamState.tileSize);
@@ -48,10 +59,18 @@ export default class PlayerMovingState extends State {
                 this.roamState.player.pos = this.targetCoords;
                 let toPushWildBattle = false;
                 let encounterTable = "";
-                // console.log(this.roamState.player.pos)
+                const grassData = this.roamState.gameMap.layers.get('grass')?.getData();
+                if (grassData) {
+                    const tile = grassData[this.targetCoords.y][this.targetCoords.x];
+                    if (tile && chance(100)) {
+                        console.log("tile is truthy");
+                        encounterTable = tile.table;
+                        toPushWildBattle = true;
+                    }
+                }
                 this.roamState.toUpdate = null;
                 this.stateStack.pop();
-                if (toPushWildBattle /*  && encounterTable && PARTY.some(p => p.canBattle()) */) {
+                if (toPushWildBattle && encounterTable && this.stateStack.game.party.usable()) {
                     const wbs = new WildBattleState(this.stateStack, "meadow", encounterTable);
                     this.stateStack.push(wbs);
                     this.stateStack.push(new FadeState(this.stateStack));

@@ -1,4 +1,7 @@
 import Vector from "./Vector.js";
+import { WallLayer } from './map_layers/WallLayer.js';
+import { BaseLayer } from "./map_layers/BaseLayer.js";
+import { GrassLayer } from "./map_layers/GrassLayer.js";
 export default class GameMap {
     constructor(name, roamState) {
         this.name = name;
@@ -8,35 +11,44 @@ export default class GameMap {
         this.toPreload = true;
         this.json = null;
         this.image = null;
+        this.layers = new Map();
+    }
+    get size() {
+        if (!this.json)
+            return new Vector;
+        const size = Vector.fromString(this.json.sizeInTiles);
+        return size;
     }
     async preload(loader) {
-        await this.load(loader);
+        await this.loadJSONData(loader);
+        this.setLayers();
+        for (const entry of this.layers) {
+            const [key, layer] = entry;
+            await layer.preload(loader);
+        }
     }
-    async load(loader) {
+    setLayers() {
+        this.layers.set('base', new BaseLayer(this));
+        this.layers.set('wall', new WallLayer(this));
+        this.layers.set('grass', new GrassLayer(this));
+    }
+    async loadJSONData(loader) {
         const promises = [
             loader.loadJSON(`/json/maps/${this.name}.json`),
-            loader.loadImage(`/assets/images/maps/${this.name}.png`)
         ];
-        const [raw, image] = await Promise.all(promises);
+        const [raw] = await Promise.all(promises);
         this.json = raw;
-        this.image = image;
     }
     init() {
-        // console.table(this.collisionDataStr)
-        // console.log(this.json?.tileDataGenerator.overrides)
+        this.layers.forEach(layer => {
+            layer.init();
+        });
     }
     update(input) {
     }
     render(ctx) {
-        if (!this.image)
-            return;
-        const pos = this.roamState.player.camera.convertCoords(new Vector());
-        this.roamState.player.camera.ctx.drawImage(this.image, pos.x, pos.y);
     }
     get sizeInPx() {
-        if (!this.json)
-            return new Vector;
-        const size = Vector.fromString(this.json.sizeInTiles);
-        return size.prod(this.roamState.tileSize);
+        return this.size.prod(this.roamState.tileSize);
     }
 }

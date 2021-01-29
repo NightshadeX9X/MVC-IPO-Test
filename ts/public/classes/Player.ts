@@ -8,7 +8,8 @@ import PlayerMovingState from "./states/PlayerMovingState.js";
 import RoamState from "./states/RoamState.js";
 import Vector from "./Vector.js";
 
-export default class Player implements Entity {
+export default class Player {
+	public zIndex = 1;
 	public pos = new Vector(16, 12);
 	public drawSize = new Vector(1, 2);
 	public drawOffset = new Vector(0, -1);
@@ -40,11 +41,11 @@ export default class Player implements Entity {
 			}
 		})
 	}
-	render(ctx: CanvasRenderingContext2D): void {
+	render(camera: Camera): void {
 		if (!this.image || !this.spritesheet) return;
 		const size = this.drawSize.prod(this.roamState.tileSize)
-		const pos = this.camera.convertCoords(this.pos.sum(this.drawOffset)/* .diff(this.drawOffset) */.prod(this.roamState.tileSize));
+		const pos = camera.convertCoords(this.pos.sum(this.drawOffset)/* .diff(this.drawOffset) */.prod(this.roamState.tileSize));
 		const spriteCoords = this.spritesheet.coords.prod(this.roamState.tileSize).prod(this.drawSize);
-		this.camera.ctx.drawImage(this.image, spriteCoords.x, spriteCoords.y, size.x, size.y, pos.x, pos.y, size.x, size.y)
+		camera.ctx.drawImage(this.image, spriteCoords.x, spriteCoords.y, size.x, size.y, pos.x, pos.y, size.x, size.y)
 	}
 }

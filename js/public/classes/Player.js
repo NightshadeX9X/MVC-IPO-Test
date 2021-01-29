@@ -6,6 +6,7 @@ import Vector from "./Vector.js";
 export default class Player {
     constructor(roamState) {
         this.roamState = roamState;
+        this.zIndex = 1;
         this.pos = new Vector(16, 12);
         this.drawSize = new Vector(1, 2);
         this.drawOffset = new Vector(0, -1);
@@ -36,12 +37,12 @@ export default class Player {
             }
         });
     }
-    render(ctx) {
+    render(camera) {
         if (!this.image || !this.spritesheet)
             return;
         const size = this.drawSize.prod(this.roamState.tileSize);
-        const pos = this.camera.convertCoords(this.pos.sum(this.drawOffset) /* .diff(this.drawOffset) */.prod(this.roamState.tileSize));
+        const pos = camera.convertCoords(this.pos.sum(this.drawOffset) /* .diff(this.drawOffset) */.prod(this.roamState.tileSize));
         const spriteCoords = this.spritesheet.coords.prod(this.roamState.tileSize).prod(this.drawSize);
-        this.camera.ctx.drawImage(this.image, spriteCoords.x, spriteCoords.y, size.x, size.y, pos.x, pos.y, size.x, size.y);
+        camera.ctx.drawImage(this.image, spriteCoords.x, spriteCoords.y, size.x, size.y, pos.x, pos.y, size.x, size.y);
     }
 }

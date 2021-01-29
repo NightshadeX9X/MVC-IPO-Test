@@ -3,8 +3,78 @@ import Input from "./Input.js";
 import Loader, { JSON } from "./Loader.js";
 import RoamState from "./states/RoamState.js";
 import Vector from "./Vector.js";
+import GameMapLayer from './GameMapLayer.js';
+import { WallLayer } from './map_layers/WallLayer.js';
+import { BaseLayer } from "./map_layers/BaseLayer.js";
+import { GrassImage, GrassLayer } from "./map_layers/GrassLayer.js";
 
 export type TileType = "wall" | "empty";
+
+
+
+export default class GameMap implements Entity {
+	toUpdate: boolean | null = true;
+	toRender: boolean | null = true;
+	toPreload: boolean | null = true;
+	json: JSONGameMap | null = null;
+	image: HTMLImageElement | null = null;
+	layers = new Map<string, GameMapLayer>();
+	constructor(public name: string, public roamState: RoamState) {
+
+
+	}
+
+	get size() {
+		if (!this.json) return new Vector;
+		const size = Vector.fromString(this.json.sizeInTiles);
+		return size;
+	}
+	async preload(loader: Loader) {
+		await this.loadJSONData(loader);
+		this.setLayers();
+
+		for (const entry of this.layers) {
+			const [key, layer] = entry;
+			await layer.preload(loader);
+		}
+	}
+
+	private setLayers() {
+		this.layers.set('base', new BaseLayer(this));
+		this.layers.set('wall', new WallLayer(this));
+		this.layers.set('grass', new GrassLayer(this));
+	}
+
+	async loadJSONData(loader: Loader) {
+		const promises = [
+			loader.loadJSON(`/json/maps/${this.name}.json`),
+		];
+
+		const [raw]
+			= await Promise.all(promises) as
+			[JSONGameMap];
+		this.json = raw;
+	}
+	init(): void {
+		this.layers.forEach(layer => {
+			layer.init();
+		})
+	}
+	update(input: Input): void {
+	}
+	render(ctx: CanvasRenderingContext2D): void {
+
+	}
+
+	get sizeInPx() {
+		return this.size.prod(this.roamState.tileSize)
+	}
+
+
+
+}
+
+
 
 export interface RangedTileSettings<T> {
 	range: string;
@@ -15,56 +85,8 @@ export interface JSONGameMap {
 	name: string;
 	sizeInTiles: string;
 	layers: {
-		walls: RangedTileSettings<boolean>[];
-		grass: RangedTileSettings<{ table: string }>[];
-		portals: RangedTileSettings<{ to: string }>[];
+		walls?: RangedTileSettings<boolean>[];
+		grass?: RangedTileSettings<{ table: string, image: GrassImage }>[];
+		portals?: RangedTileSettings<{ to: string }>[];
 	}
 }
-
-export default class GameMap implements Entity {
-	toUpdate: boolean | null = true;
-	toRender: boolean | null = true;
-	toPreload: boolean | null = true;
-	json: JSONGameMap | null = null;
-	image: HTMLImageElement | null = null;
-	constructor(public name: string, public roamState: RoamState) {
-	}
-	async preload(loader: Loader) {
-		await this.load(loader);
-	}
-
-	async load(loader: Loader) {
-		const promises = [
-			loader.loadJSON(`/json/maps/${this.name}.json`),
-			loader.loadImage(`/assets/images/maps/${this.name}.png`)
-		];
-
-		const [raw, image]
-			= await Promise.all(promises) as
-			[JSONGameMap, HTMLImageElement];
-		this.json = raw;
-		this.image = image;
-	}
-	init(): void {
-		// console.table(this.collisionDataStr)
-		// console.log(this.json?.tileDataGenerator.overrides)
-	}
-	update(input: Input): void {
-	}
-	render(ctx: CanvasRenderingContext2D): void {
-		if (!this.image) return;
-		const pos = this.roamState.player.camera.convertCoords(new Vector());
-		this.roamState.player.camera.ctx.drawImage(this.image, pos.x, pos.y);
-	}
-
-	get sizeInPx() {
-		if (!this.json) return new Vector;
-		const size = Vector.fromString(this.json.sizeInTiles)
-		return size.prod(this.roamState.tileSize)
-	}
-
-
-
-}
-
-
