@@ -7,12 +7,12 @@ export default class Player {
     constructor(roamState) {
         this.roamState = roamState;
         this.zIndex = 1;
-        this.pos = new Vector(16, 12);
+        this.pos = new Vector(12, 12);
         this.drawSize = new Vector(1, 2);
         this.drawOffset = new Vector(0, -1);
         this.image = null;
         this.spritesheet = null;
-        this.camera = new Camera(this, new Vector(480, 320));
+        this.camera = new Camera(this, new Vector(480, 320).prod(0.8));
         this.toUpdate = true;
         this.toRender = true;
         this.toPreload = true;

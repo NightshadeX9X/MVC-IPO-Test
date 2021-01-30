@@ -7,7 +7,7 @@ export default class RoamState extends State {
         super(stateStack);
         this.stateStack = stateStack;
         this.timeOfDay = TimeOfDay.NIGHT;
-        this.gameMap = new GameMap('the_square', this);
+        this.gameMap = new GameMap('player_bedroom', this);
         this.player = new Player(this);
         this.tileSize = new Vector(16);
     }

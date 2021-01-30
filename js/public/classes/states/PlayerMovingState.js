@@ -57,7 +57,6 @@ export default class PlayerMovingState extends State {
         else {
             (async () => {
                 this.roamState.player.pos = this.targetCoords;
-                let toPushWildBattle = false;
                 let encounterTable = "";
                 const grassData = this.roamState.gameMap.layers.get('grass')?.getData();
                 if (grassData) {
@@ -65,15 +64,29 @@ export default class PlayerMovingState extends State {
                     if (tile && chance(100)) {
                         console.log("tile is truthy");
                         encounterTable = tile.table;
-                        toPushWildBattle = true;
+                        // toPushWildBattle = true;
                     }
                 }
                 this.roamState.toUpdate = null;
                 this.stateStack.pop();
-                if (toPushWildBattle && encounterTable && this.stateStack.game.party.usable()) {
+                if (encounterTable && this.stateStack.game.party.usable()) {
                     const wbs = new WildBattleState(this.stateStack, "meadow", encounterTable);
                     this.stateStack.push(wbs);
                     this.stateStack.push(new FadeState(this.stateStack));
+                    return;
+                }
+                // --------------------------- PORTAL
+                const portalData = this.roamState.gameMap.layers.get('portal')?.data;
+                if (portalData) {
+                    const tile = portalData[this.targetCoords.y]?.[this.targetCoords.x];
+                    if (tile) {
+                        console.log("portal code running");
+                        const [map, posStr] = tile.to.split(" ");
+                        const pos = Vector.fromString(posStr);
+                        this.roamState.player.pos = pos;
+                        this.roamState.gameMap.name = map;
+                        await this.roamState.gameMap.preload(this.stateStack.loader);
+                    }
                 }
             })();
         }

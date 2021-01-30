@@ -7,6 +7,8 @@ import GameMapLayer from './GameMapLayer.js';
 import { WallLayer } from './map_layers/WallLayer.js';
 import { BaseLayer } from "./map_layers/BaseLayer.js";
 import { GrassImage, GrassLayer } from "./map_layers/GrassLayer.js";
+import { TallLayer } from "./map_layers/TallLayer.js";
+import { PortalLayer } from "./map_layers/PortalLayer.js";
 
 export type TileType = "wall" | "empty";
 
@@ -30,6 +32,11 @@ export default class GameMap implements Entity {
 		return size;
 	}
 	async preload(loader: Loader) {
+		this.layers.clear();
+		for (const entry of this.layers) {
+			const [key, layer] = entry;
+			layer.ctx.clearRect(0, 0, layer.cnv.width, layer.cnv.height);
+		}
 		await this.loadJSONData(loader);
 		this.setLayers();
 
@@ -43,6 +50,8 @@ export default class GameMap implements Entity {
 		this.layers.set('base', new BaseLayer(this));
 		this.layers.set('wall', new WallLayer(this));
 		this.layers.set('grass', new GrassLayer(this));
+		this.layers.set('tall', new TallLayer(this));
+		this.layers.set('portal', new PortalLayer(this));
 	}
 
 	async loadJSONData(loader: Loader) {
@@ -88,5 +97,6 @@ export interface JSONGameMap {
 		walls?: RangedTileSettings<boolean>[];
 		grass?: RangedTileSettings<{ table: string, image: GrassImage }>[];
 		portals?: RangedTileSettings<{ to: string }>[];
+		tall?: RangedTileSettings<boolean>[];
 	}
 }

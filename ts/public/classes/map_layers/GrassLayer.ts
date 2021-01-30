@@ -34,7 +34,7 @@ export class GrassLayer extends GameMapLayer<{ table: string, image?: GrassImage
 		if (!grassData) return toReturn;
 		grassData.forEach(wd => {
 			if (!wd) return;
-			// if (!wd.value.image) wd.value.image = "regular";
+			wd.value.image ||= "regular";
 			const [pos1, pos2] = wd.range.split("-").map(p => Vector.fromString(p as any));
 
 			for (let y = pos1.y; y <= pos2.y; y++) {
@@ -57,7 +57,7 @@ export class GrassLayer extends GameMapLayer<{ table: string, image?: GrassImage
 			row.forEach((tile, x) => {
 				if (!tile?.image) return;
 				const coords = camera.convertCoords(new Vector(x, y).prod(this.gameMap.roamState.tileSize));
-				if (tile.image === "regular") {
+				if (tile.image !== "transparent") {
 					const image = this.images.get(tile.image);
 					if (!image) return;
 					camera.ctx.drawImage(image, coords.x, coords.y, this.gameMap.roamState.tileSize.x, this.gameMap.roamState.tileSize.y);

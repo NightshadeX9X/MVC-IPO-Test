@@ -1,35 +1,36 @@
 import GameMapLayer from "../GameMapLayer.js";
 import Vector from "../Vector.js";
-export class WallLayer extends GameMapLayer {
+export class PortalLayer extends GameMapLayer {
     constructor(gameMap) {
         super(gameMap);
         this.gameMap = gameMap;
-        this.zIndex = -1;
-        this.drawn = [];
+        this.zIndex = -3;
+        this.data = this.getData();
     }
     getData() {
         if (!this.gameMap.json)
             return [];
         const toReturn = [];
-        const wallData = this.gameMap.json.layers.walls;
+        const portalData = this.gameMap.json.layers.portals;
         const mapSize = Vector.fromString(this.gameMap.json.sizeInTiles);
         for (let y = 0; y <= mapSize.y; y++) {
             if (!Array.isArray(toReturn[y]))
                 toReturn[y] = [];
             for (let x = 0; x <= mapSize.x; x++) {
-                toReturn[y][x] = false;
+                toReturn[y][x] = null;
             }
         }
-        if (!wallData)
+        if (!portalData)
             return toReturn;
-        wallData.forEach(wd => {
-            const [pos1, pos2] = wd.range.split("-").map(p => Vector.fromString(p));
+        portalData.forEach(pd => {
+            const [pos1, pos2] = pd.range.split("-").map(p => Vector.fromString(p));
             for (let y = pos1.y; y <= pos2.y; y++) {
                 for (let x = pos1.x; x <= pos2.x; x++) {
-                    toReturn[y][x] = wd.value;
+                    toReturn[y][x] = pd.value;
                 }
             }
         });
+        console.log(toReturn);
         return toReturn;
     }
     async preload() {
@@ -39,10 +40,5 @@ export class WallLayer extends GameMapLayer {
     update(input) {
     }
     render(camera) {
-        const data = this.getData();
-        const coords = camera.convertCoords(new Vector);
-        this.ctx.fillStyle = "red";
-        this.ctx.fillRect(0, 0, 16, 16);
-        camera.ctx.drawImage(this.cnv, coords.x, coords.y);
     }
 }

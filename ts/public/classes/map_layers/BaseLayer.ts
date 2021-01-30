@@ -37,6 +37,7 @@ export class BaseLayer extends GameMapLayer<boolean> {
 		this.ctx.drawImage(this.gameMap.image, 0, 0)
 		const coords = camera.convertCoords(new Vector);
 		camera.ctx.drawImage(this.cnv, coords.x, coords.y);
+
 	}
 	constructor(public gameMap: GameMap) {
 		super(gameMap);

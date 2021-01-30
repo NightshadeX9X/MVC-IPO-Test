@@ -1,41 +1,44 @@
 {
 	"name": "player_bedroom",
 	"sizeInTiles": "22x15",
-	"walls": [
-		{
-			"range": "0x0-21x1",
-			"value": true
-		},
-		{
-			"range": "0x2-7x5",
-			"value": true
-		},
-		{
-			"range": "1x6-1x6",
-			"value": true
-		},
-		{
-			"range": "11x3-19x8",
-			"value": true
-		},
-		{
-			"range": "11x5-11x6",
-			"value": false
-		},
-		{
-			"range": "12x7-18x8",
-			"value": false
-		},
-		{
-			"range": "19x12-21x14",
-			"value": true
-		}
-	],
-	"portals": [
-		{
-			"range": "0x7-1x8",
-			"to": "player_house 24x6"
-		}
-	],
-	"grass": []
+	"layers": {
+		"walls": [
+			{
+				"range": "0x0-21x1",
+				"value": true
+			},
+			{
+				"range": "0x2-7x5",
+				"value": true
+			},
+			{
+				"range": "1x6-1x6",
+				"value": true
+			},
+			{
+				"range": "11x3-19x8",
+				"value": true
+			},
+			{
+				"range": "11x5-11x6",
+				"value": false
+			},
+			{
+				"range": "12x7-18x8",
+				"value": false
+			},
+			{
+				"range": "19x12-21x14",
+				"value": true
+			}
+		],
+		"portals": [
+			{
+				"range": "0x7-1x8",
+				"value": {
+					"to": "player_house 24x6"
+				}
+			}
+		]
+	}
 }

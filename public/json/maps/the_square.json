@@ -4,31 +4,27 @@
 	"layers": {
 		"walls": [
 			{
-				"range": "0x0-15x2",
+				"range": "0x1-15x2",
 				"value": true
 			},
 			{
-				"range": "0x3-3x11",
+				"range": "0x3-3x10",
 				"value": true
 			},
 			{
-				"range": "0x0-15x2",
+				"range": "5x9-15x12",
 				"value": true
 			},
 			{
-				"range": "5x4-15x12",
+				"range": "0x16-3x24",
 				"value": true
 			},
 			{
-				"range": "0x16-3x21",
+				"range": "24x1-39x2",
 				"value": true
 			},
 			{
-				"range": "24x0-39x2",
-				"value": true
-			},
-			{
-				"range": "31x3-39x12",
+				"range": "31x8-39x11",
 				"value": true
 			},
 			{
@@ -38,19 +34,13 @@
 			{
 				"range": "19x11-21x15",
 				"value": true
-			},
-			{
-				"range": "6x3-14x3",
-				"value": true
 			}
 		],
-		"portals": [],
 		"grass": [
 			{
 				"range": "0x13-17x15",
 				"value": {
-					"table": "0",
-					"image": "transparent"
+					"table": "0"
 				}
 			},
 			{
@@ -82,6 +72,28 @@
 				"value": {
 					"table": "0"
 				}
+			}
+		],
+		"tall": [
+			{
+				"range": "31x2-39x7",
+				"value": true
+			},
+			{
+				"range": "0x0-15x0",
+				"value": true
+			},
+			{
+				"range": "24x0-39x0",
+				"value": true
+			},
+			{
+				"range": "5x4-15x8",
+				"value": true
+			},
+			{
+				"range": "6x3-14x3",
+				"value": true
 			}
 		]
 	}

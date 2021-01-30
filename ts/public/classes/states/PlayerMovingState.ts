@@ -3,6 +3,7 @@ import { chance, Direction, directionToVector } from "../../Util.js";
 import Input from "../Input.js";
 import Loader from "../Loader.js";
 import { GrassLayer } from "../map_layers/GrassLayer.js";
+import { PortalLayer } from "../map_layers/PortalLayer.js";
 import State from "../State.js";
 import StateStack from "../StateStack.js";
 import Vector from "../Vector.js";
@@ -71,7 +72,6 @@ export default class PlayerMovingState extends State {
 
 				this.roamState.player.pos = this.targetCoords;
 
-				let toPushWildBattle = false;
 				let encounterTable = "";
 				const grassData = (this.roamState.gameMap.layers.get('grass') as GrassLayer)?.getData();
 				if (grassData) {
@@ -79,15 +79,31 @@ export default class PlayerMovingState extends State {
 					if (tile && chance(100)) {
 						console.log("tile is truthy")
 						encounterTable = tile.table;
-						toPushWildBattle = true;
+						// toPushWildBattle = true;
 					}
 				}
 				this.roamState.toUpdate = null;
 				this.stateStack.pop();
-				if (toPushWildBattle && encounterTable && this.stateStack.game.party.usable()) {
+				if (encounterTable && this.stateStack.game.party.usable()) {
 					const wbs = new WildBattleState(this.stateStack, "meadow", encounterTable);
 					this.stateStack.push(wbs)
 					this.stateStack.push(new FadeState(this.stateStack));
+					return;
+				}
+
+
+				// --------------------------- PORTAL
+				const portalData = (this.roamState.gameMap.layers.get('portal') as PortalLayer)?.data
+				if (portalData) {
+					const tile = portalData[this.targetCoords.y]?.[this.targetCoords.x];
+					if (tile) {
+						console.log("portal code running")
+						const [map, posStr] = tile.to.split(" ");
+						const pos = Vector.fromString(posStr);
+						this.roamState.player.pos = pos;
+						this.roamState.gameMap.name = map;
+						await this.roamState.gameMap.preload(this.stateStack.loader);
+					}
 				}
 			})()
 		}

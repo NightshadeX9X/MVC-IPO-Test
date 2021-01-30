@@ -1,5 +1,5 @@
-import RoamState from "./classes/states/RoamState.js";
 import Game from "./classes/Game.js";
+import RoamState from "./classes/states/RoamState.js";
 
 const cnv = document.getElementById('screen') as HTMLCanvasElement;
 const ctx = cnv.getContext('2d') as CanvasRenderingContext2D;

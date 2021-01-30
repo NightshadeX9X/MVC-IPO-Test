@@ -10,18 +10,17 @@ import Vector from "./Vector.js";
 
 export default class Player {
 	public zIndex = 1;
-	public pos = new Vector(16, 12);
+	public pos = new Vector(12, 12);
 	public drawSize = new Vector(1, 2);
 	public drawOffset = new Vector(0, -1);
 	public image: HTMLImageElement | null = null;
 	public spritesheet: Spritesheet | null = null;
-	public camera = new Camera(this, new Vector(480, 320));
+	public camera = new Camera(this, new Vector(480, 320).prod(0.8));
 	toUpdate: boolean | null = true;
 	toRender: boolean | null = true;
 	toPreload: boolean | null = true;
 
 	constructor(public roamState: RoamState) {
-
 	}
 	async preload(loader: Loader) {
 		this.image = await loader.loadImage(`/assets/images/people/player.png`);
