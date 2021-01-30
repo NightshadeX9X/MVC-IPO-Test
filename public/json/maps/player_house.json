@@ -50,6 +50,18 @@
 			{
 				"range": "24x6-25x7",
 				"value": false
+			},
+			{
+				"range": "5x2-6x2",
+				"value": false
+			},
+			{
+				"range": "2x4-4x4",
+				"value": false
+			},
+			{
+				"range": "7x4-9x4",
+				"value": false
 			}
 		],
 		"portals": [
@@ -64,6 +76,20 @@
 				"value": {
 					"to": "the_square 18x0"
 				}
+			}
+		],
+		"tall": [
+			{
+				"range": "5x2-6x2",
+				"value": true
+			},
+			{
+				"range": "2x4-4x4",
+				"value": true
+			},
+			{
+				"range": "7x4-9x4",
+				"value": true
 			}
 		]
 	}

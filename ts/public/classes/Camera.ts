@@ -17,11 +17,11 @@ export default class Camera {
 	fixedPos = this.player.pos;
 
 	incrementPos() {
-		const smoothing = this.smoothing + 14;
-		if (smoothing === 0) {
+		if (this.smoothing === 0) {
 			this.pos = this.targetPos;
 			return;
 		}
+		const smoothing = this.smoothing + 14;
 		const diff = this.targetPos.diff(this.pos);
 		const cutoff = (smoothing * 0.1 + 13) / smoothing;
 		if (!diff.mapReturn(Math.abs).lessThan(cutoff)) {
@@ -60,8 +60,11 @@ export default class Camera {
 		ctx.scale(this.zoom, this.zoom);
 		ctx.imageSmoothingEnabled = false;
 		_ctx.drawImage(this.cnv, 0, 0);
-		ctx.drawImage(cnv, 0, 0);
-		ctx.scale(1 / this.zoom, 1 / this.zoom)
+
+		const toDrawCameraPos = new Vector;
+		ctx.drawImage(cnv, toDrawCameraPos.x, toDrawCameraPos.y);
+		ctx.scale(1 / this.zoom, 1 / this.zoom);
+
 	}
 
 }

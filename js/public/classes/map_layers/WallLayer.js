@@ -41,8 +41,6 @@ export class WallLayer extends GameMapLayer {
     render(camera) {
         const data = this.getData();
         const coords = camera.convertCoords(new Vector);
-        this.ctx.fillStyle = "red";
-        this.ctx.fillRect(0, 0, 16, 16);
         camera.ctx.drawImage(this.cnv, coords.x, coords.y);
     }
 }

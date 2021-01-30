@@ -32,17 +32,14 @@ export default class GameMap implements Entity {
 		return size;
 	}
 	async preload(loader: Loader) {
-		this.layers.clear();
-		for (const entry of this.layers) {
-			const [key, layer] = entry;
-			layer.ctx.clearRect(0, 0, layer.cnv.width, layer.cnv.height);
-		}
 		await this.loadJSONData(loader);
+		this.layers = new Map<string, GameMapLayer>();
 		this.setLayers();
 
 		for (const entry of this.layers) {
 			const [key, layer] = entry;
 			await layer.preload(loader);
+			console.log(`${layer.constructor.name} preloaded`)
 		}
 	}
 

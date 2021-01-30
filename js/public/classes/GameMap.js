@@ -22,16 +22,13 @@ export default class GameMap {
         return size;
     }
     async preload(loader) {
-        this.layers.clear();
-        for (const entry of this.layers) {
-            const [key, layer] = entry;
-            layer.ctx.clearRect(0, 0, layer.cnv.width, layer.cnv.height);
-        }
         await this.loadJSONData(loader);
+        this.layers = new Map();
         this.setLayers();
         for (const entry of this.layers) {
             const [key, layer] = entry;
             await layer.preload(loader);
+            console.log(`${layer.constructor.name} preloaded`);
         }
     }
     setLayers() {

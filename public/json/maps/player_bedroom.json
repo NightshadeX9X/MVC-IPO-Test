@@ -8,15 +8,11 @@
 				"value": true
 			},
 			{
-				"range": "0x2-7x5",
+				"range": "0x2-6x5",
 				"value": true
 			},
 			{
-				"range": "1x6-1x6",
-				"value": true
-			},
-			{
-				"range": "11x3-19x8",
+				"range": "12x3-19x6",
 				"value": true
 			},
 			{
@@ -28,7 +24,19 @@
 				"value": false
 			},
 			{
-				"range": "19x12-21x14",
+				"range": "13x3-18x3",
+				"value": false
+			},
+			{
+				"range": "1x2-7x2",
+				"value": false
+			},
+			{
+				"range": "12x7-12x7",
+				"value": true
+			},
+			{
+				"range": "19x7-19x7",
 				"value": true
 			}
 		],
@@ -38,6 +46,16 @@
 				"value": {
 					"to": "player_house 24x6"
 				}
+			}
+		],
+		"tall": [
+			{
+				"range": "13x3-18x3",
+				"value": true
+			},
+			{
+				"range": "1x2-6x2",
+				"value": true
 			}
 		]
 	}

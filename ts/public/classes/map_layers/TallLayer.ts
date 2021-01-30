@@ -22,31 +22,34 @@ export class TallLayer extends GameMapLayer<boolean> {
 			}
 		}
 		if (!tallData) return toReturn;
-		tallData.forEach(wd => {
-			const [pos1, pos2] = wd.range.split("-").map(p => Vector.fromString(p as any));
+		tallData.forEach(td => {
+			const [pos1, pos2] = td.range.split("-").map(p => Vector.fromString(p as any));
 
 			for (let y = pos1.y; y <= pos2.y; y++) {
 				for (let x = pos1.x; x <= pos2.x; x++) {
-					toReturn[y][x] = true;
+					toReturn[y][x] = td.value;
 				}
 			}
 		});
 		return toReturn;
 	}
+	preloaded = false;
 	async preload(loader: Loader) {
+		this.ctx.clearRect(0, 0, this.cnv.width, this.cnv.height)
+		this.preloaded = true;
 	}
 	data = this.getData();
 	init(): void {
 	}
 	update(input: Input): void {
 	}
-	renderedFrames = 0;;
+	renderedFrames = 0;
 	render(camera: Camera): void {
+		if (!this.preloaded) return;
 		if (this.renderedFrames === 0) {
 			this.takeFromBase();
 		}
 		this.renderedFrames++;
-		if (!this.gameMap.image) return;
 		const coords = camera.convertCoords(new Vector);
 		camera.ctx.globalAlpha = 0.7;
 		camera.ctx.drawImage(this.cnv, coords.x, coords.y);

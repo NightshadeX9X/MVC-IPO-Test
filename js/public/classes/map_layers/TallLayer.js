@@ -6,6 +6,7 @@ export class TallLayer extends GameMapLayer {
         super(gameMap);
         this.gameMap = gameMap;
         this.zIndex = 32;
+        this.preloaded = false;
         this.data = this.getData();
         this.renderedFrames = 0;
     }
@@ -24,30 +25,31 @@ export class TallLayer extends GameMapLayer {
         }
         if (!tallData)
             return toReturn;
-        tallData.forEach(wd => {
-            const [pos1, pos2] = wd.range.split("-").map(p => Vector.fromString(p));
+        tallData.forEach(td => {
+            const [pos1, pos2] = td.range.split("-").map(p => Vector.fromString(p));
             for (let y = pos1.y; y <= pos2.y; y++) {
                 for (let x = pos1.x; x <= pos2.x; x++) {
-                    toReturn[y][x] = true;
+                    toReturn[y][x] = td.value;
                 }
             }
         });
         return toReturn;
     }
     async preload(loader) {
+        this.ctx.clearRect(0, 0, this.cnv.width, this.cnv.height);
+        this.preloaded = true;
     }
     init() {
     }
     update(input) {
     }
-    ;
     render(camera) {
+        if (!this.preloaded)
+            return;
         if (this.renderedFrames === 0) {
             this.takeFromBase();
         }
         this.renderedFrames++;
-        if (!this.gameMap.image)
-            return;
         const coords = camera.convertCoords(new Vector);
         camera.ctx.globalAlpha = 0.7;
         camera.ctx.drawImage(this.cnv, coords.x, coords.y);

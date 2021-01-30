@@ -1,6 +1,7 @@
 import { chance, Direction, directionToVector } from "../../Util.js";
 import State from "../State.js";
 import Vector from "../Vector.js";
+import BlankState from "./Blank.js";
 import FadeState from "./FadeState.js";
 import WildBattleState from "./WildBattleState.js";
 export default class PlayerMovingState extends State {
@@ -85,7 +86,9 @@ export default class PlayerMovingState extends State {
                         const pos = Vector.fromString(posStr);
                         this.roamState.player.pos = pos;
                         this.roamState.gameMap.name = map;
+                        this.stateStack.push(new BlankState(this.stateStack));
                         await this.roamState.gameMap.preload(this.stateStack.loader);
+                        this.stateStack.pop();
                     }
                 }
             })();

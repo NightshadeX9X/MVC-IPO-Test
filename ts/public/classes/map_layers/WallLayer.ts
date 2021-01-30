@@ -40,9 +40,7 @@ export class WallLayer extends GameMapLayer<boolean> {
 	drawn: Vector[] = [];
 	render(camera: Camera): void {
 		const data = this.getData();
-		const coords = camera.convertCoords(new Vector);
-		this.ctx.fillStyle = "red";
-		this.ctx.fillRect(0, 0, 16, 16);
+		const coords = camera.convertCoords(new Vector)
 		camera.ctx.drawImage(this.cnv, coords.x, coords.y);
 	}
 	constructor(public gameMap: GameMap) {
