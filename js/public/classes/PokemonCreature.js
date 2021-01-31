@@ -36,11 +36,11 @@ export default class PokemonCreature {
             stats[statName] = floor(floor(floor(2 * base + IV + floor(EV / 4)) * level / 100)
                 + 5);
         });
+        console.log(level);
         const HPBase = this.species.stats.HP;
         const HPIV = this.IVs.HP;
         const HPEV = this.EVs.HP;
-        stats.HP = floor(floor(floor(2 * HPBase + HPIV + floor(HPEV / 4)) * level / 100)
-            + level + 10);
+        stats.HP = floor((floor(2 * HPBase + HPIV + HPEV / 4) * level / 100) + level + 10);
         return stats;
     }
     canBattle() {

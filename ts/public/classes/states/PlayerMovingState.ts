@@ -78,7 +78,7 @@ export default class PlayerMovingState extends State {
 				const grassData = (this.roamState.gameMap.layers.get('grass') as GrassLayer)?.getData();
 				if (grassData) {
 					const tile = grassData[this.targetCoords.y][this.targetCoords.x];
-					if (tile && chance(100)) {
+					if (tile && chance(10)) {
 						console.log("tile is truthy")
 						encounterTable = tile.table;
 						// toPushWildBattle = true;
@@ -88,7 +88,12 @@ export default class PlayerMovingState extends State {
 				this.stateStack.pop();
 				if (encounterTable && this.stateStack.game.party.usable()) {
 					const as = AnimationState.exclamation(this.roamState);
-					await as.pop();
+					const [audio] = await Promise.all([
+						this.stateStack.loader.loadAudio('/assets/sounds/sfx/exclamation.mp3'),
+					])
+					await audio.play();
+					await as.pop()
+
 					const wbs = new WildBattleState(this.stateStack, "meadow", encounterTable);
 					this.stateStack.push(wbs)
 					this.stateStack.push(new FadeState(this.stateStack));
