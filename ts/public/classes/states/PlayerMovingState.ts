@@ -7,6 +7,7 @@ import { PortalLayer } from "../map_layers/PortalLayer.js";
 import State from "../State.js";
 import StateStack from "../StateStack.js";
 import Vector from "../Vector.js";
+import AnimationState from "./AnimationState.js";
 import BlankState from "./Blank.js";
 import FadeState from "./FadeState.js";
 import RoamState from "./RoamState.js";
@@ -86,6 +87,8 @@ export default class PlayerMovingState extends State {
 				this.roamState.toUpdate = null;
 				this.stateStack.pop();
 				if (encounterTable && this.stateStack.game.party.usable()) {
+					const as = AnimationState.exclamation(this.roamState);
+					await as.pop();
 					const wbs = new WildBattleState(this.stateStack, "meadow", encounterTable);
 					this.stateStack.push(wbs)
 					this.stateStack.push(new FadeState(this.stateStack));

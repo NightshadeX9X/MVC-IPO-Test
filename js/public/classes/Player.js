@@ -19,7 +19,7 @@ export default class Player {
     }
     async preload(loader) {
         this.image = await loader.loadImage(`/assets/images/people/player.png`);
-        this.spritesheet = new Spritesheet(this.image, this.drawSize, this);
+        this.spritesheet = new Spritesheet(this.image, this.drawSize);
     }
     init() {
         if (!this.spritesheet)

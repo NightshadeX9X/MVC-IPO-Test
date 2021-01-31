@@ -10,7 +10,7 @@ import StateStack from "../StateStack.js";
 import Vector from "../Vector.js";
 export default class RoamState extends State {
 	public timeOfDay = TimeOfDay.NIGHT;
-	public gameMap = new GameMap('player_bedroom', this);
+	public gameMap = new GameMap('the_square', this);
 	public player = new Player(this);
 	public tileSize = new Vector(16);
 	constructor(public stateStack: StateStack) {
