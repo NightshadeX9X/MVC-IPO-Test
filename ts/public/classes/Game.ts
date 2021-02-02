@@ -34,8 +34,7 @@ export default class Game {
 
 		this.party.pokemon.forEach(p => {
 
-			p.stats = p.calcStats()
-			p.maxHP = p.stats.HP;
+			p.refreshStats()
 		})
 	}
 

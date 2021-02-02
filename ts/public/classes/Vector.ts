@@ -102,4 +102,14 @@ export default class Vector implements Vector {
 		const [x, y] = string.split("x").map(Number);
 		return new Vector(x, y)
 	}
+
+	rangeTo(other: Vector) {
+		let inRange: Vector[] = [];
+		for (let x = this.x; x < other.x; x++) {
+			for (let y = this.y; y < other.y; y++) {
+				inRange.push(new Vector(x, y));
+			}
+		}
+		return inRange;
+	}
 }

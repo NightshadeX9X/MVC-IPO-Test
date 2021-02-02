@@ -53,6 +53,11 @@ export default class GameMap {
     update(input) {
     }
     render(ctx) {
+        const coords = this.roamState.player.camera.convertCoords(new Vector(14).prod(this.roamState.tileSize));
+        this.roamState.player.camera.ctx.save();
+        this.roamState.player.camera.ctx.fillStyle = "#4a4a3a";
+        this.roamState.player.camera.ctx.fillRect(coords.x, coords.y, 16, 32);
+        this.roamState.player.camera.ctx.restore();
     }
     get sizeInPx() {
         return this.size.prod(this.roamState.tileSize);

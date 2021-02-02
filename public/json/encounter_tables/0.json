@@ -4,16 +4,16 @@
 		{
 			"species": "pikachu",
 			"levelRange": [
-				1,
-				1
+				20,
+				100
 			],
-			"chits": 0
+			"chits": 10
 		},
 		{
 			"species": "greninja",
 			"levelRange": [
-				15,
-				20
+				40,
+				80
 			],
 			"chits": 10
 		}

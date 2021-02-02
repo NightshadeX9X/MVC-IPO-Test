@@ -49,5 +49,12 @@ export default class PokemonCreature {
     heal() {
         this.stats.HP = this.maxHP;
     }
+    isFullyHealed() {
+        return this.stats.HP === this.maxHP;
+    }
+    refreshStats() {
+        this.stats = this.calcStats();
+        this.maxHP = this.stats.HP;
+    }
 }
 PokemonCreature.idGen = IDGenerator();

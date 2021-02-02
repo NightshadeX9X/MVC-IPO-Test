@@ -9,7 +9,9 @@ export default class BlankState extends State {
     init() {
     }
     update(input) {
+        this.substates.update(input);
     }
     render(ctx) {
+        this.substates.render(ctx);
     }
 }

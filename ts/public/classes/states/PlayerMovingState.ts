@@ -8,7 +8,8 @@ import State from "../State.js";
 import StateStack from "../StateStack.js";
 import Vector from "../Vector.js";
 import AnimationState from "./AnimationState.js";
-import BlankState from "./Blank.js";
+import BlankState from "./BlankState.js";
+import DelayState from "./DelayState.js";
 import FadeState from "./FadeState.js";
 import RoamState from "./RoamState.js";
 import WildBattleState from "./WildBattleState.js";
@@ -26,13 +27,13 @@ export default class PlayerMovingState extends State {
 		this.roamState.toUpdate = true;
 		this.playerOriginalPos = Vector.from(this.roamState.player.pos);
 		if (this.roamState.player.spritesheet) {
-			if (this.direction === Direction.DOWN)
+			if (this.roamState.player.direction === Direction.DOWN)
 				this.roamState.player.spritesheet.coords.y = 0
-			else if (this.direction === Direction.LEFT)
+			else if (this.roamState.player.direction === Direction.LEFT)
 				this.roamState.player.spritesheet.coords.y = 1
-			else if (this.direction === Direction.RIGHT)
+			else if (this.roamState.player.direction === Direction.RIGHT)
 				this.roamState.player.spritesheet.coords.y = 2
-			else if (this.direction === Direction.UP)
+			else if (this.roamState.player.direction === Direction.UP)
 				this.roamState.player.spritesheet.coords.y = 3
 		}
 
@@ -45,7 +46,8 @@ export default class PlayerMovingState extends State {
 				destination.y < 0 ||
 				destination.x >= this.roamState.gameMap.size.x ||
 				destination.y >= this.roamState.gameMap.size.y ||
-				wallData[destination.y]?.[destination.x]
+				wallData[destination.y]?.[destination.x] ||
+				this.roamState.gameEvents.some(g => !g.data.passable && g.getCoveredTiles().some(v => v.equals(destination)))
 			) {
 				this.stateStack.pop();
 			}
@@ -70,6 +72,7 @@ export default class PlayerMovingState extends State {
 			this.roamState.player.pos.add(this.vec);
 		} else {
 
+
 			(async () => {
 
 				this.roamState.player.pos = this.targetCoords;
@@ -91,8 +94,8 @@ export default class PlayerMovingState extends State {
 					const [audio] = await Promise.all([
 						this.stateStack.loader.loadAudio('/assets/sounds/sfx/exclamation.mp3'),
 					])
-					await audio.play();
-					await as.pop()
+					audio.play();
+					await as.pop();
 
 					const wbs = new WildBattleState(this.stateStack, "meadow", encounterTable);
 					this.stateStack.push(wbs)

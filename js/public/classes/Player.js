@@ -1,4 +1,4 @@
-import { Direction } from "../Util.js";
+import { Direction, directionToVector } from "../Util.js";
 import Camera from "./Camera.js";
 import Spritesheet from "./Spritesheet.js";
 import PlayerMovingState from "./states/PlayerMovingState.js";
@@ -13,6 +13,7 @@ export default class Player {
         this.image = null;
         this.spritesheet = null;
         this.camera = new Camera(this, new Vector(480, 320).prod(0.8));
+        this.direction = Direction.DOWN;
         this.toUpdate = true;
         this.toRender = true;
         this.toPreload = true;
@@ -26,6 +27,9 @@ export default class Player {
             return;
         this.camera.init();
     }
+    get tileAhead() {
+        return this.pos.sum(directionToVector(this.direction));
+    }
     update(input) {
         this.camera.update();
         if (!this.spritesheet)
@@ -33,6 +37,7 @@ export default class Player {
         const dirStrs = ["down", "left", "up", "right"];
         dirStrs.forEach(dirStr => {
             if (this.roamState.stateStack.fromTop() === this.roamState && input.directionKeyStates[dirStr.toUpperCase()] === true) {
+                this.direction = Direction[dirStr.toUpperCase()];
                 this.roamState.stateStack.push(new PlayerMovingState(this.roamState.stateStack, this.roamState, Direction[dirStr.toUpperCase()]));
             }
         });

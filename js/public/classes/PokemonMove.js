@@ -25,7 +25,8 @@ export default class PokemonMove {
         let damage = ((2 * attacker.level / 5 + 2) * this.damage * attackingStat / defendingStat / 50 + 2);
         let te = calcTypeEffectiveness(this.type, defender.species.types);
         let rand = random(85, 100) / 100;
-        let multiplier = te * rand;
+        let STAB = attacker.species.types.includes(this.type) ? 1.5 : 1;
+        let multiplier = te * rand * STAB;
         return Math.floor(damage * multiplier);
     }
 }

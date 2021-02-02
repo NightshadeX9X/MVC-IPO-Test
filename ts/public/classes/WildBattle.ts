@@ -10,7 +10,6 @@ export default class WildBattle {
 	constructor(public party: Party, public table: EncounterTable.Pure) {
 
 
-		// const randomLevel = random(selected.levelRange[0], selected.levelRange[1]);
 
 	}
 
@@ -40,6 +39,9 @@ export default class WildBattle {
 	async preload(loader: Loader) {
 		await PokemonSpecies.load(loader, this.selected.species);
 		this.wild = new PokemonCreature(this.selected.species);
+		const randomLevel = random(this.selected.levelRange[0], this.selected.levelRange[1]);
+		this.wild.level = randomLevel;
+		this.wild.refreshStats()
 		await Promise.all(this.allMoves.map(m => PokemonMove.load(loader, m)));
 	}
 }

@@ -97,4 +97,13 @@ export default class Vector {
         const [x, y] = string.split("x").map(Number);
         return new Vector(x, y);
     }
+    rangeTo(other) {
+        let inRange = [];
+        for (let x = this.x; x < other.x; x++) {
+            for (let y = this.y; y < other.y; y++) {
+                inRange.push(new Vector(x, y));
+            }
+        }
+        return inRange;
+    }
 }

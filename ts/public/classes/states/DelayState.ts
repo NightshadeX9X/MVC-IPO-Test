@@ -3,8 +3,9 @@ import Loader from "../Loader.js";
 import State from "../State.js";
 import StateStack from "../StateStack.js";
 
-export default class BlankState extends State {
-	constructor(public stateStack: StateStack) {
+export default class DelayState extends State {
+	public frames = 0;
+	constructor(public stateStack: StateStack, public totalFrames: number) {
 		super(stateStack);
 	}
 
@@ -15,7 +16,11 @@ export default class BlankState extends State {
 
 	}
 	update(input: Input): void {
-
+		if (this.frames >= this.totalFrames) {
+			this.stateStack.pop();
+			return;
+		}
+		this.frames++;
 	}
 	render(ctx: CanvasRenderingContext2D): void {
 

@@ -16,6 +16,7 @@ export default class Player {
 	public image: HTMLImageElement | null = null;
 	public spritesheet: Spritesheet | null = null;
 	public camera = new Camera(this, new Vector(480, 320).prod(0.8));
+	public direction = Direction.DOWN;
 	toUpdate: boolean | null = true;
 	toRender: boolean | null = true;
 	toPreload: boolean | null = true;
@@ -30,12 +31,16 @@ export default class Player {
 		if (!this.spritesheet) return;
 		this.camera.init();
 	}
+	get tileAhead() {
+		return this.pos.sum(directionToVector(this.direction))
+	}
 	update(input: Input): void {
 		this.camera.update();
 		if (!this.spritesheet) return;
 		const dirStrs = ["down", "left", "up", "right"];
 		dirStrs.forEach(dirStr => {
 			if (this.roamState.stateStack.fromTop() === this.roamState && (input.directionKeyStates as any)[dirStr.toUpperCase()] === true) {
+				this.direction = Direction[dirStr.toUpperCase() as keyof typeof Direction];
 				this.roamState.stateStack.push(new PlayerMovingState(this.roamState.stateStack, this.roamState, Direction[dirStr.toUpperCase() as keyof typeof Direction]))
 			}
 		})

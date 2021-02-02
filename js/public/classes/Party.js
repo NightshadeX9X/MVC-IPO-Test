@@ -27,4 +27,7 @@ export default class Party {
         p.pokemon = this.pokemon.filter(p => p.canBattle());
         return p;
     }
+    isFullyHealed() {
+        return this.pokemon.every(p => p.stats.HP === p.maxHP);
+    }
 }

@@ -27,8 +27,7 @@ export default class Game {
         this.party.pokemon[1].level = 60;
         [this.party.pokemon[0], this.party.pokemon[1]] = [this.party.pokemon[1], this.party.pokemon[0]];
         this.party.pokemon.forEach(p => {
-            p.stats = p.calcStats();
-            p.maxHP = p.stats.HP;
+            p.refreshStats();
         });
     }
     async preload() {
