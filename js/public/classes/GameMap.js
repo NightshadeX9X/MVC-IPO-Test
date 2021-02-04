@@ -22,6 +22,7 @@ export default class GameMap {
         return size;
     }
     async preload(loader) {
+        this.roamState.gameEvents = [];
         await this.loadJSONData(loader);
         this.layers = new Map();
         this.setLayers();

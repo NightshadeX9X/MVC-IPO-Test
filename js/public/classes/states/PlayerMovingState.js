@@ -36,7 +36,7 @@ export default class PlayerMovingState extends State {
                 destination.y < 0 ||
                 destination.x >= this.roamState.gameMap.size.x ||
                 destination.y >= this.roamState.gameMap.size.y ||
-                wallData[destination.y]?.[destination.x] ||
+                wallData?.[destination.y]?.[destination.x] ||
                 this.roamState.gameEvents.some(g => !g.data.passable && g.getCoveredTiles().some(v => v.equals(destination)))) {
                 this.stateStack.pop();
             }
@@ -63,7 +63,7 @@ export default class PlayerMovingState extends State {
                 let encounterTable = "";
                 const grassData = this.roamState.gameMap.layers.get('grass')?.getData();
                 if (grassData) {
-                    const tile = grassData[this.targetCoords.y][this.targetCoords.x];
+                    const tile = grassData?.[this.targetCoords.y]?.[this.targetCoords.x];
                     if (tile && chance(10)) {
                         console.log("tile is truthy");
                         encounterTable = tile.table;
@@ -87,7 +87,7 @@ export default class PlayerMovingState extends State {
                 // --------------------------- PORTAL
                 const portalData = this.roamState.gameMap.layers.get('portal')?.data;
                 if (portalData) {
-                    const tile = portalData[this.targetCoords.y]?.[this.targetCoords.x];
+                    const tile = portalData?.[this.targetCoords.y]?.[this.targetCoords.x];
                     if (tile) {
                         console.log("portal code running");
                         const [map, posStr] = tile.to.split(" ");

@@ -1,5 +1,5 @@
-import GameMapLayer from "../GameMapLayer.js";
 import Vector from "../Vector.js";
+import GameMapLayer from "../roam_state/GameMapLayer.js";
 export class PortalLayer extends GameMapLayer {
     constructor(gameMap) {
         super(gameMap);
@@ -8,7 +8,7 @@ export class PortalLayer extends GameMapLayer {
         this.data = this.getData();
     }
     getData() {
-        if (!this.gameMap.json)
+        if (!this.gameMap.json?.layers?.portals)
             return [];
         const toReturn = [];
         const portalData = this.gameMap.json.layers.portals;

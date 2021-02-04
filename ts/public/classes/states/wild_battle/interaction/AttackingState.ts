@@ -1,5 +1,5 @@
 import { calcTypeEffectiveness } from "../../../../PokemonTypeEffectiveness.js";
-import { delay } from "../../../../Util.js";
+import { delay, MoveAnimations } from "../../../../Util.js";
 import Input from "../../../Input.js";
 import Loader from "../../../Loader.js";
 import PokemonMove from "../../../PokemonMove.js";
@@ -10,6 +10,8 @@ import FightMenuState from "../FightMenuState.js";
 import InteractionState, { TrainerDecisionAttack, WildDecision } from "../InteractionState.js";
 import MainMenuState from "../MainMenuState.js";
 import { TypeRelation } from '../../../../PokemonTypeEffectiveness.js';
+import AnimationState from "../../AnimationState.js";
+import DelayState from "../../DelayState.js";
 
 export default class AttackingState extends State {
 	private frames = 0;
@@ -48,7 +50,43 @@ export default class AttackingState extends State {
 		}
 		this.displayText(`${this.decision.user.nickname} used ${this.attackChosen?.displayName}!`)
 	}
+	private animating = false
+	private readyToDecHP = false;
 	update(input: Input): void {
+		(async () => {
+			if (this.animating || !this.attackChosen) return
+			this.animating = true;
+			const animation = MoveAnimations.get(this.attackChosen);
+			const as = await AnimationState.getFromJSON(this.stateStack.loader, `moves/${animation}`, this.stateStack);
+			for (let i = 0; i < 3; i++) {
+
+				this.interactionState.wildBattleState.partyHeadPos.y -= 10;
+				await this.stateStack.push(new DelayState(this.stateStack, 3));
+				await this.stateStack.fromTop().pop();
+				this.interactionState.wildBattleState.partyHeadPos.y += 10;
+				await this.stateStack.push(new DelayState(this.stateStack, 3));
+				await this.stateStack.fromTop().pop();
+			}
+			as.ctxAdjustments = (ctx) => {
+				ctx.globalAlpha = 0.9;
+				ctx.translate(13, 10);
+				if (this.decision.user === this.interactionState.wildBattleState.battle.wild) {
+					ctx.translate(ctx.canvas.width / 6 - 30, 0)
+					ctx.rotate(Math.PI * -0.03)
+
+					ctx.scale(-1, 1);
+
+					//Using translate to move the image back to it's original origin
+
+				} else
+					ctx.rotate(Math.PI * -0.03)
+			}
+			await this.stateStack.push(as);
+			await as.pop();
+			this.readyToDecHP = true;
+
+		})();
+		if (!this.readyToDecHP) return;
 		this.frames++
 		if (!this.attackChosen || this.damageToBeDone === undefined) return;
 

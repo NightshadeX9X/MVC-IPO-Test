@@ -1,5 +1,5 @@
 // For tiles that are "high up" like top of buildings etc. These should appear above the player but slightly transparent.
-import GameMapLayer from "../GameMapLayer.js";
+import GameMapLayer from "../roam_state/GameMapLayer.js";
 import Vector from "../Vector.js";
 export class TallLayer extends GameMapLayer {
     constructor(gameMap) {
@@ -11,7 +11,7 @@ export class TallLayer extends GameMapLayer {
         this.renderedFrames = 0;
     }
     getData() {
-        if (!this.gameMap.json)
+        if (!this.gameMap.json?.layers?.tall)
             return [];
         const toReturn = [];
         const tallData = this.gameMap.json.layers.tall;

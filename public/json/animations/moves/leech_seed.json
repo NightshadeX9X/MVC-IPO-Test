@@ -1,0 +1,9 @@
+{
+	"name": "leech_seed",
+	"url": "moves/leech_seed",
+	"singleImageSize": "64x32",
+	"drawPos": "0x0",
+	"frames": 15,
+	"scale": 6,
+	"interval": 3
+}

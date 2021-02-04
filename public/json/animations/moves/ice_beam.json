@@ -1,0 +1,9 @@
+{
+	"name": "ice_beam",
+	"url": "moves/ice_beam",
+	"singleImageSize": "64x32",
+	"drawPos": "0x0",
+	"frames": 17,
+	"scale": 6,
+	"interval": 1
+}

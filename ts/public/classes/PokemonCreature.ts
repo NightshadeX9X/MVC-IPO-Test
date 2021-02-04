@@ -1,4 +1,4 @@
-import { cloneObject, IDGenerator, random } from '../Util.js';
+import { cloneObject, IDGenerator, random, randomArrayMember } from '../Util.js';
 import PokemonSpecies, { generateEmptyStats, PokemonStats, PokemonStat } from './PokemonSpecies.js';
 export default class PokemonCreature {
 	public static idGen = IDGenerator();
@@ -8,12 +8,7 @@ export default class PokemonCreature {
 	public stats: PokemonStats;
 	public maxHP: number;
 	public level = 20;
-	public moves = [
-		"thunderbolt",
-		"electroball",
-		"iron_tail",
-		"quick_attack"
-	];
+	public moves: string[] = [];
 	public EVs = generateEmptyStats();
 	public IVs: PokemonStats = {
 		HP: random(0, 31),
@@ -28,6 +23,26 @@ export default class PokemonCreature {
 		this.stats = this.calcStats();
 		this.nickname = this.species?.displayName || "Pokemon";
 		this.maxHP = Number(this.stats.HP);
+		const moves = [
+			"moonblast",
+			"dark_pulse",
+			"ice_beam",
+			"quick_attack",
+			"metal_fang",
+			"shadow_ball",
+			"shadow_sneak",
+			"tri_attack",
+			"thunderbolt",
+			"electroball",
+			"iron_tail"
+		];
+		let i = 0;
+		while (i < 4) {
+			const move = randomArrayMember(moves);
+			if (this.moves.indexOf(move) !== -1) continue;
+			this.moves.push(move);
+			i++;
+		}
 	}
 
 	calcStats() {

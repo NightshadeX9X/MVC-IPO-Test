@@ -1,3 +1,4 @@
+import { MoveCategory } from "./classes/PokemonMove.js";
 import { PokemonTypes } from "./classes/PokemonSpecies.js";
 import Vector from "./classes/Vector.js";
 export var Direction;
@@ -121,3 +122,40 @@ export function upperCaseStart(string) {
 export function typesToString(types) {
     return types.filter(t => t).map(t => PokemonTypes[t]).map(s => upperCaseStart(s)).join("/");
 }
+export function filterUnwantedFromObj(o, filterOut = [null, undefined]) {
+    const o2 = {};
+    for (const key of Object.getOwnPropertyNames(o)) {
+        if (filterOut.includes(o[key]))
+            continue;
+        o2[key] = o[key];
+    }
+    return o2;
+}
+export var MoveAnimations;
+(function (MoveAnimations) {
+    function get(move) {
+        const special = ['tri_attack'].filter(s => s === move.name)[0];
+        if (special)
+            return special;
+        if (move.type === PokemonTypes.ICE)
+            return 'ice_beam';
+        if (move.type === PokemonTypes.GHOST && move.category === MoveCategory.PHYSICAL)
+            return 'shadow_sneak';
+        if (move.type === PokemonTypes.GHOST && move.category === MoveCategory.SPECIAL)
+            return 'shadow_ball';
+        if (move.type === PokemonTypes.FAIRY)
+            return 'moonblast';
+        if (move.type === PokemonTypes.NORMAL)
+            return 'quick_attack';
+        if (move.type === PokemonTypes.GRASS)
+            return 'leech_seed';
+        if (move.type === PokemonTypes.FIRE)
+            return 'overheat';
+        if (move.type === PokemonTypes.DARK)
+            return 'dark_pulse';
+        if (move.type === PokemonTypes.STEEL)
+            return 'metal_fang';
+        return 'color_ray';
+    }
+    MoveAnimations.get = get;
+})(MoveAnimations || (MoveAnimations = {}));

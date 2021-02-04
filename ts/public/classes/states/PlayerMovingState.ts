@@ -2,8 +2,8 @@ import EncounterTable from "../../JSONConversions/EncounterTable.js";
 import { chance, Direction, directionToVector } from "../../Util.js";
 import Input from "../Input.js";
 import Loader from "../Loader.js";
-import { GrassLayer } from "../map_layers/GrassLayer.js";
-import { PortalLayer } from "../map_layers/PortalLayer.js";
+import { GrassLayer } from "../roam_state/map_layers/GrassLayer.js";
+import { PortalLayer } from "../roam_state/map_layers/PortalLayer.js";
 import State from "../State.js";
 import StateStack from "../StateStack.js";
 import Vector from "../Vector.js";
@@ -46,7 +46,7 @@ export default class PlayerMovingState extends State {
 				destination.y < 0 ||
 				destination.x >= this.roamState.gameMap.size.x ||
 				destination.y >= this.roamState.gameMap.size.y ||
-				wallData[destination.y]?.[destination.x] ||
+				wallData?.[destination.y]?.[destination.x] ||
 				this.roamState.gameEvents.some(g => !g.data.passable && g.getCoveredTiles().some(v => v.equals(destination)))
 			) {
 				this.stateStack.pop();
@@ -80,7 +80,7 @@ export default class PlayerMovingState extends State {
 				let encounterTable = "";
 				const grassData = (this.roamState.gameMap.layers.get('grass') as GrassLayer)?.getData();
 				if (grassData) {
-					const tile = grassData[this.targetCoords.y][this.targetCoords.x];
+					const tile = grassData?.[this.targetCoords.y]?.[this.targetCoords.x];
 					if (tile && chance(10)) {
 						console.log("tile is truthy")
 						encounterTable = tile.table;
@@ -107,7 +107,7 @@ export default class PlayerMovingState extends State {
 				// --------------------------- PORTAL
 				const portalData = (this.roamState.gameMap.layers.get('portal') as PortalLayer)?.data
 				if (portalData) {
-					const tile = portalData[this.targetCoords.y]?.[this.targetCoords.x];
+					const tile = portalData?.[this.targetCoords.y]?.[this.targetCoords.x];
 					if (tile) {
 						console.log("portal code running")
 						const [map, posStr] = tile.to.split(" ");

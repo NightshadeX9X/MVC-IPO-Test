@@ -16,7 +16,7 @@
 				"value": true
 			},
 			{
-				"range": "0x16-3x24",
+				"range": "0x17-3x24",
 				"value": true
 			},
 			{
@@ -94,7 +94,14 @@
 			{
 				"range": "6x3-14x3",
 				"value": true
+			},
+			{
+				"range": "0x16-3x16",
+				"value": true
 			}
 		]
-	}
+	},
+	"gameEvents": [
+		"npc1"
+	]
 }

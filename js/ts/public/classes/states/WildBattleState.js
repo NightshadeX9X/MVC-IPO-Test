@@ -34,11 +34,12 @@ export default class WildBattleState extends State {
             loader.loadJSON(`/json/encounter_tables/${this.tableId}.json`),
         ];
         let table;
-        [this.battleBg, this.audio, this.hpBarImage, table,] = await Promise.all(promises);
+        [this.battleBg, this.audio, this.hpBarImage, table] = await Promise.all(promises);
         this.table = EncounterTable.purify(table);
-        if (this.table)
+        if (this.table) {
             this.battle = new WildBattle(this.stateStack.game.party, this.table);
-        await this.substates.preload();
+            await this.battle.preload(loader);
+        }
         await this.substates.push(new IntroState(this.substates, this));
     }
     async loadPartyHeadImage(loader) {
@@ -46,6 +47,7 @@ export default class WildBattleState extends State {
         return await loader.loadImage(`/assets/images/pokemon/${this.partyHead?.species?.name}.png`);
     }
     init() {
+        console.log(this.battle.wild, this.battle.party.head);
         if (this.audio) {
             this.audio.currentTime = 0;
             this.audio.loop = true;

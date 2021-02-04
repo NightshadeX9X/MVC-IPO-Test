@@ -1,0 +1,9 @@
+{
+	"name": "moonblast",
+	"url": "moves/moonblast",
+	"singleImageSize": "64x32",
+	"drawPos": "0x0",
+	"frames": 13,
+	"scale": 6,
+	"interval": 2
+}

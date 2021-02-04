@@ -43,12 +43,13 @@ export default class InteractionState extends State {
             else
                 return randomArrayMember([-1, 1]);
         });
+        console.log(this.sortedDecisions);
     }
     static getPriority(decision) {
         if (decision.type === "attack") {
             const attack = PokemonMove.list.get(decision.attack);
             if (attack) {
-                return attack.priority;
+                return attack.priority || 0;
             }
         }
         else if (decision.type === "run") {

@@ -1,4 +1,4 @@
-import Camera from "../Camera.js";
+import { filterUnwantedFromObj } from "../../Util.js";
 import Input from "../Input.js";
 import Loader from "../Loader.js";
 import Spritesheet from "../Spritesheet.js";
@@ -14,7 +14,8 @@ export default class AnimationState extends State {
 		amountOfImages: number,
 		drawPos: Vector,
 		interval: number,
-		popFramesBefore: number
+		popFramesBefore: number,
+		scale: number
 	}
 	constructor(public stateStack: StateStack, public imageUrl: string, data: Partial<AnimationState["data"]>) {
 		super(stateStack);
@@ -24,7 +25,8 @@ export default class AnimationState extends State {
 			drawPos: new Vector,
 			interval: 0,
 			popFramesBefore: 0,
-			...data
+			scale: 1,
+			...filterUnwantedFromObj(data)
 		}
 	}
 
@@ -37,7 +39,7 @@ export default class AnimationState extends State {
 			this.spritesheet = new Spritesheet(this.image, this.data.singleImageSize, new Vector(this.data.amountOfImages, 1));
 	}
 	init(): void {
-
+		console.log(this)
 	}
 	update(input: Input): void {
 		if (!this.spritesheet) return;
@@ -49,9 +51,16 @@ export default class AnimationState extends State {
 		if (this.spritesheet.coords.x > this.data.amountOfImages - this.data.popFramesBefore) this.stateStack.pop();
 		this.frames++;
 	}
+	ctxAdjustments(ctx: CanvasRenderingContext2D) {
+	}
 	render(ctx: CanvasRenderingContext2D): void {
 		if (!this.spritesheet) return;
+		ctx.save();
+		ctx.scale(this.data.scale, this.data.scale);
+
+		this.ctxAdjustments(ctx);
 		this.spritesheet.render(ctx, this.data.drawPos);
+		ctx.restore();
 	}
 
 	static exclamation(roamState: RoamState) {
@@ -64,5 +73,33 @@ export default class AnimationState extends State {
 		});
 		roamState.stateStack.push(as)
 		return as;
+	}
+	static async getFromJSON(loader: Loader, path: string, stateStack: StateStack) {
+		const promises = [
+			loader.loadJSON(`/json/animations/${path}.json`),
+			// loader.loadImage(`/assets/images/animations/${path}.png`)
+		]
+		const [json, /* image */] = await Promise.all(promises) as [{
+			name: string,
+			url: string,
+			singleImageSize: string,
+			frames: number,
+			drawPos: string,
+			interval: number,
+			popFramesBefore: number,
+			scale: number,
+		}, /* HTMLImageElement */];
+
+		const as = new AnimationState(stateStack, `/assets/images/animations/${path}.png`, {
+			singleImageSize: Vector.fromString(json.singleImageSize),
+			drawPos: Vector.fromString(json.drawPos),
+			amountOfImages: json.frames,
+			interval: json.interval,
+			popFramesBefore: json.popFramesBefore,
+			scale: json.scale
+		});
+
+		return as;
+
 	}
 }

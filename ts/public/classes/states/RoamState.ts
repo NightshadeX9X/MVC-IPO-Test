@@ -1,11 +1,10 @@
 
 import { delay, random, randomArrayMember } from "../../Util.js";
-import GameEvent, { GameEventTrigger } from "../GameEvent.js";
-import GameMap from "../GameMap.js";
+import GameEvent, { GameEventData, GameEventTrigger, GameEventType } from "../game_events/GameEvent.js";
 import Input from "../Input.js";
 import Loader from "../Loader.js";
-import { WallLayer } from "../map_layers/WallLayer.js";
-import Player from "../Player.js";
+import GameMap from "../roam_state/GameMap.js";
+import Player from "../roam_state/Player.js";
 import Spritesheet from "../Spritesheet.js";
 import State from "../State.js";
 import StateStack from "../StateStack.js";
@@ -25,56 +24,43 @@ export default class RoamState extends State {
 		super(stateStack);
 
 	}
+	public async loadGameEvents(loader: Loader) {
+		if (!this.gameMap.json?.gameEvents) return
+		const gameEventsToLoad = this.gameMap.json.gameEvents.map(async (ge: string) => {
+			return (await loader.loadJS<{ default: GameEventData }>(`/js/game_events/${this.gameMap.name}/${ge}.js`)).default;
+		});
+		const gameEventsLoaded = await Promise.all(gameEventsToLoad);
+		console.log(gameEventsLoaded)
+
+		for (const gameEventLoaded of gameEventsLoaded) {
+			if (gameEventLoaded.type === GameEventType.NPC && gameEventLoaded.imageURL) {
+				const image = await loader.loadImage(gameEventLoaded.imageURL)
+				const spritesheet = new Spritesheet(image, new Vector(16, 32), new Vector(4));
+				const gameEvent = new GameEvent(gameEventLoaded.type, this, {
+					spritesheet,
+					pos: this.player.pos.sum(4, 1),
+					renderOffset: new Vector(0, -1),
+					renderSize: new Vector(2, 1),
+					size: new Vector(1),
+				});
+				gameEvent.roamState = this;
+				gameEvent.evtManager.addEventListener('interact', async () => {
+					await gameEventLoaded.onInteract.call(gameEvent);
+				});
+				this.gameEvents.push(gameEvent)
+			}
+		}
+	}
 	async preload(loader: Loader) {
 		await Promise.all(
 			[
 				this.gameMap.preload(loader),
 				this.player.preload(loader)
 			]);
-		const image = await loader.loadImage(`/assets/images/people/player.png`)
-		const spritesheet = new Spritesheet(image, new Vector(16, 32), new Vector(4));
-		console.log(spritesheet)
-		this.gameEvents.push(
-			new GameEvent(this, {
-				spritesheet,
-				pos: this.player.pos.sum(4, 1),
-				renderOffset: new Vector(0, -1),
-				renderSize: new Vector(2, 1),
-				size: new Vector(1),
-			})
-		);
-		const evt = this.gameEvents[0];
-		evt.roamState = this;
-		evt.evtManager.addEventListener('interact', async () => {
-			if (evt.disabled) return;
-			evt.disabled = true;
+		console.log(this.gameMap.json)
+		await this.loadGameEvents(loader);
 
-			const tbs = new TextBoxState(this.stateStack, `Hello there fellow trainer! You like a lot like me...\nInteresting... you know, just for that, I'll heal your pokemon. Yeah, really!`)
-			this.stateStack.push(tbs);
-			await tbs.pop();
-			if (this.stateStack.game.party.isFullyHealed()) {
-				const tbs2 = new TextBoxState(this.stateStack, `Wait a minute..! Your party is already healed! Get outta here!`)!
-				this.stateStack.push(tbs2);
-				await tbs2.pop();
-				this.stateStack.push(new DelayState(this.stateStack, 30));
-				await this.stateStack.fromTop().pop();
-				await this.stateStack.push(new FadeState(this.stateStack));
-				await delay(500);
-				this.player.pos.add(2)
-				this.player.camera.pos = Vector.from(this.player.pos.prod(this.tileSize));
-				await this.stateStack.fromTop().pop();
-			} else {
 
-				this.stateStack.game.party.heal();
-				this.stateStack.push(new DelayState(this.stateStack, 120));
-				await this.stateStack.fromTop().pop()
-				const tbs2 = new TextBoxState(this.stateStack, `Your pokemon have been healed!`)
-				this.stateStack.push(tbs2);
-				await tbs2.pop();
-			}
-
-			setTimeout(() => evt.disabled = false, 3000);
-		})
 	}
 	init(): void {
 		this.gameMap.init();
@@ -88,10 +74,10 @@ export default class RoamState extends State {
 			.filter(g => g.isAheadOfPlayer())
 		[0]
 
-		if (input.interactionKey)
+		if (evt && input.interactionKey)
 			if (!evt.disabled) {
 
-				evt?.
+				evt.
 					evtManager.dispatchEvent(GameEvent.interactEvt);
 			}
 

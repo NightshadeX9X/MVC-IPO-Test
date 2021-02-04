@@ -9,7 +9,8 @@ export interface TSONPokemonMove {
 	displayName: string;
 	type: PokemonTypes;
 	damage: number;
-	priority?: number
+	priority?: number;
+	category: MoveCategory;
 }
 export default class PokemonMove implements PokemonMove {
 	public priority = 0;
@@ -19,6 +20,7 @@ export default class PokemonMove implements PokemonMove {
 		const moveData = imp.default;
 		const move = new PokemonMove(moveData.name, moveData.displayName, moveData.type, moveData.damage);
 		move.priority = Number(moveData.priority);
+		move.category = moveData.category;
 		console.log(moveData)
 	}
 	constructor(public name: string, public displayName: string, public type: PokemonTypes, public damage: number, public category = MoveCategory.PHYSICAL) {
@@ -38,7 +40,7 @@ export default class PokemonMove implements PokemonMove {
 	}
 }
 
-enum MoveCategory {
+export enum MoveCategory {
 	PHYSICAL,
 	SPECIAL,
 	STATUS

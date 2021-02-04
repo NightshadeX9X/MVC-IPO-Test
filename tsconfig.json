@@ -62,5 +62,9 @@
 	},
 	"include": [
 		"ts/../."
+	],
+	"exclude": [
+		"assets/images/tilesets",
+		"assets/images/maps",
 	]
 }

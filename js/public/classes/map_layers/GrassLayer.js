@@ -1,5 +1,5 @@
-import GameMapLayer from "../GameMapLayer.js";
 import Vector from "../Vector.js";
+import GameMapLayer from "../roam_state/GameMapLayer.js";
 export class GrassLayer extends GameMapLayer {
     constructor(gameMap) {
         super(gameMap);
@@ -16,7 +16,7 @@ export class GrassLayer extends GameMapLayer {
         this.images.set('regular', regular);
     }
     getData() {
-        if (!this.gameMap.json)
+        if (!this.gameMap.json?.layers?.grass)
             return [];
         const toReturn = [];
         const grassData = this.gameMap.json.layers.grass;

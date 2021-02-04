@@ -1,4 +1,4 @@
-import Player from "./Player.js";
+import Player from "./roam_state/Player.js";
 import Vector from "./Vector.js";
 
 export default class Spritesheet {
