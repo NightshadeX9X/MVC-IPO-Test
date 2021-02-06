@@ -64,7 +64,7 @@
 		"ts/../."
 	],
 	"exclude": [
-		"assets/images/tilesets",
-		"assets/images/maps",
+		"public/assets/images/tilesets",
+		"public/assets/images/maps",
 	]
 }

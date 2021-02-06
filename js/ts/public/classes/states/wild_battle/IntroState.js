@@ -33,8 +33,12 @@ export default class IntroState extends State {
         if (this.framesSinceImagesStoppedMoving >= 20) {
             this.wildBattleState.partyHeadPos = this.partyHeadPos;
             this.wildBattleState.pokemonHeight = this.pokemonHeight;
-            this.stateStack.pop();
-            this.stateStack.push(new MainMenuState(this.stateStack, this.wildBattleState));
+            // this.stateStack.pop();
+            // this.stateStack.push(new MainMenuState(this.stateStack, this.wildBattleState));
+            (async () => {
+                this.stateStack.pop();
+                this.stateStack.push(new MainMenuState(this.stateStack, this.wildBattleState));
+            })();
         }
     }
     render(ctx) {

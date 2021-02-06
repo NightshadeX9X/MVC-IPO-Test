@@ -15,6 +15,7 @@ export default class PokemonMove {
         const moveData = imp.default;
         const move = new PokemonMove(moveData.name, moveData.displayName, moveData.type, moveData.damage);
         move.priority = Number(moveData.priority);
+        move.category = moveData.category;
         console.log(moveData);
     }
     getDamageDoneTo(attacker, defender) {
@@ -31,7 +32,7 @@ export default class PokemonMove {
     }
 }
 PokemonMove.list = new Map();
-var MoveCategory;
+export var MoveCategory;
 (function (MoveCategory) {
     MoveCategory[MoveCategory["PHYSICAL"] = 0] = "PHYSICAL";
     MoveCategory[MoveCategory["SPECIAL"] = 1] = "SPECIAL";

@@ -1,10 +1,10 @@
 import { MoveCategory } from "../classes/PokemonMove.js";
 import { PokemonTypes } from "../classes/PokemonSpecies.js";
-const electroball = {
-    name: 'electroball',
-    displayName: 'Electroball',
-    type: PokemonTypes.ELECTRIC,
-    damage: 55,
+const ice_beam = {
+    name: 'ice_beam',
+    displayName: 'Ice Beam',
+    type: PokemonTypes.ICE,
+    damage: 90,
     category: MoveCategory.SPECIAL,
 };
-export default electroball;
+export default ice_beam;

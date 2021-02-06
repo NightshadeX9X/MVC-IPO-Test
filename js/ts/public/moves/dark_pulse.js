@@ -1,10 +1,10 @@
 import { MoveCategory } from "../classes/PokemonMove.js";
 import { PokemonTypes } from "../classes/PokemonSpecies.js";
-const electroball = {
-    name: 'electroball',
-    displayName: 'Electroball',
-    type: PokemonTypes.ELECTRIC,
-    damage: 55,
+const dark_pulse = {
+    name: 'dark_pulse',
+    displayName: 'Dark Pulse',
+    type: PokemonTypes.DARK,
+    damage: 80,
     category: MoveCategory.SPECIAL,
 };
-export default electroball;
+export default dark_pulse;

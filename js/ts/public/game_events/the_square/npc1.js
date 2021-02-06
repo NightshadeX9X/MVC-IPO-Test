@@ -1,4 +1,4 @@
-import { GameEventType } from "../../classes/GameEvent.js";
+import { GameEventType } from "../../classes/game_events/GameEvent.js";
 import DelayState from "../../classes/states/DelayState.js";
 import FadeState from "../../classes/states/FadeState.js";
 import TextBoxState from "../../classes/states/TextBoxState.js";

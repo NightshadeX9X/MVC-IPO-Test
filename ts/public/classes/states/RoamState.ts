@@ -14,7 +14,7 @@ import FadeState from "./FadeState.js";
 import TextBoxState from "./TextBoxState.js";
 export default class RoamState extends State {
 	public timeOfDay = TimeOfDay.NIGHT;
-	public gameMap = new GameMap('the_square', this);
+	public gameMap = new GameMap('route5', this);
 	public player = new Player(this);
 	public tileSize = new Vector(16);
 	public gameEvents: GameEvent[] = [

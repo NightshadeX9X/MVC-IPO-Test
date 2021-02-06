@@ -1,6 +1,6 @@
-import GameEvent, { GameEventTrigger, GameEventType } from "../GameEvent.js";
-import GameMap from "../GameMap.js";
-import Player from "../Player.js";
+import GameEvent, { GameEventTrigger, GameEventType } from "../game_events/GameEvent.js";
+import GameMap from "../roam_state/GameMap.js";
+import Player from "../roam_state/Player.js";
 import Spritesheet from "../Spritesheet.js";
 import State from "../State.js";
 import Vector from "../Vector.js";
@@ -9,7 +9,7 @@ export default class RoamState extends State {
         super(stateStack);
         this.stateStack = stateStack;
         this.timeOfDay = TimeOfDay.NIGHT;
-        this.gameMap = new GameMap('sunnyville_island', this);
+        this.gameMap = new GameMap('the_square', this);
         this.player = new Player(this);
         this.tileSize = new Vector(16);
         this.gameEvents = [];

@@ -1,3 +1,4 @@
+import { filterUnwantedFromObj } from "../../Util.js";
 import Spritesheet from "../Spritesheet.js";
 import State from "../State.js";
 import Vector from "../Vector.js";
@@ -15,7 +16,8 @@ export default class AnimationState extends State {
             drawPos: new Vector,
             interval: 0,
             popFramesBefore: 0,
-            ...data
+            scale: 1,
+            ...filterUnwantedFromObj(data)
         };
     }
     async preload(loader) {
@@ -24,6 +26,7 @@ export default class AnimationState extends State {
             this.spritesheet = new Spritesheet(this.image, this.data.singleImageSize, new Vector(this.data.amountOfImages, 1));
     }
     init() {
+        console.log(this);
     }
     update(input) {
         if (!this.spritesheet)
@@ -36,10 +39,16 @@ export default class AnimationState extends State {
             this.stateStack.pop();
         this.frames++;
     }
+    ctxAdjustments(ctx) {
+    }
     render(ctx) {
         if (!this.spritesheet)
             return;
+        ctx.save();
+        ctx.scale(this.data.scale, this.data.scale);
+        this.ctxAdjustments(ctx);
         this.spritesheet.render(ctx, this.data.drawPos);
+        ctx.restore();
     }
     static exclamation(roamState) {
         const coords = roamState.player.camera.convertCoords(roamState.player.pos.prod(roamState.tileSize)).diff(8, 50);
@@ -50,6 +59,21 @@ export default class AnimationState extends State {
             amountOfImages: 27
         });
         roamState.stateStack.push(as);
+        return as;
+    }
+    static async getFromJSON(loader, path, stateStack) {
+        const promises = [
+            loader.loadJSON(`/json/animations/${path}.json`),
+        ];
+        const [json,] = await Promise.all(promises);
+        const as = new AnimationState(stateStack, `/assets/images/animations/${path}.png`, {
+            singleImageSize: Vector.fromString(json.singleImageSize),
+            drawPos: Vector.fromString(json.drawPos),
+            amountOfImages: json.frames,
+            interval: json.interval,
+            popFramesBefore: json.popFramesBefore,
+            scale: json.scale
+        });
         return as;
     }
 }
