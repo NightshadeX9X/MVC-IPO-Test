@@ -7,7 +7,7 @@ import PokemonSpecies, { generateEmptyStats, JSONSpecies, PokemonType } from "./
 import { PokemonTypes } from './PokemonSpecies.js';
 
 export default class Game {
-	fps = 60;
+	fps = 120;
 	input = new Input()
 	loader = new Loader()
 	stateStack = new StateStack(this)

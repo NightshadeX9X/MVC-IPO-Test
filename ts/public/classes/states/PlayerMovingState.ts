@@ -1,9 +1,8 @@
 import EncounterTable from "../../JSONConversions/EncounterTable.js";
-import { chance, Direction, directionToVector } from "../../Util.js";
+import { chance, Direction, directionToVector, stringToDirections } from "../../Util.js";
 import Input from "../Input.js";
 import Loader from "../Loader.js";
-import { GrassLayer } from "../roam_state/map_layers/GrassLayer.js";
-import { PortalLayer } from "../roam_state/map_layers/PortalLayer.js";
+import GameEvent, { GameEventTrigger } from "../roam_state/game_events/GameEvent.js";
 import State from "../State.js";
 import StateStack from "../StateStack.js";
 import Vector from "../Vector.js";
@@ -38,15 +37,14 @@ export default class PlayerMovingState extends State {
 		}
 
 		const destination = this.targetCoords;
-		const wallData = this.roamState.gameMap.layers.get('wall')?.getData();
+		if (this.roamState.gameMap.json) {
 
-		if (this.roamState.gameMap.json && wallData) {
 			if (
 				destination.x < 0 ||
 				destination.y < 0 ||
 				destination.x >= this.roamState.gameMap.size.x ||
 				destination.y >= this.roamState.gameMap.size.y ||
-				wallData?.[destination.y]?.[destination.x] ||
+				this.roamState.player.onMapLayer?.partsAt(destination.x, destination.y).find(p => p.type === "wall" && (typeof p.value === "string" ? stringToDirections(p.value).includes(this.roamState.player.direction) : p.value)) ||
 				this.roamState.gameEvents.some(g => !g.data.passable && g.getCoveredTiles().some(v => v.equals(destination)))
 			) {
 				this.stateStack.pop();
@@ -77,48 +75,21 @@ export default class PlayerMovingState extends State {
 
 				this.roamState.player.pos = this.targetCoords;
 
-				let encounterTable = "";
-				const grassData = (this.roamState.gameMap.layers.get('grass') as GrassLayer)?.getData();
-				if (grassData) {
-					const tile = grassData?.[this.targetCoords.y]?.[this.targetCoords.x];
-					if (tile && chance(10)) {
-						console.log("tile is truthy")
-						encounterTable = tile.table;
-						// toPushWildBattle = true;
-					}
-				}
 				this.roamState.toUpdate = null;
 				this.stateStack.pop();
-				if (encounterTable && this.stateStack.game.party.usable()) {
-					const as = AnimationState.exclamation(this.roamState);
-					const [audio] = await Promise.all([
-						this.stateStack.loader.loadAudio('/assets/sounds/sfx/exclamation.mp3'),
-					])
-					audio.play();
-					await as.pop();
 
-					const wbs = new WildBattleState(this.stateStack, "meadow", encounterTable);
-					this.stateStack.push(wbs)
-					this.stateStack.push(new FadeState(this.stateStack));
-					return;
-				}
+				// TRIGGER ON PLAYER TOUCH EVENTS
+				const toTrigger = this.roamState.gameEvents.filter(e => e.data.trigger === GameEventTrigger.PLAYER_TOUCH && !!e.getCoveredTiles().find(v => v.equals(this.targetCoords)));
+				toTrigger.forEach(ge => {
+					ge.evtManager.dispatchEvent(GameEvent.interactEvt)
+				})
 
 
-				// --------------------------- PORTAL
-				const portalData = (this.roamState.gameMap.layers.get('portal') as PortalLayer)?.data
-				if (portalData) {
-					const tile = portalData?.[this.targetCoords.y]?.[this.targetCoords.x];
-					if (tile) {
-						console.log("portal code running")
-						const [map, posStr] = tile.to.split(" ");
-						const pos = Vector.fromString(posStr);
-						this.roamState.player.pos = pos;
-						this.roamState.gameMap.name = map;
-						this.stateStack.push(new BlankState(this.stateStack));
-						await this.roamState.gameMap.preload(this.stateStack.loader);
-						this.stateStack.pop();
-					}
-				}
+
+
+
+
+
 			})()
 		}
 

@@ -36,15 +36,17 @@ export default class Camera {
 	}
 	update() {
 		this.incrementPos();
+		this.cnv.width = this.size.x / this.zoom;
+		this.cnv.height = this.size.y / this.zoom;
 	}
 
 	convertCoords(pos: Vector) {
-		return pos.diff(this.pos).sum(this.size.quo(2));
+		return pos.diff(this.pos).sum(this.cnv.width / 2, this.cnv.height / 2)
 	}
 
 	get targetPos() {
 		if (this.mode === CameraMode.FOLLOW_PLAYER)
-			return this.player.pos.sum(0.5, 0.5).prod(this.player.roamState.tileSize);
+			return this.player.pos.sum(0, 0).prod(this.player.roamState.tileSize);
 		else
 			return this.fixedPos;
 	}
@@ -53,17 +55,12 @@ export default class Camera {
 	}
 
 	render(ctx: CanvasRenderingContext2D) {
-		const cnv = document.createElement('canvas');
-		const _ctx = cnv.getContext('2d') as CanvasRenderingContext2D;
-		cnv.width = this.cnv.width * this.zoom;
-		cnv.height = this.cnv.height * this.zoom;
-		ctx.scale(this.zoom, this.zoom);
-		ctx.imageSmoothingEnabled = false;
-		_ctx.drawImage(this.cnv, 0, 0);
 
-		const toDrawCameraPos = new Vector;
-		ctx.drawImage(cnv, toDrawCameraPos.x, toDrawCameraPos.y);
-		ctx.scale(1 / this.zoom, 1 / this.zoom);
+		ctx.save();
+		ctx.scale(this.zoom, this.zoom)
+		ctx.imageSmoothingEnabled = false;
+		ctx.drawImage(this.cnv, 0, 0)
+		ctx.restore();
 
 	}
 

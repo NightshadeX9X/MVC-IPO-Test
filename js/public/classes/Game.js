@@ -6,7 +6,7 @@ import PokemonCreature from "./PokemonCreature.js";
 import PokemonSpecies from "./PokemonSpecies.js";
 export default class Game {
     constructor() {
-        this.fps = 60;
+        this.fps = 120;
         this.input = new Input();
         this.loader = new Loader();
         this.stateStack = new StateStack(this);

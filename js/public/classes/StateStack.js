@@ -36,8 +36,10 @@ export default class StateStack {
     fromBottom(n = 0) {
         return this.states[n];
     }
-    async push(s) {
-        this.states.push(s);
+    async push(s, index = this.states.length) {
+        const before = this.states.slice(0, index);
+        const after = this.states.slice(index);
+        this.states = [...before, s, ...after];
         await s.preload(this.loader);
         s.init();
     }

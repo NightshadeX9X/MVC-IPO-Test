@@ -21,6 +21,10 @@ export default class Player {
 	toRender: boolean | null = true;
 	toPreload: boolean | null = true;
 
+	get onMapLayer() {
+		return this.roamState.gameMap.layers.find(l => l.zIndex === (this.zIndex - 1))
+	}
+
 	constructor(public roamState: RoamState) {
 	}
 	async preload(loader: Loader) {

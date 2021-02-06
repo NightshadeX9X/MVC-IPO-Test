@@ -1,8 +1,8 @@
-import { Direction, directionToVector } from "../../Util.js";
-import Camera from "../roam_state/Camera.js";
-import Spritesheet from "../Spritesheet.js";
-import RoamState from "../states/RoamState.js";
-import Vector from "../Vector.js";
+import { Direction, directionToVector } from "../../../Util.js";
+import Camera from "../Camera.js";
+import Spritesheet from "../../Spritesheet.js";
+import RoamState from "../../states/RoamState.js";
+import Vector from "../../Vector.js";
 
 export default class GameEvent {
 	disabled = false;
@@ -21,12 +21,7 @@ export default class GameEvent {
 	static getNewID() {
 		return this.IDs.next().value as string;
 	}
-	get zIndex() {
-		if (!this.roamState) return 1;
-		if (this.roamState.player.pos.y > this.data.pos.y) return this.roamState.player.zIndex - 0.01;
-		else if (this.roamState.player.pos.y < this.data.pos.y) return this.roamState.player.zIndex + 0.01;
-		return this.roamState.player.zIndex;
-	}
+	zIndex = 1;
 	ID = GameEvent.getNewID();
 	evtManager = new EventTarget();
 	public data: {
@@ -107,9 +102,11 @@ export enum GameEventTrigger {
 export interface GameEventData {
 	type: GameEventType,
 	imageURL?: string,
+	data?: Partial<GameEvent["data"]>;
 	onInteract(): Promise<void>;
 }
 export enum GameEventType {
 	NPC,
-	REGULAR
+	REGULAR,
+	BATTLER
 }

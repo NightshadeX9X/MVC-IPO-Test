@@ -164,3 +164,13 @@ export namespace MoveAnimations {
 		return 'color_ray'
 	}
 }
+
+export function stringToDirections(string: string) {
+	const directions: Direction[] = [];
+	const letters = string.split("");
+	if (letters.find(l => l.toUpperCase() === "L")) directions.push(Direction.LEFT);
+	if (letters.find(l => l.toUpperCase() === "R")) directions.push(Direction.RIGHT);
+	if (letters.find(l => l.toUpperCase() === "U")) directions.push(Direction.UP);
+	if (letters.find(l => l.toUpperCase() === "D")) directions.push(Direction.DOWN);
+	return directions;
+}

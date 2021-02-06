@@ -1,9 +1,5 @@
-import { BaseLayer } from "./map_layers/BaseLayer.js";
-import { GrassLayer } from "./map_layers/GrassLayer.js";
-import { PortalLayer } from "./map_layers/PortalLayer.js";
-import { TallLayer } from "./map_layers/TallLayer.js";
-import { WallLayer } from "./map_layers/WallLayer.js";
 import Vector from "../Vector.js";
+import GameMapLayer from "./GameMapLayer.js";
 export default class GameMap {
     constructor(name, roamState) {
         this.name = name;
@@ -13,7 +9,7 @@ export default class GameMap {
         this.toPreload = true;
         this.json = null;
         this.image = null;
-        this.layers = new Map();
+        this.layers = [];
     }
     get size() {
         if (!this.json)
@@ -24,20 +20,10 @@ export default class GameMap {
     async preload(loader) {
         this.roamState.gameEvents = [];
         await this.loadJSONData(loader);
-        this.layers = new Map();
-        this.setLayers();
-        for (const entry of this.layers) {
-            const [key, layer] = entry;
-            await layer.preload(loader);
-            console.log(`${layer.constructor.name} preloaded`);
-        }
-    }
-    setLayers() {
-        this.layers.set('base', new BaseLayer(this));
-        this.layers.set('wall', new WallLayer(this));
-        this.layers.set('grass', new GrassLayer(this));
-        this.layers.set('tall', new TallLayer(this));
-        this.layers.set('portal', new PortalLayer(this));
+        this.json?.layers?.forEach(layer => {
+            this.layers.push(new GameMapLayer(this, layer.src, layer.zIndex));
+        });
+        await Promise.all(this.layers.map(l => l.preload(loader)));
     }
     async loadJSONData(loader) {
         const promises = [
@@ -47,18 +33,11 @@ export default class GameMap {
         this.json = raw;
     }
     init() {
-        this.layers.forEach(layer => {
-            layer.init();
-        });
+        this.layers.forEach(l => l.init());
     }
     update(input) {
     }
     render(ctx) {
-        const coords = this.roamState.player.camera.convertCoords(new Vector(14).prod(this.roamState.tileSize));
-        this.roamState.player.camera.ctx.save();
-        this.roamState.player.camera.ctx.fillStyle = "#4a4a3a";
-        this.roamState.player.camera.ctx.fillRect(coords.x, coords.y, 16, 32);
-        this.roamState.player.camera.ctx.restore();
     }
     get sizeInPx() {
         return this.size.prod(this.roamState.tileSize);

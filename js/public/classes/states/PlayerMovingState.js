@@ -1,10 +1,7 @@
-import { chance, Direction, directionToVector } from "../../Util.js";
+import { Direction, directionToVector, stringToDirections } from "../../Util.js";
+import GameEvent, { GameEventTrigger } from "../roam_state/game_events/GameEvent.js";
 import State from "../State.js";
 import Vector from "../Vector.js";
-import AnimationState from "./AnimationState.js";
-import BlankState from "./BlankState.js";
-import FadeState from "./FadeState.js";
-import WildBattleState from "./WildBattleState.js";
 export default class PlayerMovingState extends State {
     constructor(stateStack, roamState, direction) {
         super(stateStack);
@@ -30,13 +27,12 @@ export default class PlayerMovingState extends State {
                 this.roamState.player.spritesheet.coords.y = 3;
         }
         const destination = this.targetCoords;
-        const wallData = this.roamState.gameMap.layers.get('wall')?.getData();
-        if (this.roamState.gameMap.json && wallData) {
+        if (this.roamState.gameMap.json) {
             if (destination.x < 0 ||
                 destination.y < 0 ||
                 destination.x >= this.roamState.gameMap.size.x ||
                 destination.y >= this.roamState.gameMap.size.y ||
-                wallData?.[destination.y]?.[destination.x] ||
+                this.roamState.player.onMapLayer?.partsAt(destination.x, destination.y).find(p => p.type === "wall" && (typeof p.value === "string" ? stringToDirections(p.value).includes(this.roamState.player.direction) : p.value)) ||
                 this.roamState.gameEvents.some(g => !g.data.passable && g.getCoveredTiles().some(v => v.equals(destination)))) {
                 this.stateStack.pop();
             }
@@ -60,45 +56,13 @@ export default class PlayerMovingState extends State {
         else {
             (async () => {
                 this.roamState.player.pos = this.targetCoords;
-                let encounterTable = "";
-                const grassData = this.roamState.gameMap.layers.get('grass')?.getData();
-                if (grassData) {
-                    const tile = grassData?.[this.targetCoords.y]?.[this.targetCoords.x];
-                    if (tile && chance(10)) {
-                        console.log("tile is truthy");
-                        encounterTable = tile.table;
-                        // toPushWildBattle = true;
-                    }
-                }
                 this.roamState.toUpdate = null;
                 this.stateStack.pop();
-                if (encounterTable && this.stateStack.game.party.usable()) {
-                    const as = AnimationState.exclamation(this.roamState);
-                    const [audio] = await Promise.all([
-                        this.stateStack.loader.loadAudio('/assets/sounds/sfx/exclamation.mp3'),
-                    ]);
-                    audio.play();
-                    await as.pop();
-                    const wbs = new WildBattleState(this.stateStack, "meadow", encounterTable);
-                    this.stateStack.push(wbs);
-                    this.stateStack.push(new FadeState(this.stateStack));
-                    return;
-                }
-                // --------------------------- PORTAL
-                const portalData = this.roamState.gameMap.layers.get('portal')?.data;
-                if (portalData) {
-                    const tile = portalData?.[this.targetCoords.y]?.[this.targetCoords.x];
-                    if (tile) {
-                        console.log("portal code running");
-                        const [map, posStr] = tile.to.split(" ");
-                        const pos = Vector.fromString(posStr);
-                        this.roamState.player.pos = pos;
-                        this.roamState.gameMap.name = map;
-                        this.stateStack.push(new BlankState(this.stateStack));
-                        await this.roamState.gameMap.preload(this.stateStack.loader);
-                        this.stateStack.pop();
-                    }
-                }
+                // TRIGGER ON PLAYER TOUCH EVENTS
+                const toTrigger = this.roamState.gameEvents.filter(e => e.data.trigger === GameEventTrigger.PLAYER_TOUCH && !!e.getCoveredTiles().find(v => v.equals(this.targetCoords)));
+                toTrigger.forEach(ge => {
+                    ge.evtManager.dispatchEvent(GameEvent.interactEvt);
+                });
             })();
         }
         this.frames++;

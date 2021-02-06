@@ -1,9 +1,10 @@
-import GameEvent, { GameEventTrigger, GameEventType } from "../game_events/GameEvent.js";
+import GameEvent, { GameEventTrigger } from "../roam_state/game_events/GameEvent.js";
 import GameMap from "../roam_state/GameMap.js";
 import Player from "../roam_state/Player.js";
 import Spritesheet from "../Spritesheet.js";
 import State from "../State.js";
 import Vector from "../Vector.js";
+import GameMapLayer from "../roam_state/GameMapLayer.js";
 export default class RoamState extends State {
     constructor(stateStack) {
         super(stateStack);
@@ -13,17 +14,18 @@ export default class RoamState extends State {
         this.player = new Player(this);
         this.tileSize = new Vector(16);
         this.gameEvents = [];
+        this.sinceLastZIndexChange = 0;
     }
     async loadGameEvents(loader) {
         if (!this.gameMap.json?.gameEvents)
             return;
         const gameEventsToLoad = this.gameMap.json.gameEvents.map(async (ge) => {
-            return (await loader.loadJS(`/js/game_events/${this.gameMap.name}/${ge}.js`)).default;
+            return (await loader.loadJS(`/js/classes/roam_state/game_events/${this.gameMap.name}/${ge}.js`)).default;
         });
         const gameEventsLoaded = await Promise.all(gameEventsToLoad);
         console.log(gameEventsLoaded);
         for (const gameEventLoaded of gameEventsLoaded) {
-            if (gameEventLoaded.type === GameEventType.NPC && gameEventLoaded.imageURL) {
+            if (gameEventLoaded.imageURL) {
                 const image = await loader.loadImage(gameEventLoaded.imageURL);
                 const spritesheet = new Spritesheet(image, new Vector(16, 32), new Vector(4));
                 const gameEvent = new GameEvent(gameEventLoaded.type, this, {
@@ -32,6 +34,21 @@ export default class RoamState extends State {
                     renderOffset: new Vector(0, -1),
                     renderSize: new Vector(2, 1),
                     size: new Vector(1),
+                    ...(gameEventLoaded.data || {})
+                });
+                gameEvent.roamState = this;
+                gameEvent.evtManager.addEventListener('interact', async () => {
+                    await gameEventLoaded.onInteract.call(gameEvent);
+                });
+                this.gameEvents.push(gameEvent);
+            }
+            else {
+                const gameEvent = new GameEvent(gameEventLoaded.type, this, {
+                    pos: new Vector,
+                    renderOffset: new Vector(0, -1),
+                    renderSize: new Vector(2, 1),
+                    size: new Vector(1),
+                    ...(gameEventLoaded.data || {})
                 });
                 gameEvent.roamState = this;
                 gameEvent.evtManager.addEventListener('interact', async () => {
@@ -54,6 +71,18 @@ export default class RoamState extends State {
         this.player.init();
     }
     update(input) {
+        if (this.sinceLastZIndexChange > 20) {
+            if (input.keyIsDown('t')) {
+                this.player.zIndex--;
+                this.sinceLastZIndexChange = 0;
+                console.log(this.player.onMapLayer);
+            }
+            if (input.keyIsDown('y')) {
+                this.player.zIndex++;
+                this.sinceLastZIndexChange = 0;
+                console.log(this.player.onMapLayer);
+            }
+        }
         this.player.update(input);
         const evt = this.gameEvents
             .filter(g => g.data.trigger === GameEventTrigger.INTERACTION_KEY)
@@ -66,6 +95,7 @@ export default class RoamState extends State {
         /* this.gameEvents.forEach(e => {
             e.cooldown++;
         }) */
+        this.sinceLastZIndexChange++;
     }
     render(ctx) {
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
@@ -75,6 +105,19 @@ export default class RoamState extends State {
         const sorted = entries.sort((a, b) => {
             let va = Array.isArray(a) ? a[1] : a;
             let vb = Array.isArray(b) ? b[1] : b;
+            if (va === vb) {
+                if (a instanceof GameMapLayer)
+                    return -1;
+                if (!(a instanceof GameMapLayer) && !(b instanceof GameMapLayer)) {
+                    function pos(x) {
+                        if (x instanceof Player)
+                            return x.pos;
+                        return x.data.pos;
+                    }
+                    return pos(a).y - pos(b).y;
+                }
+                return 1;
+            }
             return va.zIndex - vb.zIndex;
         });
         for (const entry of sorted) {

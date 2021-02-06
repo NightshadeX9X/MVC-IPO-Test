@@ -18,6 +18,9 @@ export default class Player {
         this.toRender = true;
         this.toPreload = true;
     }
+    get onMapLayer() {
+        return this.roamState.gameMap.layers.find(l => l.zIndex === (this.zIndex - 1));
+    }
     async preload(loader) {
         this.image = await loader.loadImage(`/assets/images/people/player.png`);
         this.spritesheet = new Spritesheet(this.image, this.drawSize);

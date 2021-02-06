@@ -1,9 +1,9 @@
-import { GameEventType } from "../../classes/roam_state/game_events/GameEvent.js";
-import DelayState from "../../classes/states/DelayState.js";
-import FadeState from "../../classes/states/FadeState.js";
-import TextBoxState from "../../classes/states/TextBoxState.js";
-import Vector from "../../classes/Vector.js";
-import { delay } from "../../Util.js";
+import { GameEventType } from "../GameEvent.js";
+import DelayState from "../../../states/DelayState.js";
+import FadeState from "../../../states/FadeState.js";
+import TextBoxState from "../../../states/TextBoxState.js";
+import Vector from "../../../Vector.js";
+import { delay } from "../../../../Util.js";
 export default {
     type: GameEventType.NPC,
     imageURL: `/assets/images/people/player.png`,

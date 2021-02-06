@@ -1,11 +1,6 @@
 import Entity from "../../Entity.js";
 import Input from "../Input.js";
 import Loader from "../Loader.js";
-import { BaseLayer } from "./map_layers/BaseLayer.js";
-import { GrassLayer, GrassImage } from "./map_layers/GrassLayer.js";
-import { PortalLayer } from "./map_layers/PortalLayer.js";
-import { TallLayer } from "./map_layers/TallLayer.js";
-import { WallLayer } from "./map_layers/WallLayer.js";
 import RoamState from "../states/RoamState.js";
 import Vector from "../Vector.js";
 import GameMapLayer from "./GameMapLayer.js";
@@ -20,7 +15,7 @@ export default class GameMap implements Entity {
 	toPreload: boolean | null = true;
 	json: JSONGameMap | null = null;
 	image: HTMLImageElement | null = null;
-	layers = new Map<string, GameMapLayer>();
+	layers: GameMapLayer[] = [];
 	constructor(public name: string, public roamState: RoamState) {
 
 
@@ -34,24 +29,11 @@ export default class GameMap implements Entity {
 	async preload(loader: Loader) {
 		this.roamState.gameEvents = [];
 		await this.loadJSONData(loader);
-		this.layers = new Map<string, GameMapLayer>();
-		this.setLayers();
-
-		for (const entry of this.layers) {
-			const [key, layer] = entry;
-			await layer.preload(loader);
-			console.log(`${layer.constructor.name} preloaded`)
-		}
+		this.json?.layers?.forEach(layer => {
+			this.layers.push(new GameMapLayer(this, layer.src, layer.zIndex))
+		})
+		await Promise.all(this.layers.map(l => l.preload(loader)));
 	}
-
-	private setLayers() {
-		this.layers.set('base', new BaseLayer(this));
-		this.layers.set('wall', new WallLayer(this));
-		this.layers.set('grass', new GrassLayer(this));
-		this.layers.set('tall', new TallLayer(this));
-		this.layers.set('portal', new PortalLayer(this));
-	}
-
 	async loadJSONData(loader: Loader) {
 		const promises = [
 			loader.loadJSON(`/json/maps/${this.name}.json`),
@@ -63,18 +45,12 @@ export default class GameMap implements Entity {
 		this.json = raw;
 	}
 	init(): void {
-		this.layers.forEach(layer => {
-			layer.init();
-		})
+		this.layers.forEach(l => l.init())
 	}
 	update(input: Input): void {
 	}
 	render(ctx: CanvasRenderingContext2D): void {
-		const coords = this.roamState.player.camera.convertCoords(new Vector(14).prod(this.roamState.tileSize))
-		this.roamState.player.camera.ctx.save();
-		this.roamState.player.camera.ctx.fillStyle = "#4a4a3a"
-		this.roamState.player.camera.ctx.fillRect(coords.x, coords.y, 16, 32);
-		this.roamState.player.camera.ctx.restore();
+
 	}
 
 	get sizeInPx() {
@@ -95,11 +71,15 @@ export interface RangedTileSettings<T> {
 export interface JSONGameMap {
 	name: string;
 	sizeInTiles: string;
+	gameEvents?: string[];
 	layers: {
-		walls?: RangedTileSettings<boolean>[];
-		grass?: RangedTileSettings<{ table: string, image: GrassImage }>[];
-		portals?: RangedTileSettings<{ to: string }>[];
-		tall?: RangedTileSettings<boolean>[];
-	};
-	gameEvents: string[];
+		src: string;
+		zIndex: number;
+		parts: LayerPart[];
+	}[]
+}
+export type LayerPart = {
+	type: 'wall',
+	range: string,
+	value: boolean | string;
 }
