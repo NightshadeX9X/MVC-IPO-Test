@@ -1,38 +1,30 @@
-import Game from "./classes/Game.js";
-import RoamState from "./classes/states/RoamState.js";
-
-const cnv = document.getElementById('screen') as HTMLCanvasElement;
-const ctx = cnv.getContext('2d') as CanvasRenderingContext2D;
-ctx.imageSmoothingEnabled = false;
+import Game from "./core/Game.js";
 
 
-
-const game = new Game();
-
-
-async function setup() {
-	game.input.start(document)
-	const r = new RoamState(game.stateStack);
-	game.stateStack.states.push(r)
-	await preload();
-	init();
-	setInterval(update, 1000 / game.fps);
-	render();
-}
-async function preload() {
+async function preload(game: Game) {
 	await game.preload();
 }
-function init() {
-	game.stateStack.init();
-}
-function update() {
-	game.stateStack.update(game.input);
 
-}
-function render() {
-	game.stateStack.render(ctx);
-
-	requestAnimationFrame(render);
+function update(game: Game) {
+	game.update();
 }
 
-window.onload = () => setup()
+function render(game: Game) {
+	game.render();
+}
+
+async function init(game: Game) {
+	await preload(game);
+	setInterval(() => {
+		update(game);
+	}, 1000 / game.fps);
+	window.requestAnimationFrame(() => {
+		render(game);
+	});
+}
+
+window.addEventListener('load', () => {
+	const game = new Game();
+
+	init(game);
+});

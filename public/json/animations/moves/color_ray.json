@@ -1,9 +1,0 @@
-{
-	"name": "color_ray",
-	"url": "moves/color_ray",
-	"singleImageSize": "64x32",
-	"drawPos": "0x0",
-	"frames": 19,
-	"scale": 6,
-	"interval": 4
-}

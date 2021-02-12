@@ -1,9 +1,0 @@
-{
-	"name": "shadow_sneak",
-	"url": "moves/shadow_sneak",
-	"singleImageSize": "64x32",
-	"drawPos": "0x0",
-	"frames": 12,
-	"scale": 6,
-	"interval": 5
-}

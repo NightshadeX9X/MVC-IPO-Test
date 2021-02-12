@@ -1,9 +1,0 @@
-{
-	"name": "tri_attack",
-	"url": "moves/tri_attack",
-	"singleImageSize": "64x32",
-	"drawPos": "0x0",
-	"frames": 27,
-	"scale": 6,
-	"interval": 1
-}

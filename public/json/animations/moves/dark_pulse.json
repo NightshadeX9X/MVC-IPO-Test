@@ -1,9 +1,0 @@
-{
-	"name": "dark_pulse",
-	"url": "moves/dark_pulse",
-	"singleImageSize": "64x32",
-	"drawPos": "0x0",
-	"frames": 16,
-	"scale": 6,
-	"interval": 2
-}

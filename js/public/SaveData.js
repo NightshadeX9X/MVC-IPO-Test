@@ -1,2 +1,0 @@
-const KEY = 'savedata';
-export {};
