@@ -100,6 +100,16 @@
 					"type": "wall",
 					"range": "3x10-5x10",
 					"value": true
+				},
+				{
+					"type": "wall",
+					"range": "0x21-2x29",
+					"value": true
+				},
+				{
+					"type": "wall",
+					"range": "9x0-47x4",
+					"value": true
 				}
 			]
 		},
@@ -171,12 +181,44 @@
 					"type": "wall",
 					"range": "7x0-7x0",
 					"value": true
+				},
+				{
+					"type": "wall",
+					"range": "2x1-3x4",
+					"value": true
+				},
+				{
+					"type": "wall",
+					"range": "4x1-4x3",
+					"value": true
+				},
+				{
+					"type": "wall",
+					"range": "5x1-6x4",
+					"value": true
 				}
 			]
 		},
 		{
 			"src": "/assets/images/maps/route5/2.png",
-			"zIndex": 2
+			"zIndex": 2,
+			"parts": [
+				{
+					"type": "wall",
+					"range": "39x4-47x4",
+					"value": true
+				},
+				{
+					"type": "tall",
+					"range": "39x7-47x7",
+					"value": true
+				},
+				{
+					"type": "wall",
+					"range": "39x8-47x8",
+					"value": true
+				}
+			]
 		},
 		{
 			"src": "/assets/images/maps/route5/3.png",

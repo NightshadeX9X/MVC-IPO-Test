@@ -14,7 +14,7 @@ import FadeState from "./FadeState.js";
 import TextBoxState from "./TextBoxState.js";
 import GameMapLayer from "../roam_state/GameMapLayer.js";
 export default class RoamState extends State {
-	public timeOfDay = TimeOfDay.NIGHT;
+	public timeOfDay = TimeOfDay.DAY;
 	public gameMap = new GameMap('route5', this);
 	public player = new Player(this);
 	public tileSize = new Vector(16);
@@ -139,10 +139,20 @@ export default class RoamState extends State {
 			}
 			return va.zIndex - vb.zIndex;
 		})
+		this.player.camera.ctx.save();
 		for (const entry of sorted) {
 			const entity = Array.isArray(entry) ? entry[1] : entry;
 			entity.render(this.player.camera);
+
 		}
+		if (this.timeOfDay === TimeOfDay.NIGHT) {
+			this.player.camera.ctx.globalAlpha = 0.3;
+			this.player.camera.ctx.fillStyle = "#008";
+
+			this.player.camera.ctx.fillRect(0, 0, this.player.camera.size.x, this.player.camera.size.y);
+		}
+		this.player.camera.ctx.restore();
+
 
 		this.player.camera.render(ctx);
 

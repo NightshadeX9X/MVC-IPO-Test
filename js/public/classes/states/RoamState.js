@@ -9,7 +9,7 @@ export default class RoamState extends State {
     constructor(stateStack) {
         super(stateStack);
         this.stateStack = stateStack;
-        this.timeOfDay = TimeOfDay.NIGHT;
+        this.timeOfDay = TimeOfDay.DAY;
         this.gameMap = new GameMap('route5', this);
         this.player = new Player(this);
         this.tileSize = new Vector(16);
@@ -120,10 +120,17 @@ export default class RoamState extends State {
             }
             return va.zIndex - vb.zIndex;
         });
+        this.player.camera.ctx.save();
         for (const entry of sorted) {
             const entity = Array.isArray(entry) ? entry[1] : entry;
             entity.render(this.player.camera);
         }
+        if (this.timeOfDay === TimeOfDay.NIGHT) {
+            this.player.camera.ctx.globalAlpha = 0.3;
+            this.player.camera.ctx.fillStyle = "#008";
+            this.player.camera.ctx.fillRect(0, 0, this.player.camera.size.x, this.player.camera.size.y);
+        }
+        this.player.camera.ctx.restore();
         this.player.camera.render(ctx);
     }
 }

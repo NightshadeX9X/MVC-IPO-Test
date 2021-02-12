@@ -82,4 +82,8 @@ export type LayerPart = {
 	type: 'wall',
 	range: string,
 	value: boolean | string;
+} | {
+	type: 'tall',
+	range: string,
+	value: boolean;
 }
