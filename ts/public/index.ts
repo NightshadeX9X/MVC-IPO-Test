@@ -11,6 +11,9 @@ function update(game: Game) {
 
 function render(game: Game) {
 	game.render();
+	window.requestAnimationFrame(() => {
+		render(game);
+	});
 }
 
 async function init(game: Game) {
@@ -18,9 +21,7 @@ async function init(game: Game) {
 	setInterval(() => {
 		update(game);
 	}, 1000 / game.fps);
-	window.requestAnimationFrame(() => {
-		render(game);
-	});
+	render(game)
 }
 
 window.addEventListener('load', () => {

@@ -1,16 +1,28 @@
 export default class Input {
     constructor() {
         this.keyStates = new Map();
+        this.specialKeys = {
+            CTRL: false,
+            SHIFT: false,
+            ALT: false
+        };
     }
     start(el) {
         el.addEventListener('keydown', e => {
             e.preventDefault();
             this.keyStates.set(e.key, Input.keyDownSymbol);
+            this.updateSpecialKeys(e);
         });
         el.addEventListener('keyup', e => {
             e.preventDefault();
             this.keyStates.set(e.key, Input.keyUpSymbol);
+            this.updateSpecialKeys(e);
         });
+    }
+    updateSpecialKeys(e) {
+        this.specialKeys.SHIFT = e.shiftKey;
+        this.specialKeys.ALT = e.altKey;
+        this.specialKeys.CTRL = e.ctrlKey;
     }
     keyIsDown(key) {
         return this.keyStates.get(key) === Input.keyDownSymbol;

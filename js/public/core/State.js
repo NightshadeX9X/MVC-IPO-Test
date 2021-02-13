@@ -18,4 +18,11 @@ export default class State {
     render(ctx) {
         this.subStateStack.render(ctx);
     }
+    pop() {
+        return new Promise((res, rej) => {
+            this.evtHandler.addEventListener('popped', () => {
+                res();
+            });
+        });
+    }
 }

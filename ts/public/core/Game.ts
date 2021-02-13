@@ -4,7 +4,7 @@ import Loader from "./Loader.js";
 import StateStack from "./StateStack.js";
 
 export default class Game {
-	fps = 1;
+	fps = 80;
 	loader = new Loader();
 	input = new Input();
 	cnv = document.getElementById('screen') as HTMLCanvasElement;
@@ -13,7 +13,7 @@ export default class Game {
 
 	async preload() {
 		await this.stateStack.push(new RoamState(this.stateStack));
-		// await this.stateStack.preload(this.loader);
+		this.input.start(document);
 
 	}
 	update() {

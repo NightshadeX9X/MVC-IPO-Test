@@ -27,4 +27,12 @@ export default abstract class State implements Entity {
 		this.subStateStack.render(ctx);
 	}
 
+	pop() {
+		return new Promise<void>((res, rej) => {
+			this.evtHandler.addEventListener('popped', () => {
+				res();
+			})
+		})
+	}
+
 }

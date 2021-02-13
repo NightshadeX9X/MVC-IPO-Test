@@ -44,6 +44,46 @@ export default class Vector implements Vector {
 		return new Vector(this.x / x, this.y / y);
 	}
 
+	// ------ OPERATION BY MODIFICATION
+	add(a: number): void;
+	add(a: number, b: number): void;
+	add(a: Vector): void;
+	add(a: number | Vector, b?: number) {
+		const vector = this.getVectorFromArgs(a, b);
+		const res = this.sum(vector);
+		this.x = res.x;
+		this.y = res.y;
+	}
+
+	sub(a: number): void;
+	sub(a: number, b: number): void;
+	sub(a: Vector): void;
+	sub(a: number | Vector, b?: number) {
+		const vector = this.getVectorFromArgs(a, b);
+		const res = this.diff(vector);
+		this.x = res.x;
+		this.y = res.y;
+	}
+
+	mult(a: number): void;
+	mult(a: number, b: number): void;
+	mult(a: Vector): void;
+	mult(a: number | Vector, b?: number) {
+		const vector = this.getVectorFromArgs(a, b);
+		const res = this.prod(vector);
+		this.x = res.x;
+		this.y = res.y;
+	}
+
+	div(a: number): void;
+	div(a: number, b: number): void;
+	div(a: Vector): void;
+	div(a: number | Vector, b?: number) {
+		const vector = this.getVectorFromArgs(a, b);
+		const res = this.quo(vector);
+		this.x = res.x;
+		this.y = res.y;
+	}
 	// ------ COMPARISON
 	equals(a: number): boolean;
 	equals(a: number, b: number): boolean;

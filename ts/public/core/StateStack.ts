@@ -4,7 +4,7 @@ import Loader from "./Loader.js";
 import State from "./State.js";
 import Events from '../util/Events.js';
 
-export default class StateStack<TParent extends Game | State = State> {
+export default class StateStack<TParent extends Game | State = Game | State> {
 	states: State[] = [];
 	evtHandler = new Events.Handler();
 
@@ -13,14 +13,14 @@ export default class StateStack<TParent extends Game | State = State> {
 	}
 
 	async preload(loader: Loader) {
-		const toPreload = this.states.filter((s) => this.toPreloadState(s));
-		await Promise.all(toPreload.map(state => state.preload(loader)));
+		const toPreload = this.states.filter((state) => state.preload && this.toPreloadState(state));
+		await Promise.all(toPreload.map(state => (state as any).preload(loader)));
 	}
 	update(input: Input) {
-		this.states.filter((s) => this.toUpdateState(s)).forEach(s => s.update(input));
+		this.states.filter((state) => state.update && this.toUpdateState(state)).forEach(state => (state as any).update(input));
 	}
 	render(ctx: CanvasRenderingContext2D) {
-		this.states.filter((s) => this.toRenderState(s)).forEach(s => s.render(ctx));
+		this.states.filter((state) => state.render && this.toRenderState(state)).forEach(state => (state as any).render(ctx));
 	}
 
 	fromTop(n = this.states.length - 1) {
@@ -46,11 +46,11 @@ export default class StateStack<TParent extends Game | State = State> {
 
 
 	async push(state: State) {
-		if (this.toPreloadState(state))
-			await state.preload(this.game.loader);
 		this.states.push(state);
 		this.evtHandler.dispatchEvent('state pushed', state);
 		state.evtHandler.dispatchEvent('pushed');
+		if (this.toPreloadState(state))
+			await state.preload(this.game.loader);
 	}
 	pop() {
 		const state = this.states.pop();

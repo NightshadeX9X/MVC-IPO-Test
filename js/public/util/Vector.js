@@ -27,6 +27,30 @@ export default class Vector {
         let y = vector.y || 1;
         return new Vector(this.x / x, this.y / y);
     }
+    add(a, b) {
+        const vector = this.getVectorFromArgs(a, b);
+        const res = this.sum(vector);
+        this.x = res.x;
+        this.y = res.y;
+    }
+    sub(a, b) {
+        const vector = this.getVectorFromArgs(a, b);
+        const res = this.diff(vector);
+        this.x = res.x;
+        this.y = res.y;
+    }
+    mult(a, b) {
+        const vector = this.getVectorFromArgs(a, b);
+        const res = this.prod(vector);
+        this.x = res.x;
+        this.y = res.y;
+    }
+    div(a, b) {
+        const vector = this.getVectorFromArgs(a, b);
+        const res = this.quo(vector);
+        this.x = res.x;
+        this.y = res.y;
+    }
     equals(a, b) {
         const vector = this.getVectorFromArgs(a, b);
         return this.x === vector.x && this.y === vector.y;
@@ -57,30 +81,21 @@ export default class Vector {
     static from(n) {
         return new Vector(n.x, n.y);
     }
-}
-`${number}x${number}`;
-{
-    const [x, y] = string.split("x").map(Number);
-    return new Vector(x, y);
-}
-rangeTo(a, number);
-Vector[];
-rangeTo(a, number, b, number);
-Vector[];
-rangeTo(a, Vector);
-Vector[];
-rangeTo(a, number | Vector, b ?  : number);
-{
-    const vector = this.getVectorFromArgs(a, b);
-    let inRange = [];
-    for (let x = this.x; x < vector.x; x++) {
-        for (let y = this.y; y < vector.y; y++) {
-            inRange.push(new Vector(x, y));
-        }
+    static fromString(string) {
+        const [x, y] = string.split("x").map(Number);
+        return new Vector(x, y);
     }
-    return inRange;
-}
-toString();
-{
-    return `${this.x}x${this.y}`;
+    rangeTo(a, b) {
+        const vector = this.getVectorFromArgs(a, b);
+        let inRange = [];
+        for (let x = this.x; x < vector.x; x++) {
+            for (let y = this.y; y < vector.y; y++) {
+                inRange.push(new Vector(x, y));
+            }
+        }
+        return inRange;
+    }
+    toString() {
+        return `${this.x}x${this.y}`;
+    }
 }

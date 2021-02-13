@@ -4,18 +4,30 @@ export default class Input {
 	private static keyDownSymbol = Symbol('key down');
 	private static keyUpSymbol = Symbol('key up');
 	private keyStates = new Map<string, typeof Input.keyDownSymbol | typeof Input.keyUpSymbol>()
+	public specialKeys = {
+		CTRL: false,
+		SHIFT: false,
+		ALT: false
+	}
 
 	public start(el: Document | HTMLElement) {
 		el.addEventListener('keydown', e => {
 			e.preventDefault();
 			this.keyStates.set((e as KeyboardEvent).key, Input.keyDownSymbol);
-
+			this.updateSpecialKeys(e as KeyboardEvent);
 		})
 
 		el.addEventListener('keyup', e => {
 			e.preventDefault();
 			this.keyStates.set((e as KeyboardEvent).key, Input.keyUpSymbol);
+			this.updateSpecialKeys(e as KeyboardEvent);
 		})
+	}
+
+	private updateSpecialKeys(e: KeyboardEvent) {
+		this.specialKeys.SHIFT = e.shiftKey;
+		this.specialKeys.ALT = e.altKey;
+		this.specialKeys.CTRL = e.ctrlKey;
 	}
 
 	public keyIsDown(key: string) {

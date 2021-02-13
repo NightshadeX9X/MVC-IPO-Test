@@ -7,15 +7,16 @@ function update(game) {
 }
 function render(game) {
     game.render();
+    window.requestAnimationFrame(() => {
+        render(game);
+    });
 }
 async function init(game) {
     await preload(game);
     setInterval(() => {
         update(game);
     }, 1000 / game.fps);
-    window.requestAnimationFrame(() => {
-        render(game);
-    });
+    render(game);
 }
 window.addEventListener('load', () => {
     const game = new Game();

@@ -7,14 +7,14 @@ export default class StateStack {
         this.evtHandler = new Events.Handler();
     }
     async preload(loader) {
-        const toPreload = this.states.filter((s) => this.toPreloadState(s));
+        const toPreload = this.states.filter((state) => state.preload && this.toPreloadState(state));
         await Promise.all(toPreload.map(state => state.preload(loader)));
     }
     update(input) {
-        this.states.filter((s) => this.toUpdateState(s)).forEach(s => s.update(input));
+        this.states.filter((state) => state.update && this.toUpdateState(state)).forEach(state => state.update(input));
     }
     render(ctx) {
-        this.states.filter((s) => this.toRenderState(s)).forEach(s => s.render(ctx));
+        this.states.filter((state) => state.render && this.toRenderState(state)).forEach(state => state.render(ctx));
     }
     fromTop(n = this.states.length - 1) {
         return this.states[n];
@@ -38,11 +38,11 @@ export default class StateStack {
         return true;
     }
     async push(state) {
-        if (this.toPreloadState(state))
-            await state.preload(this.game.loader);
         this.states.push(state);
         this.evtHandler.dispatchEvent('state pushed', state);
         state.evtHandler.dispatchEvent('pushed');
+        if (this.toPreloadState(state))
+            await state.preload(this.game.loader);
     }
     pop() {
         const state = this.states.pop();
