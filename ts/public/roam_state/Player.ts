@@ -8,19 +8,21 @@ import Spritesheet from "../util/Spritesheet.js";
 import Vector from "../util/Vector.js";
 
 export default class Player implements Entity {
-	image: HTMLImageElement | null = null;
-	spritesheet: Spritesheet | null = null;
-	pos = new Vector();
-	direction = Direction.DOWN;
-	zIndex = 1;
+	public image: HTMLImageElement | null = null;
+	public spritesheet: Spritesheet | null = null;
+	public pos = new Vector();
+	public size = new Vector(1);
+	public drawSize = new Vector(1, 2);
+	public direction = Direction.DOWN;
+	public zIndex = 1;
 	constructor(public roamState: RoamState) {
 
 	}
-	async preload(loader: Loader) {
+	public async preload(loader: Loader) {
 		this.image = await loader.loadImage(`/assets/images/people/player.png`);
-		this.spritesheet = new Spritesheet(this.image, new Vector(16, 32), new Vector(4))
+		this.spritesheet = new Spritesheet(this.image, this.drawSize.prod(this.roamState.tileSize), new Vector(4))
 	}
-	update(input: Input): void {
+	public update(input: Input): void {
 		for (let key in input.directionKeyStates) {
 			const d = key as keyof typeof input.directionKeyStates;
 			if (!input.directionKeyStates[d] || this.roamState !== this.roamState.stateStack.fromTop()) continue;
@@ -41,12 +43,14 @@ export default class Player implements Entity {
 		if (this.direction === Direction.UP) this.spritesheet.pos.y = 3;
 
 	}
-	render(ctx: CanvasRenderingContext2D): void {
+	public render(ctx: CanvasRenderingContext2D): void {
 		if (this.image && this.spritesheet) {
-			ctx.save();
-			ctx.translate(this.pos.x * this.roamState.tileSize, this.pos.y * this.roamState.tileSize);
-			this.spritesheet.render(ctx);
-			ctx.restore();
+			this.roamState.camera.ctx.save();
+			const coords = this.roamState.camera.convertCoords(this.pos.diff(0, 1).prod(this.roamState.tileSize));
+			// this.roamState.camera.ctx.translate(this.roamState.camera.size.x / 2, this.roamState.camera.size.y / 2 - this.drawSize.y * this.roamState.tileSize / 2);
+			this.roamState.camera.ctx.translate(coords.x, coords.y);
+			this.spritesheet.render(this.roamState.camera.ctx);
+			this.roamState.camera.ctx.restore();
 		}
 	}
 }

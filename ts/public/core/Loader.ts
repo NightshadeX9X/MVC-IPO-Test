@@ -7,7 +7,7 @@ export default class Loader {
 		console.log("new loader")
 	}
 
-	async loadJSON(src: string, name = src, dynamic = false) {
+	public async loadJSON(src: string, name = src, dynamic = false) {
 		const loaded = this.alreadyLoaded.get(name);
 		if (loaded && !dynamic) return Promise.resolve(loaded as JSON);
 		const res = await fetch(src);
@@ -17,7 +17,7 @@ export default class Loader {
 		return json;
 	}
 
-	loadImage(src: string, name = src, dynamic = false) {
+	public async loadImage(src: string, name = src, dynamic = false) {
 		const loaded = this.alreadyLoaded.get(name);
 		if (loaded && !dynamic) return Promise.resolve(loaded as HTMLImageElement);
 		return new Promise<HTMLImageElement>((res, rej) => {
@@ -31,7 +31,7 @@ export default class Loader {
 		})
 	}
 
-	async loadAudio(src: string, name = src, dynamic = false) {
+	public async loadAudio(src: string, name = src, dynamic = false) {
 		const loaded = this.alreadyLoaded.get(name);
 		if (loaded && !dynamic) return loaded as HTMLAudioElement;
 		const audio = new Audio(src);
@@ -40,7 +40,7 @@ export default class Loader {
 		return audio;
 	}
 
-	async loadJS<T = any>(path: string) {
+	public async loadJS<T = any>(path: string) {
 		const imported = await import(path) as T;
 		return imported;
 	}

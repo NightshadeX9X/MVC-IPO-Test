@@ -8,12 +8,14 @@ export default class Player {
         this.image = null;
         this.spritesheet = null;
         this.pos = new Vector();
+        this.size = new Vector(1);
+        this.drawSize = new Vector(1, 2);
         this.direction = Direction.DOWN;
         this.zIndex = 1;
     }
     async preload(loader) {
         this.image = await loader.loadImage(`/assets/images/people/player.png`);
-        this.spritesheet = new Spritesheet(this.image, new Vector(16, 32), new Vector(4));
+        this.spritesheet = new Spritesheet(this.image, this.drawSize.prod(this.roamState.tileSize), new Vector(4));
     }
     update(input) {
         for (let key in input.directionKeyStates) {
@@ -42,10 +44,12 @@ export default class Player {
     }
     render(ctx) {
         if (this.image && this.spritesheet) {
-            ctx.save();
-            ctx.translate(this.pos.x * this.roamState.tileSize, this.pos.y * this.roamState.tileSize);
-            this.spritesheet.render(ctx);
-            ctx.restore();
+            this.roamState.camera.ctx.save();
+            const coords = this.roamState.camera.convertCoords(this.pos.diff(0, 1).prod(this.roamState.tileSize));
+            // this.roamState.camera.ctx.translate(this.roamState.camera.size.x / 2, this.roamState.camera.size.y / 2 - this.drawSize.y * this.roamState.tileSize / 2);
+            this.roamState.camera.ctx.translate(coords.x, coords.y);
+            this.spritesheet.render(this.roamState.camera.ctx);
+            this.roamState.camera.ctx.restore();
         }
     }
 }

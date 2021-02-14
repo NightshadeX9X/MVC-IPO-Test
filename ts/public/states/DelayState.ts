@@ -7,7 +7,7 @@ export default class DelayState extends State {
 	constructor(public stateStack: StateStack, public totalFrames: number) {
 		super(stateStack);
 	}
-	update(input: Input) {
+	public update(input: Input) {
 		if (this.remainingFrames <= 0) {
 			this.stateStack.pop();
 		}

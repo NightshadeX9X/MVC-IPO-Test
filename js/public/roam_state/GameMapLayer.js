@@ -13,6 +13,7 @@ export default class GameMapLayer {
     render(ctx) {
         if (!this.image)
             return;
-        ctx.drawImage(this.image, this.pos.x, this.pos.y);
+        const coords = this.gameMap.roamState.camera.convertCoords(this.pos);
+        this.gameMap.roamState.camera.ctx.drawImage(this.image, coords.x, coords.y);
     }
 }

@@ -15,7 +15,7 @@ export default class GameMap implements Preloadable {
 	constructor(public roamState: RoamState, public name: string) {
 
 	}
-	async preload(loader: Loader) {
+	public async preload(loader: Loader) {
 		await Promise.all(this.layers.map(layer => layer.preload(loader)))
 	}
 }

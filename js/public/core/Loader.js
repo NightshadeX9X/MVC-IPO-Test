@@ -13,7 +13,7 @@ export default class Loader {
             this.alreadyLoaded.set(name, json);
         return json;
     }
-    loadImage(src, name = src, dynamic = false) {
+    async loadImage(src, name = src, dynamic = false) {
         const loaded = this.alreadyLoaded.get(name);
         if (loaded && !dynamic)
             return Promise.resolve(loaded);

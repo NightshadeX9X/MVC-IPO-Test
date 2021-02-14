@@ -5,28 +5,28 @@ import State from "./State.js";
 import Events from '../util/Events.js';
 
 export default class StateStack<TParent extends Game | State = Game | State> {
-	states: State[] = [];
-	evtHandler = new Events.Handler();
+	public states: State[] = [];
+	public evtHandler = new Events.Handler();
 
 	constructor(public parent: TParent, public game: Game) {
 
 	}
 
-	async preload(loader: Loader) {
+	public async preload(loader: Loader) {
 		const toPreload = this.states.filter((state) => state.preload && this.toPreloadState(state));
 		await Promise.all(toPreload.map(state => (state as any).preload(loader)));
 	}
-	update(input: Input) {
+	public update(input: Input) {
 		this.states.filter((state) => state.update && this.toUpdateState(state)).forEach(state => (state as any).update(input));
 	}
-	render(ctx: CanvasRenderingContext2D) {
+	public render(ctx: CanvasRenderingContext2D) {
 		this.states.filter((state) => state.render && this.toRenderState(state)).forEach(state => (state as any).render(ctx));
 	}
 
-	fromTop(n = this.states.length - 1) {
+	public fromTop(n = this.states.length - 1) {
 		return this.states[n];
 	}
-	fromBottom(n = 0) {
+	public fromBottom(n = 0) {
 		return this.states[n];
 	}
 
@@ -45,14 +45,14 @@ export default class StateStack<TParent extends Game | State = Game | State> {
 
 
 
-	async push(state: State) {
+	public async push(state: State) {
 		this.states.push(state);
 		this.evtHandler.dispatchEvent('state pushed', state);
 		state.evtHandler.dispatchEvent('pushed');
 		if (this.toPreloadState(state))
 			await state.preload(this.game.loader);
 	}
-	pop() {
+	public pop() {
 		const state = this.states.pop();
 		if (!state) return;
 		this.evtHandler.dispatchEvent('state popped', state);

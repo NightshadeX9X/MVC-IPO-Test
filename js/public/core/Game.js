@@ -10,6 +10,7 @@ export default class Game {
         this.cnv = document.getElementById('screen');
         this.ctx = this.cnv.getContext('2d');
         this.stateStack = new StateStack(this, this);
+        this.ctx.imageSmoothingEnabled = false;
     }
     async preload() {
         await this.stateStack.push(new RoamState(this.stateStack));

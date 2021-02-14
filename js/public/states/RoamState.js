@@ -1,4 +1,5 @@
 import State from "../core/State.js";
+import Camera from "../roam_state/Camera.js";
 import GameMap from "../roam_state/GameMap.js";
 import Player from "../roam_state/Player.js";
 export default class RoamState extends State {
@@ -6,6 +7,7 @@ export default class RoamState extends State {
         super(...arguments);
         this.player = new Player(this);
         this.gameMap = new GameMap(this, 'route5');
+        this.camera = new Camera(this);
         this.tileSize = 16;
     }
     async preload(loader) {
@@ -21,6 +23,7 @@ export default class RoamState extends State {
     }
     update(input) {
         this.player.update(input);
+        this.camera.update();
     }
     render(ctx) {
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
@@ -35,6 +38,8 @@ export default class RoamState extends State {
         sortedEntities.forEach(entity => {
             entity.render(ctx);
         });
+        /////////
+        this.camera.render(ctx);
     }
     getEntities() {
         return [

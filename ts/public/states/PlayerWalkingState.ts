@@ -12,14 +12,14 @@ export default class PlayerWalkingState extends State {
 		super(stateStack);
 	}
 
-	async preload() {
+	public async preload() {
 		this.handleMovement();
 		this.evtHandler.addEventListener('movement done', () => {
 			this.stateStack.pop();
 		})
 	}
 
-	update(input: Input) {
+	public update(input: Input) {
 		this.roamState.update(input)
 	}
 

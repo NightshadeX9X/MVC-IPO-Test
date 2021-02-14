@@ -95,6 +95,15 @@ export default class Vector {
         }
         return inRange;
     }
+    map(fn) {
+        const vec = new Vector(fn(this.x), fn(this.y));
+        return vec;
+    }
+    set(a, b) {
+        const vector = this.getVectorFromArgs(a, b);
+        this.x = vector.x;
+        this.y = vector.y;
+    }
     toString() {
         return `${this.x}x${this.y}`;
     }

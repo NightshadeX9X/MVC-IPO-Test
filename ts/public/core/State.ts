@@ -6,28 +6,28 @@ import Loader from "./Loader.js";
 import StateStack from "./StateStack.js";
 
 export default abstract class State implements Entity {
-	toPreload: boolean | null = null;
-	toUpdate: boolean | null = null;
-	toRender: boolean | null = null;
-	subStateStack = new StateStack(this, this.stateStack.game);
-	evtHandler = new Events.Handler();
+	public toPreload: boolean | null = null;
+	public toUpdate: boolean | null = null;
+	public toRender: boolean | null = null;
+	public subStateStack = new StateStack(this, this.stateStack.game);
+	public evtHandler = new Events.Handler();
 
 
 	constructor(public stateStack: StateStack<Game | State>) {
 
 	}
 
-	async preload(loader: Loader) {
+	public async preload(loader: Loader) {
 		await this.subStateStack.preload(loader);
 	}
-	update(input: Input): void {
+	public update(input: Input): void {
 		this.subStateStack.update(input);
 	}
-	render(ctx: CanvasRenderingContext2D): void {
+	public render(ctx: CanvasRenderingContext2D): void {
 		this.subStateStack.render(ctx);
 	}
 
-	pop() {
+	public pop() {
 		return new Promise<void>((res, rej) => {
 			this.evtHandler.addEventListener('popped', () => {
 				res();

@@ -162,6 +162,20 @@ export default class Vector implements Vector {
 		return inRange;
 	}
 
+	map(fn: (n: number) => number) {
+		const vec = new Vector(fn(this.x), fn(this.y));
+		return vec;
+	}
+
+	set(a: number): void;
+	set(a: number, b: number): void;
+	set(a: Vector): void;
+	set(a: number | Vector, b?: number) {
+		const vector = this.getVectorFromArgs(a, b)
+		this.x = vector.x;
+		this.y = vector.y;
+	}
+
 	toString() {
 		return `${this.x}x${this.y}` as const
 	}

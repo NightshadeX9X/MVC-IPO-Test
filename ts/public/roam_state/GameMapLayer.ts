@@ -5,16 +5,17 @@ import Vector from '../util/Vector.js';
 
 export default class GameMapLayer implements Preloadable, Renderable {
 	private image: HTMLImageElement | null = null;
-	pos = new Vector;
+	public pos = new Vector;
 	constructor(public gameMap: GameMap, private imageName: string, public zIndex: number) {
 
 	}
 
-	async preload(loader: Loader) {
+	public async preload(loader: Loader) {
 		this.image = await loader.loadImage(`/assets/images/maps/${this.gameMap.name}/${this.imageName}.png`)
 	}
-	render(ctx: CanvasRenderingContext2D): void {
+	public render(ctx: CanvasRenderingContext2D): void {
 		if (!this.image) return;
-		ctx.drawImage(this.image, this.pos.x, this.pos.y);
+		const coords = this.gameMap.roamState.camera.convertCoords(this.pos);
+		this.gameMap.roamState.camera.ctx.drawImage(this.image, coords.x, coords.y);
 	}
 }
