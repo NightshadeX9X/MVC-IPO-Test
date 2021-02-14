@@ -39,8 +39,12 @@ export default class PlayerWalkingState extends State {
 	}
 
 	private async takeStep() {
+		if (!this.roamState.player.spritesheet) return;
 		for (let i = 0; i < 4; i++) {
 			this.roamState.player.pos.add(this.vector.quo(16));
+			if (i % 2 === 0)
+				this.roamState.player.spritesheet.pos.x++;
+			if (this.roamState.player.spritesheet.pos.x >= 4) this.roamState.player.spritesheet.pos.x = 0;
 			const delay = new DelayState(this.stateStack, 1);
 			const oldUpdate = delay.update.bind(delay);
 			delay.update = (input: Input) => {

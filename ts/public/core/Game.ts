@@ -4,7 +4,7 @@ import Loader from "./Loader.js";
 import StateStack from "./StateStack.js";
 
 export default class Game {
-	fps = 80;
+	fps = 60;
 	loader = new Loader();
 	input = new Input();
 	cnv = document.getElementById('screen') as HTMLCanvasElement;

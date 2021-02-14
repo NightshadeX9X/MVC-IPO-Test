@@ -6,6 +6,7 @@ export default class RoamState extends State {
         super(...arguments);
         this.player = new Player(this);
         this.gameMap = new GameMap(this, 'route5');
+        this.tileSize = 16;
     }
     async preload(loader) {
         await Promise.all([
@@ -13,13 +14,24 @@ export default class RoamState extends State {
             this.gameMap.preload(loader),
         ]);
     }
+    getEntityZIndexPriority(entity) {
+        if (entity instanceof Player)
+            return 1;
+        return 0;
+    }
     update(input) {
         this.player.update(input);
     }
     render(ctx) {
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
         const entities = this.getEntities();
-        const sortedEntities = entities.sort((a, b) => a.zIndex - b.zIndex);
+        const sortedEntities = entities.sort((a, b) => {
+            if (a.zIndex !== b.zIndex)
+                return a.zIndex - b.zIndex;
+            if (a.pos.y !== b.pos.y)
+                return a.pos.y - b.pos.y;
+            return this.getEntityZIndexPriority(a) - this.getEntityZIndexPriority(b);
+        });
         sortedEntities.forEach(entity => {
             entity.render(ctx);
         });

@@ -1,9 +1,11 @@
 import { Preloadable, Renderable } from "../core/Attributes.js";
 import Loader from "../core/Loader.js";
 import GameMap from "./GameMap.js";
+import Vector from '../util/Vector.js';
 
 export default class GameMapLayer implements Preloadable, Renderable {
 	private image: HTMLImageElement | null = null;
+	pos = new Vector;
 	constructor(public gameMap: GameMap, private imageName: string, public zIndex: number) {
 
 	}
@@ -13,6 +15,6 @@ export default class GameMapLayer implements Preloadable, Renderable {
 	}
 	render(ctx: CanvasRenderingContext2D): void {
 		if (!this.image) return;
-		ctx.drawImage(this.image, 0, 0);
+		ctx.drawImage(this.image, this.pos.x, this.pos.y);
 	}
 }
