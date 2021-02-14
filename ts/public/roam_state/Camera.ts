@@ -26,10 +26,11 @@ class Camera {
 	}
 
 	private advanceTowardsTarget() {
-		this.pos.add(this.distanceFromTarget.prod(1 / this.smoothing));
+		/* this.pos.add(this.distanceFromTarget.prod(1 / this.smoothing));
 		if (this.distanceFromTarget.map(Math.abs).lessThanOrEqualTo(1)) {
 			this.pos.set(this.target);
-		}
+		} */
+		this.pos.set(this.target)
 	}
 
 	private get distanceFromTarget() {
@@ -37,7 +38,7 @@ class Camera {
 	}
 
 	public update() {
-		this.advanceTowardsTarget()
+		this.advanceTowardsTarget();
 	}
 
 	public render(ctx: CanvasRenderingContext2D) {

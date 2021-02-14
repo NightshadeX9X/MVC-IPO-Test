@@ -20,10 +20,11 @@ class Camera {
         return halfSize.diff(this.pos).sum(coords);
     }
     advanceTowardsTarget() {
-        this.pos.add(this.distanceFromTarget.prod(1 / this.smoothing));
+        /* this.pos.add(this.distanceFromTarget.prod(1 / this.smoothing));
         if (this.distanceFromTarget.map(Math.abs).lessThanOrEqualTo(1)) {
             this.pos.set(this.target);
-        }
+        } */
+        this.pos.set(this.target);
     }
     get distanceFromTarget() {
         return this.target.diff(this.pos);

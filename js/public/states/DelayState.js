@@ -7,7 +7,8 @@ export default class DelayState extends State {
         this.elapsedFrames = 0;
     }
     update(input) {
-        if (this.remainingFrames <= 0) {
+        if (this.remainingFrames <= 1) {
+            console.log(this.stateStack.fromTop() === this);
             this.stateStack.pop();
         }
         this.elapsedFrames++;

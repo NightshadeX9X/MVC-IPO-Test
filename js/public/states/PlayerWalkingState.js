@@ -11,13 +11,16 @@ export default class PlayerWalkingState extends State {
         this.playerStartingPos = Vector.from(this.roamState.player.pos);
     }
     async preload() {
+        this.roamState.toUpdate = true;
         this.handleMovement();
+        this.evtHandler.addEventListener('popped', () => {
+            this.roamState.toUpdate = null;
+        });
         this.evtHandler.addEventListener('movement done', () => {
             this.stateStack.pop();
         });
     }
     update(input) {
-        this.roamState.update(input);
     }
     get playerTarget() {
         return this.playerStartingPos.sum(this.vector);
@@ -26,30 +29,26 @@ export default class PlayerWalkingState extends State {
         for (let i = 0; i < 4; i++) {
             await this.takeStep();
         }
-        this.roamState.player.pos = this.playerTarget;
+        // this.roamState.player.pos.set(this.playerTarget);
         this.evtHandler.dispatchEvent('movement done');
     }
     get vector() {
         return directionToVector(this.direction);
     }
     async takeStep() {
-        if (!this.roamState.player.spritesheet)
-            return;
-        for (let i = 0; i < 4; i++) {
-            this.roamState.player.pos.add(this.vector.quo(16));
-            if (i % 2 === 0)
-                this.roamState.player.spritesheet.pos.x++;
-            if (this.roamState.player.spritesheet.pos.x >= 4)
-                this.roamState.player.spritesheet.pos.x = 0;
+        const createDelay = async () => {
             const delay = new DelayState(this.stateStack, 1);
-            const oldUpdate = delay.update.bind(delay);
-            delay.update = (input) => {
-                oldUpdate(input);
-                this.update(input);
-            };
             this.stateStack.push(delay);
             await delay.pop();
+        };
+        if (!this.roamState.player.spritesheet)
+            return;
+        this.roamState.player.spritesheet.pos.x++;
+        if (this.roamState.player.spritesheet.pos.x >= 4)
+            this.roamState.player.spritesheet.pos.x = 0;
+        for (let i = 0; i < 4; i++) {
+            this.roamState.player.pos.add(this.vector.quo(16));
+            await createDelay();
         }
-        console.log("step");
     }
 }
