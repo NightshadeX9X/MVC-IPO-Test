@@ -1,17 +1,22 @@
 import PlayerWalkingState from "../states/PlayerWalkingState.js";
 import Direction from "../util/Direction.js";
+import Events from "../util/Events.js";
+import { applyMixins } from "../util/functions.js";
 import Spritesheet from "../util/Spritesheet.js";
 import Vector from "../util/Vector.js";
-export default class Player {
+import MWalker from "./Walker.js";
+class Player {
     constructor(roamState) {
         this.roamState = roamState;
         this.image = null;
         this.spritesheet = null;
-        this.pos = new Vector();
+        this.pos = new Vector(1);
         this.size = new Vector(1);
         this.drawSize = new Vector(1, 2);
         this.direction = Direction.DOWN;
         this.zIndex = 1;
+        this.evtHandler = new Events.Handler();
+        MWalker.construct.call(this);
     }
     async preload(loader) {
         this.image = await loader.loadImage(`/assets/images/people/player.png`);
@@ -53,3 +58,5 @@ export default class Player {
         }
     }
 }
+applyMixins(Player, [MWalker]);
+export default Player;

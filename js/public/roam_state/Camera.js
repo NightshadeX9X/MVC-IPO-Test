@@ -7,7 +7,9 @@ class Camera {
         this.fixedPos = new Vector;
         this.pos = Vector.from(this.fixedPos);
         this.smoothing = 30;
-        const cnvData = createCanvas(new Vector(400, 200));
+        this.zoom = 1;
+        this.startingSize = new Vector(480, 320);
+        const cnvData = createCanvas(this.startingSize);
         this.cnv = cnvData.cnv;
         this.ctx = cnvData.ctx;
         this.ctx.imageSmoothingEnabled = false;
@@ -31,9 +33,14 @@ class Camera {
     }
     update() {
         this.advanceTowardsTarget();
+        this.cnv.width = this.startingSize.quo(this.zoom).x;
+        this.cnv.height = this.startingSize.quo(this.zoom).y;
     }
     render(ctx) {
+        ctx.save();
+        ctx.scale(this.zoom, this.zoom);
         ctx.drawImage(this.cnv, 0, 0);
+        ctx.restore();
         this.ctx.clearRect(0, 0, this.size.x, this.size.y);
     }
     fixTo(pos) {
@@ -42,7 +49,7 @@ class Camera {
     }
     get target() {
         if (this.mode === 0 /* FOLLOW_PLAYER */) {
-            return this.roamState.player.pos.prod(this.roamState.tileSize).sum(8, 0);
+            return this.roamState.player.pos.sum(0.5, 0).prod(this.roamState.tileSize);
         }
         return this.fixedPos;
     }

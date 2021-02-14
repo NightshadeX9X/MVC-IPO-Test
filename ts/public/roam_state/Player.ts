@@ -4,19 +4,24 @@ import Loader from "../core/Loader.js";
 import PlayerWalkingState from "../states/PlayerWalkingState.js";
 import RoamState from "../states/RoamState.js";
 import Direction, { directionToVector } from "../util/Direction.js";
+import Events from "../util/Events.js";
+import { applyMixins } from "../util/functions.js";
 import Spritesheet from "../util/Spritesheet.js";
 import Vector from "../util/Vector.js";
+import MWalker from "./Walker.js";
 
-export default class Player implements Entity {
+interface Player extends MWalker { }
+class Player implements Entity {
 	public image: HTMLImageElement | null = null;
 	public spritesheet: Spritesheet | null = null;
-	public pos = new Vector();
+	public pos = new Vector(1);
 	public size = new Vector(1);
 	public drawSize = new Vector(1, 2);
 	public direction = Direction.DOWN;
 	public zIndex = 1;
+	public evtHandler = new Events.Handler();
 	constructor(public roamState: RoamState) {
-
+		MWalker.construct.call(this);
 	}
 	public async preload(loader: Loader) {
 		this.image = await loader.loadImage(`/assets/images/people/player.png`);
@@ -54,3 +59,7 @@ export default class Player implements Entity {
 		}
 	}
 }
+
+applyMixins(Player, [MWalker])
+
+export default Player;

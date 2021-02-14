@@ -21,7 +21,9 @@ export default class PlayerWalkingState extends State {
 			this.roamState.toUpdate = null;
 		})
 		this.evtHandler.addEventListener('movement done', () => {
+			console.log(this.roamState.camera.convertCoords(this.roamState.player.pos), this.roamState.camera.pos)
 			this.stateStack.pop();
+
 		})
 	}
 
@@ -32,36 +34,12 @@ export default class PlayerWalkingState extends State {
 		return this.playerStartingPos.sum(this.vector);
 	}
 	private async handleMovement() {
-		for (let i = 0; i < 4; i++) {
-			await this.takeStep();
-		}
-		// this.roamState.player.pos.set(this.playerTarget);
+		await this.roamState.player.walk(this.direction);
 		this.evtHandler.dispatchEvent('movement done')
 	}
 
 	private get vector() {
 		return directionToVector(this.direction);
-	}
-
-	private async takeStep() {
-		const createDelay = async () => {
-			const delay = new DelayState(this.stateStack, 1);
-			this.stateStack.push(delay);
-			await delay.pop();
-		}
-		if (!this.roamState.player.spritesheet) return;
-		this.roamState.player.spritesheet.pos.x++;
-		if (this.roamState.player.spritesheet.pos.x >= 4) this.roamState.player.spritesheet.pos.x = 0;
-
-		for (let i = 0; i < 4; i++) {
-
-			this.roamState.player.pos.add(this.vector.quo(16));
-			await createDelay();
-		}
-
-
-
-
 	}
 
 }

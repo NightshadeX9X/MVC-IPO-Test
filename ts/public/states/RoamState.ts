@@ -23,7 +23,7 @@ export default class RoamState extends State {
 	}
 	public update(input: Input): void {
 		this.player.update(input)
-		this.camera.update()
+		this.camera.update();
 	}
 	public render(ctx: CanvasRenderingContext2D): void {
 		ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);

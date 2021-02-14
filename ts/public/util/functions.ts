@@ -7,3 +7,21 @@ export function createCanvas(size: Vector) {
 	cnv.height = size.y;
 	return { cnv, ctx };
 }
+
+/**  Helper function to copy properties from an array of objects (bs), into one object (a) */
+export function copyProperties(a: Record<keyof any, any>, bs: Record<keyof any, any>[], override = true) {
+	function copyFromSingleObject(a: Record<keyof any, any>, b: Record<keyof any, any>) {
+		Object.getOwnPropertyNames(b).forEach(name => {
+			if (!override && a.hasOwnProperty(name)) return;
+			a[name] = b[name];
+		})
+	}
+
+	bs.forEach(b => copyFromSingleObject(a, b))
+}
+export function applyMixins(base: Constructor, mixins: Mixin[]) {
+	copyProperties(base.prototype, mixins.map(mixin => mixin.prototype), false);
+}
+
+export type Constructor<TInstance = {}, TArgs extends any[] = any[]> = new (...args: TArgs) => TInstance;
+export type Mixin<TInstance = {}, TArgs extends any[] = any[]> = Constructor<{}, []> & { construct(...args: TArgs): void }

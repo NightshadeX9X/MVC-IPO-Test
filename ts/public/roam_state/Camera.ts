@@ -9,9 +9,11 @@ class Camera {
 	public cnv: HTMLCanvasElement;
 	public ctx: CanvasRenderingContext2D;
 	public smoothing = 30;
+	public zoom = 1;
+	private startingSize = new Vector(480, 320)
 
 	constructor(public roamState: RoamState) {
-		const cnvData = createCanvas(new Vector(400, 200));
+		const cnvData = createCanvas(this.startingSize);
 		this.cnv = cnvData.cnv;
 		this.ctx = cnvData.ctx;
 		this.ctx.imageSmoothingEnabled = false;
@@ -39,10 +41,15 @@ class Camera {
 
 	public update() {
 		this.advanceTowardsTarget();
+		this.cnv.width = this.startingSize.quo(this.zoom).x;
+		this.cnv.height = this.startingSize.quo(this.zoom).y;
 	}
 
 	public render(ctx: CanvasRenderingContext2D) {
+		ctx.save();
+		ctx.scale(this.zoom, this.zoom)
 		ctx.drawImage(this.cnv, 0, 0);
+		ctx.restore();
 		this.ctx.clearRect(0, 0, this.size.x, this.size.y)
 	}
 
@@ -53,7 +60,7 @@ class Camera {
 
 	private get target() {
 		if (this.mode === Camera.Mode.FOLLOW_PLAYER) {
-			return this.roamState.player.pos.prod(this.roamState.tileSize).sum(8, 0);
+			return this.roamState.player.pos.sum(0.5, 0).prod(this.roamState.tileSize);
 		}
 
 		return this.fixedPos;
