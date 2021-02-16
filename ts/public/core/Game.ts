@@ -16,6 +16,7 @@ export default class Game {
 	}
 
 	public async preload() {
+
 		await this.stateStack.push(new RoamState(this.stateStack));
 		this.input.start(document);
 

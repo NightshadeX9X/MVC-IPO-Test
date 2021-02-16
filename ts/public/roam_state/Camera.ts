@@ -10,7 +10,7 @@ class Camera {
 	public ctx: CanvasRenderingContext2D;
 	public smoothing = 30;
 	public zoom = 1;
-	private startingSize = new Vector(480, 320)
+	private startingSize = new Vector(240, 160)
 
 	constructor(public roamState: RoamState) {
 		const cnvData = createCanvas(this.startingSize);

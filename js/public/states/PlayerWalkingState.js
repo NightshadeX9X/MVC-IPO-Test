@@ -1,5 +1,5 @@
 import State from "../core/State.js";
-import { directionToVector } from "../util/Direction.js";
+import Direction from "../util/Direction.js";
 import Vector from "../util/Vector.js";
 export default class PlayerWalkingState extends State {
     constructor(stateStack, roamState, direction) {
@@ -16,7 +16,6 @@ export default class PlayerWalkingState extends State {
             this.roamState.toUpdate = null;
         });
         this.evtHandler.addEventListener('movement done', () => {
-            console.log(this.roamState.camera.convertCoords(this.roamState.player.pos), this.roamState.camera.pos);
             this.stateStack.pop();
         });
     }
@@ -30,6 +29,6 @@ export default class PlayerWalkingState extends State {
         this.evtHandler.dispatchEvent('movement done');
     }
     get vector() {
-        return directionToVector(this.direction);
+        return Direction.toVector(this.direction);
     }
 }

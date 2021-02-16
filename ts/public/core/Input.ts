@@ -35,7 +35,7 @@ export default class Input {
 	}
 
 	public get directionKeyStates() {
-		const states: Record<keyof typeof Direction, boolean> = {
+		const states: Record<Direction.AsString, boolean> = {
 			UP: false,
 			LEFT: false,
 			RIGHT: false,

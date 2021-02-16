@@ -25,3 +25,8 @@ export function applyMixins(base: Constructor, mixins: Mixin[]) {
 
 export type Constructor<TInstance = {}, TArgs extends any[] = any[]> = new (...args: TArgs) => TInstance;
 export type Mixin<TInstance = {}, TArgs extends any[] = any[]> = Constructor<{}, []> & { construct(...args: TArgs): void }
+
+export function omitKeys<T extends Record<string, any>, K extends keyof T>(key: K, obj: T) {
+	const { [key]: omitted, ...rest } = obj;
+	return rest as Omit<T, K>;
+}

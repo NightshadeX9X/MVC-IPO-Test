@@ -1,4 +1,4 @@
-export default class Vector {
+class Vector {
     constructor(x = 0, y = x) {
         this.x = x;
         this.y = y;
@@ -107,4 +107,9 @@ export default class Vector {
     toString() {
         return `${this.x}x${this.y}`;
     }
+    static fromStringRange(strRange) {
+        const arr = strRange.split("-").map(str => Vector.fromString(str));
+        return arr;
+    }
 }
+export default Vector;

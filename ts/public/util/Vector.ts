@@ -1,4 +1,4 @@
-export default class Vector implements Vector {
+class Vector implements Vector {
 	constructor(public x = 0, public y = x) { }
 
 	private getVectorFromArgs(a: number | Vector, b?: number) {
@@ -10,34 +10,34 @@ export default class Vector implements Vector {
 	}
 
 	// OPERATION BY RETURN
-	sum(a: number): Vector;
-	sum(a: number, b: number): Vector;
-	sum(a: Vector): Vector;
-	sum(a: number | Vector, b?: number) {
+	public sum(a: number): Vector;
+	public sum(a: number, b: number): Vector;
+	public sum(a: Vector): Vector;
+	public sum(a: number | Vector, b?: number) {
 		const vector = this.getVectorFromArgs(a, b)
 		return new Vector(this.x + vector.x, this.y + vector.y);
 	}
 
-	diff(a: number): Vector;
-	diff(a: number, b: number): Vector;
-	diff(a: Vector): Vector;
-	diff(a: number | Vector, b?: number) {
+	public diff(a: number): Vector;
+	public diff(a: number, b: number): Vector;
+	public diff(a: Vector): Vector;
+	public diff(a: number | Vector, b?: number) {
 		const vector = this.getVectorFromArgs(a, b)
 		return new Vector(this.x - vector.x, this.y - vector.y);
 	}
 
-	prod(a: number): Vector;
-	prod(a: number, b: number): Vector;
-	prod(a: Vector): Vector;
-	prod(a: number | Vector, b?: number) {
+	public prod(a: number): Vector;
+	public prod(a: number, b: number): Vector;
+	public prod(a: Vector): Vector;
+	public prod(a: number | Vector, b?: number) {
 		const vector = this.getVectorFromArgs(a, b)
 		return new Vector(this.x * vector.x, this.y * vector.y);
 	}
 
-	quo(a: number): Vector;
-	quo(a: number, b: number): Vector;
-	quo(a: Vector): Vector;
-	quo(a: number | Vector, b?: number) {
+	public quo(a: number): Vector;
+	public quo(a: number, b: number): Vector;
+	public quo(a: Vector): Vector;
+	public quo(a: number | Vector, b?: number) {
 		const vector = this.getVectorFromArgs(a, b)
 		let x = vector.x || 1;
 		let y = vector.y || 1;
@@ -45,82 +45,82 @@ export default class Vector implements Vector {
 	}
 
 	// ------ OPERATION BY MODIFICATION
-	add(a: number): void;
-	add(a: number, b: number): void;
-	add(a: Vector): void;
-	add(a: number | Vector, b?: number) {
+	public add(a: number): void;
+	public add(a: number, b: number): void;
+	public add(a: Vector): void;
+	public add(a: number | Vector, b?: number) {
 		const vector = this.getVectorFromArgs(a, b);
 		const res = this.sum(vector);
 		this.x = res.x;
 		this.y = res.y;
 	}
 
-	sub(a: number): void;
-	sub(a: number, b: number): void;
-	sub(a: Vector): void;
-	sub(a: number | Vector, b?: number) {
+	public sub(a: number): void;
+	public sub(a: number, b: number): void;
+	public sub(a: Vector): void;
+	public sub(a: number | Vector, b?: number) {
 		const vector = this.getVectorFromArgs(a, b);
 		const res = this.diff(vector);
 		this.x = res.x;
 		this.y = res.y;
 	}
 
-	mult(a: number): void;
-	mult(a: number, b: number): void;
-	mult(a: Vector): void;
-	mult(a: number | Vector, b?: number) {
+	public mult(a: number): void;
+	public mult(a: number, b: number): void;
+	public mult(a: Vector): void;
+	public mult(a: number | Vector, b?: number) {
 		const vector = this.getVectorFromArgs(a, b);
 		const res = this.prod(vector);
 		this.x = res.x;
 		this.y = res.y;
 	}
 
-	div(a: number): void;
-	div(a: number, b: number): void;
-	div(a: Vector): void;
-	div(a: number | Vector, b?: number) {
+	public div(a: number): void;
+	public div(a: number, b: number): void;
+	public div(a: Vector): void;
+	public div(a: number | Vector, b?: number) {
 		const vector = this.getVectorFromArgs(a, b);
 		const res = this.quo(vector);
 		this.x = res.x;
 		this.y = res.y;
 	}
 	// ------ COMPARISON
-	equals(a: number): boolean;
-	equals(a: number, b: number): boolean;
-	equals(a: Vector): boolean;
-	equals(a: number | Vector, b?: number) {
+	public equals(a: number): boolean;
+	public equals(a: number, b: number): boolean;
+	public equals(a: Vector): boolean;
+	public equals(a: number | Vector, b?: number) {
 		const vector = this.getVectorFromArgs(a, b)
 		return this.x === vector.x && this.y === vector.y;
 	}
 
-	lessThan(a: number): boolean;
-	lessThan(a: number, b: number): boolean;
-	lessThan(a: Vector): boolean;
-	lessThan(a: number | Vector, b?: number) {
+	public lessThan(a: number): boolean;
+	public lessThan(a: number, b: number): boolean;
+	public lessThan(a: Vector): boolean;
+	public lessThan(a: number | Vector, b?: number) {
 		const vector = this.getVectorFromArgs(a, b)
 		return this.x < vector.x && this.y < vector.y;
 	}
 
-	lessThanOrEqualTo(a: number): boolean;
-	lessThanOrEqualTo(a: number, b: number): boolean;
-	lessThanOrEqualTo(a: Vector): boolean;
-	lessThanOrEqualTo(a: number | Vector, b?: number) {
+	public lessThanOrEqualTo(a: number): boolean;
+	public lessThanOrEqualTo(a: number, b: number): boolean;
+	public lessThanOrEqualTo(a: Vector): boolean;
+	public lessThanOrEqualTo(a: number | Vector, b?: number) {
 		const vector = this.getVectorFromArgs(a, b)
 		return this.x <= vector.x && this.y <= vector.y;
 	}
 
-	greaterThan(a: number): boolean;
-	greaterThan(a: number, b: number): boolean;
-	greaterThan(a: Vector): boolean;
-	greaterThan(a: number | Vector, b?: number) {
+	public greaterThan(a: number): boolean;
+	public greaterThan(a: number, b: number): boolean;
+	public greaterThan(a: Vector): boolean;
+	public greaterThan(a: number | Vector, b?: number) {
 		const vector = this.getVectorFromArgs(a, b)
 		return this.x > vector.x && this.y > vector.y;
 	}
 
-	greaterThanOrEqualTo(a: number): boolean;
-	greaterThanOrEqualTo(a: number, b: number): boolean;
-	greaterThanOrEqualTo(a: Vector): boolean;
-	greaterThanOrEqualTo(a: number | Vector, b?: number) {
+	public greaterThanOrEqualTo(a: number): boolean;
+	public greaterThanOrEqualTo(a: number, b: number): boolean;
+	public greaterThanOrEqualTo(a: Vector): boolean;
+	public greaterThanOrEqualTo(a: number | Vector, b?: number) {
 		const vector = this.getVectorFromArgs(a, b)
 		return this.x >= vector.x && this.y >= vector.y;
 	}
@@ -128,10 +128,10 @@ export default class Vector implements Vector {
 	// ------ OTHER
 
 
-	distFrom(a: number): number;
-	distFrom(a: number, b: number): number;
-	distFrom(a: Vector): number;
-	distFrom(a: number | Vector, b?: number) {
+	public distFrom(a: number): number;
+	public distFrom(a: number, b: number): number;
+	public distFrom(a: Vector): number;
+	public distFrom(a: number | Vector, b?: number) {
 		const vector = this.getVectorFromArgs(a, b);
 		const xDiffSq = (this.x - vector.x) ** 2;
 		const yDiffSq = (this.y - vector.y) ** 2;
@@ -140,18 +140,18 @@ export default class Vector implements Vector {
 		return dist;
 	}
 
-	static from(n: { x: number, y: number }) {
+	public static from(n: { x: number, y: number }) {
 		return new Vector(n.x, n.y);
 	}
-	static fromString(string: `${number}x${number}`) {
+	public static fromString(string: Vector.AsString) {
 		const [x, y] = string.split("x").map(Number);
 		return new Vector(x, y)
 	}
 
-	rangeTo(a: number): Vector[];
-	rangeTo(a: number, b: number): Vector[];
-	rangeTo(a: Vector): Vector[];
-	rangeTo(a: number | Vector, b?: number) {
+	public rangeTo(a: number): Vector[];
+	public rangeTo(a: number, b: number): Vector[];
+	public rangeTo(a: Vector): Vector[];
+	public rangeTo(a: number | Vector, b?: number) {
 		const vector = this.getVectorFromArgs(a, b);
 		let inRange: Vector[] = [];
 		for (let x = this.x; x < vector.x; x++) {
@@ -162,21 +162,33 @@ export default class Vector implements Vector {
 		return inRange;
 	}
 
-	map(fn: (n: number) => number) {
+	public map(fn: (n: number) => number) {
 		const vec = new Vector(fn(this.x), fn(this.y));
 		return vec;
 	}
 
-	set(a: number): void;
-	set(a: number, b: number): void;
-	set(a: Vector): void;
-	set(a: number | Vector, b?: number) {
+	public set(a: number): void;
+	public set(a: number, b: number): void;
+	public set(a: Vector): void;
+	public set(a: number | Vector, b?: number) {
 		const vector = this.getVectorFromArgs(a, b)
 		this.x = vector.x;
 		this.y = vector.y;
 	}
 
-	toString() {
-		return `${this.x}x${this.y}` as const
+	public toString() {
+		return `${this.x}x${this.y}` as Vector.AsString;
+	}
+
+	public static fromStringRange(strRange: Vector.AsStringRange) {
+		const arr = strRange.split("-").map(str => Vector.fromString(str as Vector.AsString)) as [Vector, Vector];
+		return arr;
 	}
 }
+
+namespace Vector {
+	export type AsString = `${number}x${number}`;
+	export type AsStringRange = `${AsString}-${AsString}`;
+}
+
+export default Vector;

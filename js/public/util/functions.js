@@ -19,3 +19,7 @@ export function copyProperties(a, bs, override = true) {
 export function applyMixins(base, mixins) {
     copyProperties(base.prototype, mixins.map(mixin => mixin.prototype), false);
 }
+export function omitKeys(key, obj) {
+    const { [key]: omitted, ...rest } = obj;
+    return rest;
+}

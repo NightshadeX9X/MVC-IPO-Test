@@ -8,7 +8,7 @@ class Camera {
         this.pos = Vector.from(this.fixedPos);
         this.smoothing = 30;
         this.zoom = 1;
-        this.startingSize = new Vector(480, 320);
+        this.startingSize = new Vector(240, 160);
         const cnvData = createCanvas(this.startingSize);
         this.cnv = cnvData.cnv;
         this.ctx = cnvData.ctx;

@@ -1,0 +1,235 @@
+{
+	"name": "route5",
+	"sizeInTiles": "48x34",
+	"layers": [
+		{
+			"src": "0",
+			"zIndex": 0,
+			"parts": [
+				{
+					"type": "wall",
+					"range": "20x29-21x30",
+					"value": true
+				},
+				{
+					"type": "wall",
+					"range": "20x32-21x33",
+					"value": true
+				},
+				{
+					"type": "wall",
+					"range": "12x5-40x28",
+					"value": true
+				},
+				{
+					"type": "wall",
+					"range": "3x20-3x20",
+					"value": "R"
+				},
+				{
+					"type": "wall",
+					"range": "2x20-2x20",
+					"value": "L"
+				},
+				{
+					"type": "wall",
+					"range": "4x20-4x20",
+					"value": "L"
+				},
+				{
+					"type": "wall",
+					"range": "5x20-5x20",
+					"value": "R"
+				},
+				{
+					"type": "wall",
+					"range": "1x1-6x3",
+					"value": true
+				},
+				{
+					"type": "wall",
+					"range": "1x4-1x5",
+					"value": true
+				},
+				{
+					"type": "wall",
+					"range": "2x4-2x7",
+					"value": true
+				},
+				{
+					"type": "wall",
+					"range": "3x4-3x4",
+					"value": true
+				},
+				{
+					"type": "wall",
+					"range": "5x4-6x4",
+					"value": true
+				},
+				{
+					"type": "wall",
+					"range": "3x7-6x7",
+					"value": true
+				},
+				{
+					"type": "wall",
+					"range": "6x8-6x9",
+					"value": true
+				},
+				{
+					"type": "wall",
+					"range": "2x10-2x19",
+					"value": true
+				},
+				{
+					"type": "wall",
+					"range": "5x19-9x19",
+					"value": true
+				},
+				{
+					"type": "wall",
+					"range": "9x6-9x18",
+					"value": true
+				},
+				{
+					"type": "wall",
+					"range": "8x1-8x5",
+					"value": true
+				},
+				{
+					"type": "wall",
+					"range": "3x10-5x10",
+					"value": true
+				},
+				{
+					"type": "wall",
+					"range": "0x21-2x29",
+					"value": true
+				},
+				{
+					"type": "wall",
+					"range": "9x0-47x4",
+					"value": true
+				}
+			]
+		},
+		{
+			"src": "1",
+			"zIndex": 1,
+			"parts": [
+				{
+					"type": "wall",
+					"range": "1x1-6x3",
+					"value": true
+				},
+				{
+					"type": "wall",
+					"range": "1x4-1x5",
+					"value": true
+				},
+				{
+					"type": "wall",
+					"range": "2x4-2x7",
+					"value": true
+				},
+				{
+					"type": "wall",
+					"range": "3x4-3x4",
+					"value": true
+				},
+				{
+					"type": "wall",
+					"range": "5x4-6x4",
+					"value": true
+				},
+				{
+					"type": "wall",
+					"range": "3x7-6x7",
+					"value": true
+				},
+				{
+					"type": "wall",
+					"range": "6x8-6x9",
+					"value": true
+				},
+				{
+					"type": "wall",
+					"range": "2x10-2x19",
+					"value": true
+				},
+				{
+					"type": "wall",
+					"range": "5x19-9x19",
+					"value": true
+				},
+				{
+					"type": "wall",
+					"range": "9x6-9x18",
+					"value": true
+				},
+				{
+					"type": "wall",
+					"range": "8x1-8x5",
+					"value": true
+				},
+				{
+					"type": "wall",
+					"range": "3x9-5x9",
+					"value": true
+				},
+				{
+					"type": "wall",
+					"range": "7x0-7x0",
+					"value": true
+				},
+				{
+					"type": "wall",
+					"range": "2x1-3x4",
+					"value": true
+				},
+				{
+					"type": "wall",
+					"range": "4x1-4x3",
+					"value": true
+				},
+				{
+					"type": "wall",
+					"range": "5x1-6x4",
+					"value": true
+				}
+			]
+		},
+		{
+			"src": "2",
+			"zIndex": 2,
+			"parts": [
+				{
+					"type": "wall",
+					"range": "39x4-47x4",
+					"value": true
+				},
+				{
+					"type": "tall",
+					"range": "39x7-47x7",
+					"value": true
+				},
+				{
+					"type": "wall",
+					"range": "39x8-47x8",
+					"value": true
+				}
+			]
+		},
+		{
+			"src": "3",
+			"zIndex": 3
+		},
+		{
+			"src": "4",
+			"zIndex": 4
+		}
+	],
+	"gameEvents": [
+		"ladder1"
+	]
+}
