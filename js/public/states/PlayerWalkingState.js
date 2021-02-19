@@ -8,15 +8,14 @@ export default class PlayerWalkingState extends State {
         this.roamState = roamState;
         this.direction = direction;
         this.playerStartingPos = Vector.from(this.roamState.player.pos);
+        this.link(this.roamState);
+        this.roamState.player.walkingEnabled = false;
     }
     async preload() {
-        this.roamState.toUpdate = true;
+        // this.roamState.toUpdate = true;
         this.handleMovement();
         this.evtHandler.addEventListener('popped', () => {
-            this.roamState.toUpdate = null;
-        });
-        this.evtHandler.addEventListener('movement done', () => {
-            this.stateStack.pop();
+            this.roamState.player.walkingEnabled = true;
         });
     }
     update(input) {
@@ -25,8 +24,8 @@ export default class PlayerWalkingState extends State {
         return this.playerStartingPos.sum(this.vector);
     }
     async handleMovement() {
-        await this.roamState.player.walk(this.direction);
-        this.evtHandler.dispatchEvent('movement done');
+        await this.roamState.player.walk(this.direction, this.roamState.stateStack);
+        this.stateStack.pop();
     }
     get vector() {
         return Direction.toVector(this.direction);

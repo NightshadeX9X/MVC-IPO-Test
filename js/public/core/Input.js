@@ -1,5 +1,7 @@
+import Events from "../util/Events.js";
 export default class Input {
     constructor() {
+        this.evtHandler = new Events.Handler();
         this.keyStates = new Map();
         this.specialKeys = {
             CTRL: false,
@@ -10,11 +12,17 @@ export default class Input {
     start(el) {
         el.addEventListener('keydown', e => {
             e.preventDefault();
+            if (!this.keyIsDown(e.key)) {
+                this.evtHandler.dispatchEvent('keypress', e.key);
+            }
             this.keyStates.set(e.key, Input.keyDownSymbol);
             this.updateSpecialKeys(e);
         });
         el.addEventListener('keyup', e => {
             e.preventDefault();
+            if (this.keyIsDown(e.key)) {
+                this.evtHandler.dispatchEvent('keyrelease', e.key);
+            }
             this.keyStates.set(e.key, Input.keyUpSymbol);
             this.updateSpecialKeys(e);
         });

@@ -9,8 +9,13 @@ export default abstract class State implements Entity {
 	public toPreload: boolean | null = null;
 	public toUpdate: boolean | null = null;
 	public toRender: boolean | null = null;
+	public blocking = false;
 	public subStateStack = new StateStack(this, this.stateStack.game);
 	public evtHandler = new Events.Handler();
+	private _linkedStates: State[] = [];
+	public get linkedStates() {
+		return this._linkedStates;
+	}
 
 
 	constructor(public stateStack: StateStack<Game | State>) {
@@ -27,12 +32,17 @@ export default abstract class State implements Entity {
 		this.subStateStack.render(ctx);
 	}
 
-	public pop() {
+	public async pop() {
+		if (!this.stateStack.states.includes(this)) return;
 		return new Promise<void>((res, rej) => {
 			this.evtHandler.addEventListener('popped', () => {
 				res();
 			})
 		})
+	}
+
+	public link(state: State) {
+		this._linkedStates.push(state);
 	}
 
 }

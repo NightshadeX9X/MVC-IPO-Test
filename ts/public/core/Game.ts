@@ -10,6 +10,11 @@ export default class Game {
 	public cnv = document.getElementById('screen') as HTMLCanvasElement;
 	public ctx = this.cnv.getContext('2d') as CanvasRenderingContext2D;
 	public stateStack = new StateStack(this, this);
+	public readonly debug = true;
+
+	public get cheatMode() {
+		return this.debug && this.input.specialKeys.CTRL;
+	}
 
 	constructor() {
 		this.ctx.imageSmoothingEnabled = false;

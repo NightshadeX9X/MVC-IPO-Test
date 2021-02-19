@@ -7,22 +7,24 @@ namespace Events {
 		id: number;
 		data: TTransmission;
 	}
-	export interface Reception<TReception = any> {
+	export interface Reception<TReception extends any[] = any[]> {
 		name: string;
 		id: number;
-		callback(data: TReception): void;
+		callback(...data: TReception): void;
+		priority: number;
 	}
 
 	export class Handler {
 		private events: Reception[] = [];
 		private idGen = ID.Generator();
 
-		addEventListener(name: string, callback: Reception["callback"]) {
+		addEventListener(name: string, callback: Reception["callback"], priority = 0) {
 			const id = this.idGen.next().value as number;
 			this.events.push({
 				name,
 				id,
-				callback
+				callback,
+				priority
 			});
 
 			return id;
@@ -54,14 +56,14 @@ namespace Events {
 			return 0;
 		}
 
-		dispatchEvent(name: string, data?: any): number;
-		dispatchEvent(id: number, data?: any): number;
-		dispatchEvent(nameOrId: string | number, data: any = undefined) {
+		dispatchEvent(name: string, ...data: any[]): number;
+		dispatchEvent(id: number, ...data: any[]): number;
+		dispatchEvent(nameOrId: string | number, ...data: any[]) {
 			let dispatchCount = 0;
 			if (typeof nameOrId === "string") {
 				const eventsWithName = this.events.filter(e => e.name === nameOrId);
-				eventsWithName.forEach(eventWithName => {
-					eventWithName.callback(data);
+				eventsWithName.sort((a, b) => b.priority - a.priority).forEach(eventWithName => {
+					eventWithName.callback(...data);
 					dispatchCount++;
 				});
 				return dispatchCount;

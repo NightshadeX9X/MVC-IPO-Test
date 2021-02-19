@@ -2,7 +2,7 @@ import Input from "../core/Input.js";
 import State from "../core/State.js";
 import StateStack from "../core/StateStack.js";
 
-export default class DelayState extends State {
+class DelayState extends State {
 	public elapsedFrames = 0;
 	constructor(public stateStack: StateStack, public totalFrames: number) {
 		super(stateStack);
@@ -19,3 +19,13 @@ export default class DelayState extends State {
 		return this.totalFrames - this.elapsedFrames;
 	}
 }
+
+namespace DelayState {
+	export async function create(stateStack: StateStack, frames: number) {
+		const ds = new DelayState(stateStack, frames);
+		await stateStack.push(ds);
+		await ds.pop();
+	}
+}
+
+export default DelayState;

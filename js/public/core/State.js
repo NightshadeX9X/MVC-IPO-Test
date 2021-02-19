@@ -6,8 +6,13 @@ export default class State {
         this.toPreload = null;
         this.toUpdate = null;
         this.toRender = null;
+        this.blocking = false;
         this.subStateStack = new StateStack(this, this.stateStack.game);
         this.evtHandler = new Events.Handler();
+        this._linkedStates = [];
+    }
+    get linkedStates() {
+        return this._linkedStates;
     }
     async preload(loader) {
         await this.subStateStack.preload(loader);
@@ -18,11 +23,16 @@ export default class State {
     render(ctx) {
         this.subStateStack.render(ctx);
     }
-    pop() {
+    async pop() {
+        if (!this.stateStack.states.includes(this))
+            return;
         return new Promise((res, rej) => {
             this.evtHandler.addEventListener('popped', () => {
                 res();
             });
         });
+    }
+    link(state) {
+        this._linkedStates.push(state);
     }
 }

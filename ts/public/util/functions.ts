@@ -30,3 +30,10 @@ export function omitKeys<T extends Record<string, any>, K extends keyof T>(key: 
 	const { [key]: omitted, ...rest } = obj;
 	return rest as Omit<T, K>;
 }
+
+export function random(min = 0, max = 1, whole = true) {
+	if (whole) return Math.floor(Math.random() * (max - min + 1) + min);
+	else return Math.random() * (max - min) + min;
+}
+
+export type ChildClass<TParent extends Constructor, TArgs extends any[] = any[]> = new (...args: TArgs) => InstanceType<TParent>

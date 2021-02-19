@@ -1,4 +1,4 @@
-import { createCanvas } from "../util/functions.js";
+import { createCanvas, random } from "../util/functions.js";
 import Vector from "../util/Vector.js";
 class Camera {
     constructor(roamState) {
@@ -8,6 +8,10 @@ class Camera {
         this.pos = Vector.from(this.fixedPos);
         this.smoothing = 30;
         this.zoom = 1;
+        this.shake = {
+            enabled: false,
+            power: 2
+        };
         this.startingSize = new Vector(240, 160);
         const cnvData = createCanvas(this.startingSize);
         this.cnv = cnvData.cnv;
@@ -33,6 +37,9 @@ class Camera {
     }
     update() {
         this.advanceTowardsTarget();
+        if (this.shake.enabled) {
+            this.pos.add(random(-this.shake.power, this.shake.power), random(-this.shake.power, this.shake.power));
+        }
         this.cnv.width = this.startingSize.quo(this.zoom).x;
         this.cnv.height = this.startingSize.quo(this.zoom).y;
     }

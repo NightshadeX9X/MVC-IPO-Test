@@ -1,3 +1,4 @@
+import { random } from "./functions.js";
 import Vector from "./Vector.js";
 var Direction;
 (function (Direction) {
@@ -27,5 +28,9 @@ var Direction;
         return new Vector(0, -1);
     }
     Direction.toVector = toVector;
+    function getRandom() {
+        return random(0, 3);
+    }
+    Direction.getRandom = getRandom;
 })(Direction || (Direction = {}));
 export default Direction;

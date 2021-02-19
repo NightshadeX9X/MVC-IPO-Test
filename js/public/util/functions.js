@@ -23,3 +23,9 @@ export function omitKeys(key, obj) {
     const { [key]: omitted, ...rest } = obj;
     return rest;
 }
+export function random(min = 0, max = 1, whole = true) {
+    if (whole)
+        return Math.floor(Math.random() * (max - min + 1) + min);
+    else
+        return Math.random() * (max - min) + min;
+}

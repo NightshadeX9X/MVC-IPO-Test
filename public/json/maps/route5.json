@@ -229,7 +229,7 @@
 			"zIndex": 4
 		}
 	],
-	"gameEvents": [
-		"ladder1"
+	"gameObjects": [
+		"npc1"
 	]
 }

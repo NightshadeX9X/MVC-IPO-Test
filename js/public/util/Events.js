@@ -6,12 +6,13 @@ var Events;
             this.events = [];
             this.idGen = ID.Generator();
         }
-        addEventListener(name, callback) {
+        addEventListener(name, callback, priority = 0) {
             const id = this.idGen.next().value;
             this.events.push({
                 name,
                 id,
-                callback
+                callback,
+                priority
             });
             return id;
         }
@@ -37,12 +38,12 @@ var Events;
             }
             return 0;
         }
-        dispatchEvent(nameOrId, data = undefined) {
+        dispatchEvent(nameOrId, ...data) {
             let dispatchCount = 0;
             if (typeof nameOrId === "string") {
                 const eventsWithName = this.events.filter(e => e.name === nameOrId);
-                eventsWithName.forEach(eventWithName => {
-                    eventWithName.callback(data);
+                eventsWithName.sort((a, b) => b.priority - a.priority).forEach(eventWithName => {
+                    eventWithName.callback(...data);
                     dispatchCount++;
                 });
                 return dispatchCount;

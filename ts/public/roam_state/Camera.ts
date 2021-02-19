@@ -1,5 +1,5 @@
 import RoamState from "../states/RoamState.js";
-import { createCanvas } from "../util/functions.js";
+import { createCanvas, random } from "../util/functions.js";
 import Vector from "../util/Vector.js";
 
 class Camera {
@@ -10,6 +10,10 @@ class Camera {
 	public ctx: CanvasRenderingContext2D;
 	public smoothing = 30;
 	public zoom = 1;
+	public shake: Camera.Shake = {
+		enabled: false,
+		power: 2
+	};
 	private startingSize = new Vector(240, 160)
 
 	constructor(public roamState: RoamState) {
@@ -41,6 +45,9 @@ class Camera {
 
 	public update() {
 		this.advanceTowardsTarget();
+		if (this.shake.enabled) {
+			this.pos.add(random(-this.shake.power, this.shake.power), random(-this.shake.power, this.shake.power));
+		}
 		this.cnv.width = this.startingSize.quo(this.zoom).x;
 		this.cnv.height = this.startingSize.quo(this.zoom).y;
 	}
@@ -71,6 +78,10 @@ namespace Camera {
 	export const enum Mode {
 		FOLLOW_PLAYER,
 		FIXED
+	}
+	export interface Shake {
+		enabled: boolean;
+		power: number;
 	}
 }
 

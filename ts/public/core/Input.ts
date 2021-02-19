@@ -1,8 +1,10 @@
 import Direction from "../util/Direction.js";
+import Events from "../util/Events.js";
 
 export default class Input {
 	private static keyDownSymbol = Symbol('key down');
 	private static keyUpSymbol = Symbol('key up');
+	public evtHandler = new Events.Handler()
 	private keyStates = new Map<string, typeof Input.keyDownSymbol | typeof Input.keyUpSymbol>()
 	public specialKeys = {
 		CTRL: false,
@@ -13,12 +15,18 @@ export default class Input {
 	public start(el: Document | HTMLElement) {
 		el.addEventListener('keydown', e => {
 			e.preventDefault();
+			if (!this.keyIsDown((e as KeyboardEvent).key)) {
+				this.evtHandler.dispatchEvent('keypress', (e as KeyboardEvent).key)
+			}
 			this.keyStates.set((e as KeyboardEvent).key, Input.keyDownSymbol);
 			this.updateSpecialKeys(e as KeyboardEvent);
 		})
 
 		el.addEventListener('keyup', e => {
 			e.preventDefault();
+			if (this.keyIsDown((e as KeyboardEvent).key)) {
+				this.evtHandler.dispatchEvent('keyrelease', (e as KeyboardEvent).key)
+			}
 			this.keyStates.set((e as KeyboardEvent).key, Input.keyUpSymbol);
 			this.updateSpecialKeys(e as KeyboardEvent);
 		})

@@ -3,6 +3,7 @@ import Input from "./Input.js";
 import Loader from "./Loader.js";
 import State from "./State.js";
 import Events from '../util/Events.js';
+import { ArrayUtil } from "../util/ObjectMethods.js";
 
 export default class StateStack<TParent extends Game | State = Game | State> {
 	public states: State[] = [];
@@ -14,7 +15,7 @@ export default class StateStack<TParent extends Game | State = Game | State> {
 
 	public async preload(loader: Loader) {
 		const toPreload = this.states.filter((state) => state.preload && this.toPreloadState(state));
-		await Promise.all(toPreload.map(state => (state as any).preload(loader)));
+		// await Promise.all(toPreload.map(state => (state as any).preload(loader)));
 	}
 	public update(input: Input) {
 		this.states.filter((state) => state.update && this.toUpdateState(state)).forEach(state => (state as any).update(input));
@@ -34,15 +35,27 @@ export default class StateStack<TParent extends Game | State = Game | State> {
 		if (typeof state.toPreload === "boolean") return state.toPreload;
 		return true;
 	}
+	private stateIsLinkedToIndependentlyUpdatable(state: State) {
+		return this.states.filter(s => this.stateIsIndependentlyUpdatable(s)).some(s => s.linkedStates.includes(state));
+	}
+	private stateIsIndependentlyUpdatable(state: State) {
+		if (state.toUpdate !== null) return state.toUpdate;
+		return this.stateIsAboveAllBlocking(state)
+	}
+	public stateIsAboveAllBlocking(state: State) {
+		return ArrayUtil.last(this.states.filter(s => s === state || state.blocking)) === state;
+	}
 	private toUpdateState(state: State) {
-		if (typeof state.toUpdate === "boolean") return state.toUpdate;
-		return this.fromTop() === state;
+		return this.stateIsIndependentlyUpdatable(state) || this.stateIsLinkedToIndependentlyUpdatable(state);
 	}
 	private toRenderState(state: State) {
 		if (typeof state.toRender === "boolean") return state.toRender;
 		return true;
 	}
 
+	public get topBlockingState() {
+		return ArrayUtil.invert(this.states).find(s => s.blocking);
+	}
 
 
 	public async push(state: State) {

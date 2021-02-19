@@ -38,7 +38,7 @@ namespace GameMap {
 			zIndex: number;
 			parts?: JSONLayerPart[];
 		}[];
-		gameEvents?: string[];
+		gameObjects?: string[];
 	}
 
 	export type JSONLayerPart =

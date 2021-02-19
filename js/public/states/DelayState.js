@@ -1,5 +1,5 @@
 import State from "../core/State.js";
-export default class DelayState extends State {
+class DelayState extends State {
     constructor(stateStack, totalFrames) {
         super(stateStack);
         this.stateStack = stateStack;
@@ -16,3 +16,12 @@ export default class DelayState extends State {
         return this.totalFrames - this.elapsedFrames;
     }
 }
+(function (DelayState) {
+    async function create(stateStack, frames) {
+        const ds = new DelayState(stateStack, frames);
+        await stateStack.push(ds);
+        await ds.pop();
+    }
+    DelayState.create = create;
+})(DelayState || (DelayState = {}));
+export default DelayState;

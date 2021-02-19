@@ -1,4 +1,5 @@
 import Events from '../util/Events.js';
+import { ArrayUtil } from "../util/ObjectMethods.js";
 export default class StateStack {
     constructor(parent, game) {
         this.parent = parent;
@@ -8,7 +9,7 @@ export default class StateStack {
     }
     async preload(loader) {
         const toPreload = this.states.filter((state) => state.preload && this.toPreloadState(state));
-        await Promise.all(toPreload.map(state => state.preload(loader)));
+        // await Promise.all(toPreload.map(state => (state as any).preload(loader)));
     }
     update(input) {
         this.states.filter((state) => state.update && this.toUpdateState(state)).forEach(state => state.update(input));
@@ -27,15 +28,27 @@ export default class StateStack {
             return state.toPreload;
         return true;
     }
-    toUpdateState(state) {
-        if (typeof state.toUpdate === "boolean")
+    stateIsLinkedToIndependentlyUpdatable(state) {
+        return this.states.filter(s => this.stateIsIndependentlyUpdatable(s)).some(s => s.linkedStates.includes(state));
+    }
+    stateIsIndependentlyUpdatable(state) {
+        if (state.toUpdate !== null)
             return state.toUpdate;
-        return this.fromTop() === state;
+        return this.stateIsAboveAllBlocking(state);
+    }
+    stateIsAboveAllBlocking(state) {
+        return ArrayUtil.last(this.states.filter(s => s === state || state.blocking)) === state;
+    }
+    toUpdateState(state) {
+        return this.stateIsIndependentlyUpdatable(state) || this.stateIsLinkedToIndependentlyUpdatable(state);
     }
     toRenderState(state) {
         if (typeof state.toRender === "boolean")
             return state.toRender;
         return true;
+    }
+    get topBlockingState() {
+        return ArrayUtil.invert(this.states).find(s => s.blocking);
     }
     async push(state) {
         this.states.push(state);

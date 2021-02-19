@@ -1,3 +1,4 @@
+import { random } from "./functions.js";
 import Vector from "./Vector.js";
 
 enum Direction {
@@ -24,6 +25,9 @@ namespace Direction {
 		if (d === Direction.LEFT) return new Vector(-1, 0);
 		if (d === Direction.RIGHT) return new Vector(1, 0);
 		return new Vector(0, -1);
+	}
+	export function getRandom() {
+		return random(0, 3) as Direction;
 	}
 	export type AsString = "DOWN" | "LEFT" | "UP" | "RIGHT";
 }
