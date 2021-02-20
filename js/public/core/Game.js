@@ -1,29 +1,16 @@
-import RoamState from "../states/RoamState.js";
-import Input from "./Input.js";
-import Loader from "./Loader.js";
+import { create } from "../util/functions.js";
 import StateStack from "./StateStack.js";
-export default class Game {
+class Game {
     constructor() {
-        this.fps = 60;
-        this.loader = new Loader();
-        this.input = new Input();
+        this.stateStack = null;
+        this.cnv = null;
+        this.ctx = null;
+    }
+    static construct() {
+        this.stateStack = create(StateStack, this, this);
         this.cnv = document.getElementById('screen');
         this.ctx = this.cnv.getContext('2d');
-        this.stateStack = new StateStack(this, this);
-        this.debug = true;
-        this.ctx.imageSmoothingEnabled = false;
-    }
-    get cheatMode() {
-        return this.debug && this.input.specialKeys.CTRL;
-    }
-    async preload() {
-        await this.stateStack.push(new RoamState(this.stateStack));
-        this.input.start(document);
-    }
-    update() {
-        this.stateStack.update(this.input);
-    }
-    render() {
-        this.stateStack.render(this.ctx);
+        return this;
     }
 }
+export default Game;

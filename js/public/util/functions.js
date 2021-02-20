@@ -1,11 +1,10 @@
-export function createCanvas(size) {
-    const cnv = document.createElement('canvas');
-    const ctx = cnv.getContext('2d');
-    cnv.width = size.x;
-    cnv.height = size.y;
-    return { cnv, ctx };
-}
-/**  Helper function to copy properties from an array of objects (bs), into one object (a) */
+export var Mixin;
+(function (Mixin) {
+    function apply(child, parents) {
+        copyProperties(child.prototype, parents.map(p => p.prototype), false);
+    }
+    Mixin.apply = apply;
+})(Mixin || (Mixin = {}));
 export function copyProperties(a, bs, override = true) {
     function copyFromSingleObject(a, b) {
         Object.getOwnPropertyNames(b).forEach(name => {
@@ -16,16 +15,6 @@ export function copyProperties(a, bs, override = true) {
     }
     bs.forEach(b => copyFromSingleObject(a, b));
 }
-export function applyMixins(base, mixins) {
-    copyProperties(base.prototype, mixins.map(mixin => mixin.prototype), false);
-}
-export function omitKeys(key, obj) {
-    const { [key]: omitted, ...rest } = obj;
-    return rest;
-}
-export function random(min = 0, max = 1, whole = true) {
-    if (whole)
-        return Math.floor(Math.random() * (max - min + 1) + min);
-    else
-        return Math.random() * (max - min) + min;
+export function create(ctor, ...args) {
+    return ctor.construct.call(Object.create(ctor.prototype), ...args);
 }

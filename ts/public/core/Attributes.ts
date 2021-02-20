@@ -1,19 +1,17 @@
-import Input from "./Input.js";
-import Loader from "./Loader.js";
+export abstract class Updatable {
+	toUpdate: boolean | null = null as any;
+	static construct(this: Updatable) {
+		this.toUpdate = null;
+	}
 
-export interface Preloadable {
-	toPreload?: boolean | null;
-	preload(loader: Loader): Promise<void>;
-}
-export interface Updatable {
-	toUpdate?: boolean | null;
-	update(input: Input): void;
-}
-export interface Renderable {
-	toRender?: boolean | null;
-	render(ctx: CanvasRenderingContext2D): void;
+	abstract update(): void;
 }
 
-export interface Entity extends Preloadable, Updatable, Renderable {
+export abstract class Renderable {
+	toRender: boolean | null = null as any;
+	static construct(this: Renderable) {
+		this.toRender = null;
+	}
 
+	abstract render(): void;
 }

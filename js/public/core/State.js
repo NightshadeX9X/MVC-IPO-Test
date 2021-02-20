@@ -1,38 +1,17 @@
-import Events from "../util/Events.js";
+import { create, Mixin } from "../util/functions.js";
+import { Renderable } from "./Attributes.js";
 import StateStack from "./StateStack.js";
-export default class State {
-    constructor(stateStack) {
+class State {
+    constructor() {
+        this.stateStack = null;
+        this.subStateStack = null;
+    }
+    static construct(stateStack) {
+        Renderable.construct.call(this);
         this.stateStack = stateStack;
-        this.toPreload = null;
-        this.toUpdate = null;
-        this.toRender = null;
-        this.blocking = false;
-        this.subStateStack = new StateStack(this, this.stateStack.game);
-        this.evtHandler = new Events.Handler();
-        this._linkedStates = [];
-    }
-    get linkedStates() {
-        return this._linkedStates;
-    }
-    async preload(loader) {
-        await this.subStateStack.preload(loader);
-    }
-    update(input) {
-        this.subStateStack.update(input);
-    }
-    render(ctx) {
-        this.subStateStack.render(ctx);
-    }
-    async pop() {
-        if (!this.stateStack.states.includes(this))
-            return;
-        return new Promise((res, rej) => {
-            this.evtHandler.addEventListener('popped', () => {
-                res();
-            });
-        });
-    }
-    link(state) {
-        this._linkedStates.push(state);
+        this.subStateStack = create(StateStack, this.stateStack.game, this);
+        return this;
     }
 }
+Mixin.apply(State, [Renderable]);
+export default State;
