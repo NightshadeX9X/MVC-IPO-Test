@@ -16,10 +16,10 @@ namespace Direction {
 		return Direction.DOWN;
 	}
 	export function toVector(d: Direction) {
-		if (d === Direction.DOWN) return New(Vector, 0, 1);
-		if (d === Direction.LEFT) return New(Vector, -1, 0);
-		if (d === Direction.RIGHT) return New(Vector, 1, 0);
-		return New(Vector, 0, -1);
+		if (d === Direction.DOWN) return new Vector(0, 1);
+		if (d === Direction.LEFT) return new Vector(-1, 0);
+		if (d === Direction.RIGHT) return new Vector(1, 0);
+		return new Vector(0, -1);
 	}
 	export function getRandom() {
 		return random(0, 3) as Direction;

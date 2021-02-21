@@ -50,14 +50,13 @@ namespace Events {
 					const event = this.events[index];
 					if (!event) continue;
 
-					if (event.name !== nameOrId && event.id !== nameOrId) return;
+					if (event.name !== nameOrId && event.id !== nameOrId) return removeCount;
 					this.events.splice(Number(index), 1);
 					removeCount++;
 				}
-				return removeCount;
 			}
+			return removeCount;
 
-			return 0;
 		}
 
 		dispatchEvent(name: string, ...data: any[]): number;

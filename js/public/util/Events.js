@@ -32,13 +32,12 @@ var Events;
                     if (!event)
                         continue;
                     if (event.name !== nameOrId && event.id !== nameOrId)
-                        return;
+                        return removeCount;
                     this.events.splice(Number(index), 1);
                     removeCount++;
                 }
-                return removeCount;
             }
-            return 0;
+            return removeCount;
         }
         dispatchEvent(nameOrId, ...data) {
             let dispatchCount = 0;

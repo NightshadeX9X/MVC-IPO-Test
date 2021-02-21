@@ -12,8 +12,9 @@ canvas#screen {
       image-rendering: -moz-crisp-edges;
       image-rendering: -o-pixelated;
       image-rendering: pixelated;
-  display: none;
   margin: 8px;
+  width: 480px;
+  height: 320px;
 }
 
 div.container {

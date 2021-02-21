@@ -6,7 +6,7 @@ class StateStack {
         this.game = null;
         this.parent = null;
         this.states = null;
-        this.evtHandler = New(Events.Handler);
+        this.evtHandler = null;
         return New(StateStack, ...args);
     }
     static construct(game, parent) {
@@ -16,7 +16,7 @@ class StateStack {
         this.game = game;
         this.parent = parent;
         this.states = [];
-        this.evtHandler = New(Events.Handler);
+        this.evtHandler = new Events.Handler();
         return this;
     }
     isIndependentlyUpdatable(state) {
@@ -24,10 +24,13 @@ class StateStack {
             return false;
         if (state.toUpdate !== null)
             return state.toUpdate;
-        return state === this.fromTop();
+        return this.states.filter(s => s.blocking).reverse()[0] === state;
+    }
+    isLinkedToIndependentlyUpdatable(state) {
+        return this.states.filter(s => this.isIndependentlyUpdatable(s)).some(s => s.linkedStates.includes(state));
     }
     toUpdateState(state) {
-        return this.isIndependentlyUpdatable(state);
+        return this.isIndependentlyUpdatable(state) || this.isLinkedToIndependentlyUpdatable(state);
     }
     toRenderState(state) {
         if (!this.states.includes(state))
@@ -50,25 +53,36 @@ class StateStack {
             state.render(ctx);
         });
     }
-    async preload(loader) {
-        await Promise.all(this.states.filter(state => this.toPreloadState(state)).map(state => state.preload(loader)));
-    }
+    /* async preload(loader: Loader) {
+        console.log("ss", this.states)
+        await Promise.all(
+            this.states.filter(state => this.toPreloadState(state)).map(state => state.preload(loader))
+        );
+    } */
     update(input) {
         this.states.filter(state => this.toUpdateState(state)).forEach(state => {
             state.update(input);
         });
     }
-    async insertState(state, index) {
+    async insert(state, index) {
+        if (!state)
+            return;
         await state.preload(this.game.loader);
-        insertIntoArray(this.states, index, [state]);
+        this.states = insertIntoArray(this.states, index, [state]);
         state.evtHandler.dispatchEvent('insert', this);
         this.evtHandler.dispatchEvent('state insert', state);
     }
     async push(state) {
-        await state.preload(this.game.loader);
-        this.states.push(state);
-        state.evtHandler.dispatchEvent('insert', this);
-        this.evtHandler.dispatchEvent('state insert', state);
+        await this.insert(state, this.states.length);
+    }
+    pop() {
+        this.remove(this.states.length - 1);
+    }
+    remove(index) {
+        const state = this.states[index];
+        this.states.splice(index, 1);
+        state?.evtHandler.dispatchEvent('remove');
+        this.evtHandler.dispatchEvent('state remove');
     }
 }
 Mixin.apply(StateStack, [Renderable, Updatable, Preloadable]);

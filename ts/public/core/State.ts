@@ -6,8 +6,11 @@ import Input from "./Input.js";
 import StateStack from "./StateStack.js";
 class State {
 	stateStack: StateStack = null as any;
-	subStateStack = new StateStack(this.stateStack.game, this);
-	evtHandler = New(Events.Handler);
+	subStateStack: StateStack = null as any;
+	evtHandler: Events.Handler = null as any;
+	blocking: boolean = null as any;
+	linkedStates: State[] = null as any;
+	id: string = null as any;
 
 	constructor(...args: ArgsType<typeof State["construct"]>) {
 		return New(State, ...args);
@@ -20,7 +23,9 @@ class State {
 
 		this.stateStack = stateStack;
 		this.subStateStack = new StateStack(this.stateStack.game, this);
-		this.evtHandler = New(Events.Handler);
+		this.evtHandler = new Events.Handler();
+		this.blocking = true;
+		this.id = this.stateStack.game.stateIDGen.generate();
 
 		return this;
 	}
@@ -31,6 +36,22 @@ class State {
 
 	update(input: Input) {
 		this.subStateStack.update(input);
+	}
+
+	remove() {
+		this.stateStack.remove(this.stateStack.states.indexOf(this));
+	}
+
+	async waitForRemoval() {
+		return new Promise<void>((res, rej) => {
+			this.evtHandler.addEventListener('remove', () => {
+				res();
+			})
+		})
+	}
+
+	get index() {
+		return (this.stateStack?.states.indexOf(this)) ?? -1;
 	}
 }
 Mixin.apply(State, [Renderable, Updatable, Preloadable]);

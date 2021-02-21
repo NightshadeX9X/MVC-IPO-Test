@@ -2,8 +2,8 @@ import Events from "../util/Events.js";
 import { New } from "../util/functions.js";
 export default class Input {
     constructor() {
-        this.evtHandler = New(Events.Handler);
-        this.preventDefault = true;
+        this.evtHandler = new Events.Handler();
+        this.preventDefault = null;
         this.keyStates = new Map();
         this.specialKeys = {
             CTRL: false,
@@ -13,14 +13,14 @@ export default class Input {
         return New(Input);
     }
     static construct() {
-        this.evtHandler = New(Events.Handler);
+        this.evtHandler = new Events.Handler();
         this.keyStates = new Map();
         this.specialKeys = {
             CTRL: false,
             SHIFT: false,
             ALT: false
         };
-        this.preventDefault = false;
+        this.preventDefault = true;
         return this;
     }
     start(el) {

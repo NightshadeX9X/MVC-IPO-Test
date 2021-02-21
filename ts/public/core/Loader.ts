@@ -1,7 +1,7 @@
 import { New } from '../util/functions.js';
 import { JSON } from '../util/types.js';
 
-abstract class Loader {
+class Loader {
 	private alreadyLoaded = new Map<string, Loader.Loadable>();
 
 

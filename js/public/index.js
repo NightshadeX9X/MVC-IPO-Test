@@ -1,7 +1,5 @@
 import Game from './core/Game.js';
-import { New } from './util/functions.js';
-console.log("hello");
-const game = New(Game);
+const game = new Game();
 async function preload() {
     await game.preload();
 }

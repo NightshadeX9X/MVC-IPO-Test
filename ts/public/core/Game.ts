@@ -1,17 +1,19 @@
 import RoamState from "../states/RoamState.js";
 import { Mixin, New } from "../util/functions.js";
+import UIDGen from "../util/UIDGen.js";
 import { Preloadable, Renderable, Updatable } from "./Attributes.js";
 import Input from "./Input.js";
 import Loader from "./Loader.js";
 import StateStack from "./StateStack.js";
 
 class Game {
-	stateStack = New(StateStack, this, this);
+	stateStack = new StateStack(this, this);
 	cnv = document.getElementById('screen') as HTMLCanvasElement;
 	ctx = this.cnv.getContext('2d') as CanvasRenderingContext2D;
-	input = New(Input);
-	loader = New(Loader);
+	input = new Input();
+	loader = new Loader();
 	fps = 60;
+	stateIDGen = new UIDGen();
 
 	constructor() {
 		return New(Game);
@@ -25,16 +27,19 @@ class Game {
 		this.stateStack = new StateStack(this, this);
 		this.cnv = document.getElementById('screen') as HTMLCanvasElement;
 		this.ctx = this.cnv.getContext('2d') as CanvasRenderingContext2D;
-		this.input = New(Input);
-		this.loader = New(Loader);
+		this.input = new Input();
+		this.loader = new Loader();
 		this.fps = 60;
+
+		this.stateIDGen = new UIDGen();
+		this.stateIDGen.prefix = "STATE";
 
 		return this;
 	}
 
 	async preload() {
-		await this.stateStack.push(new RoamState(this.stateStack));
 		this.input.start(document);
+		await this.stateStack.push(new RoamState(this.stateStack));
 	}
 
 	update() {

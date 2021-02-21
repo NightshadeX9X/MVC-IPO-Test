@@ -1,4 +1,4 @@
-import { New, random } from "./functions.js";
+import { random } from "./functions.js";
 import Vector from "./Vector.js";
 var Direction;
 (function (Direction) {
@@ -20,12 +20,12 @@ var Direction;
     Direction.invert = invert;
     function toVector(d) {
         if (d === Direction.DOWN)
-            return New(Vector, 0, 1);
+            return new Vector(0, 1);
         if (d === Direction.LEFT)
-            return New(Vector, -1, 0);
+            return new Vector(-1, 0);
         if (d === Direction.RIGHT)
-            return New(Vector, 1, 0);
-        return New(Vector, 0, -1);
+            return new Vector(1, 0);
+        return new Vector(0, -1);
     }
     Direction.toVector = toVector;
     function getRandom() {

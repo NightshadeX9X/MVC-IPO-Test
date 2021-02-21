@@ -2,11 +2,11 @@ import Direction from "../util/Direction.js";
 import Events from "../util/Events.js";
 import { New } from "../util/functions.js";
 
-export default abstract class Input {
+export default class Input {
 	private static keyDownSymbol = Symbol('key down');
 	private static keyUpSymbol = Symbol('key up');
-	public evtHandler = New(Events.Handler);
-	public preventDefault = true;
+	public evtHandler = new Events.Handler();
+	public preventDefault: boolean = null as any;
 	private keyStates = new Map<string, typeof Input.keyDownSymbol | typeof Input.keyUpSymbol>()
 	public specialKeys = {
 		CTRL: false,
@@ -19,14 +19,14 @@ export default abstract class Input {
 	}
 
 	static construct(this: Input) {
-		this.evtHandler = New(Events.Handler);
+		this.evtHandler = new Events.Handler();
 		this.keyStates = new Map<string, typeof Input.keyDownSymbol | typeof Input.keyUpSymbol>()
 		this.specialKeys = {
 			CTRL: false,
 			SHIFT: false,
 			ALT: false
 		}
-		this.preventDefault = false;
+		this.preventDefault = true;
 
 
 		return this;

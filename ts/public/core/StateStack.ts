@@ -10,7 +10,7 @@ class StateStack {
 	game: Game = null as any;
 	parent: StateStack.Parent = null as any;
 	states: State[] = null as any;
-	evtHandler = New(Events.Handler);
+	evtHandler: Events.Handler = null as any;
 	constructor(...args: ArgsType<typeof StateStack["construct"]>) {
 		return New(StateStack, ...args);
 	}
@@ -22,18 +22,22 @@ class StateStack {
 		this.game = game;
 		this.parent = parent;
 		this.states = [];
-		this.evtHandler = New(Events.Handler);
+		this.evtHandler = new Events.Handler();
 		return this;
 	}
 
 	private isIndependentlyUpdatable(state: State) {
 		if (!this.states.includes(state)) return false;
 		if (state.toUpdate !== null) return state.toUpdate;
-		return state === this.fromTop()
+		return this.states.filter(s => s.blocking).reverse()[0] === state;
+	}
+
+	private isLinkedToIndependentlyUpdatable(state: State) {
+		return this.states.filter(s => this.isIndependentlyUpdatable(s)).some(s => s.linkedStates.includes(state))
 	}
 
 	private toUpdateState(state: State) {
-		return this.isIndependentlyUpdatable(state);
+		return this.isIndependentlyUpdatable(state) || this.isLinkedToIndependentlyUpdatable(state);
 	}
 
 	private toRenderState(state: State) {
@@ -58,11 +62,12 @@ class StateStack {
 		})
 	}
 
-	async preload(loader: Loader) {
+	/* async preload(loader: Loader) {
+		console.log("ss", this.states)
 		await Promise.all(
 			this.states.filter(state => this.toPreloadState(state)).map(state => state.preload(loader))
 		);
-	}
+	} */
 
 	update(input: Input) {
 
@@ -72,17 +77,28 @@ class StateStack {
 		})
 	}
 
-	async insertState(state: State, index: number) {
+	async insert(state: State, index: number) {
+		if (!state) return;
 		await state.preload(this.game.loader);
-		insertIntoArray(this.states, index, [state]);
+		this.states = insertIntoArray(this.states, index, [state]);
+
 		state.evtHandler.dispatchEvent('insert', this);
 		this.evtHandler.dispatchEvent('state insert', state);
 	}
 	async push(state: State) {
-		await state.preload(this.game.loader);
-		this.states.push(state);
-		state.evtHandler.dispatchEvent('insert', this);
-		this.evtHandler.dispatchEvent('state insert', state);
+		await this.insert(state, this.states.length);
+	}
+
+	pop() {
+		this.remove(this.states.length - 1);
+	}
+
+	remove(index: number) {
+		const state = this.states[index];
+		this.states.splice(index, 1);
+
+		state?.evtHandler.dispatchEvent('remove');
+		this.evtHandler.dispatchEvent('state remove');
 	}
 }
 
