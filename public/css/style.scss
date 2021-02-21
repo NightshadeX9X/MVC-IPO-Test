@@ -1,0 +1,21 @@
+* {
+	margin: 0px;
+ 	:focus {
+		outline: none;
+	}
+}
+
+@mixin Flex($direction: row) {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: $direction;
+}
+
+canvas#screen {
+	image-rendering: pixelated;
+	margin: 8px;
+	width: 480px;
+	height: 320px;
+}
+

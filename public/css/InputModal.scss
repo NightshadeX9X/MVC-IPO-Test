@@ -1,0 +1,78 @@
+@import 'style';
+
+$primary: #f5f5f5;
+$secondary: #a4a4a4;
+div.container {
+	$width: 400px;
+	$height: calc(#{$width} / 48 * 32); // 320
+	width: $width;
+	height: $height;
+	font-family: Nunito, sans-serif, Arial, Helvetica;
+	margin: 8px;
+	@include Flex(column);
+	gap: calc(#{$height} / 25);
+	background-color: $primary;
+	border: calc(#{$width} / 400 * 3) solid $secondary;
+	border-radius: calc(#{$width} / 400 * 4);
+
+	h2 {
+		margin-bottom: calc(#{$height} / 25 * 2);
+		text-align: center;
+		font-size: calc(#{$width} / 15 * 1.2);
+	}
+
+	input {
+		background: none;
+		border: none;
+		border-bottom: calc(#{$height} / 50) solid $secondary;
+		padding-bottom: calc(#{$height} / 25 * 2);
+		text-align: center;
+		color: #aa0000;
+		&[data-valid] {
+			color: #00aa00;
+		}
+		font-size: calc(#{$width} / 40 * 2);
+
+		&:focus {
+			border-top: none;
+			border-left: none;
+			border-right: none;
+		}
+		margin-bottom: calc(#{$height} / 25);
+	}
+
+	div.buttons {
+		@include Flex();
+		height: calc(#{$height} / 250 * 75);
+		width: 100%;
+
+		.btn {
+			@include Flex();
+			width: 30%;
+			height: 40%;
+			color: white;
+			border-radius: 9999px;
+			margin: calc(#{$width} / 400 * 3);
+			cursor: pointer;
+			transition: all ease-in-out .2s;
+			border: calc(#{$width} / 400 * 2) solid black;
+			font-size: calc(#{$width} / 25);
+
+
+			@mixin Button ($bg-color) {
+				background: $bg-color;
+				&:hover {
+					background: lighten($bg-color, 15);
+				}
+			}
+
+			&-clear {
+				@include Button(red);
+			}
+			&-confirm {
+				@include Button(#04ff58);
+			}
+		}
+	}
+
+}

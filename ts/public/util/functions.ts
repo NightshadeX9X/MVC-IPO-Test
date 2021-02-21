@@ -13,9 +13,18 @@ export function copyProperties(a: Record<keyof any, any>, bs: Record<keyof any, 
 		})
 	}
 
-	bs.forEach(b => copyFromSingleObject(a, b))
+	bs.forEach(b => copyFromSingleObject(a, b));
+	return a;
 }
 
-export function create<TInstance, TArgs extends any[]>(ctor: Class<TInstance, TArgs>, ...args: TArgs) {
+export function New<TInstance, TArgs extends any[]>(ctor: Class<TInstance, TArgs>, ...args: TArgs) {
 	return ctor.construct.call(Object.create(ctor.prototype), ...args);
+}
+
+export function random(min = 0, max = 1, whole = true) {
+	return whole ? Math.floor(Math.random() * (max - min + 1) + min) : Math.random() * (max - min) + min;
+}
+
+export function insertIntoArray<T>(array: T[], index: number, values: T[]) {
+	return [...array.slice(0, index), ...values, ...array.slice(index)]
 }

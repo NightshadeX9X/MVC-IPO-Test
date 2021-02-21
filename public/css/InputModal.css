@@ -1,0 +1,129 @@
+* {
+  margin: 0px;
+}
+
+* :focus {
+  outline: none;
+}
+
+canvas#screen {
+  -ms-interpolation-mode: nearest-neighbor;
+      image-rendering: -webkit-optimize-contrast;
+      image-rendering: -moz-crisp-edges;
+      image-rendering: -o-pixelated;
+      image-rendering: pixelated;
+  display: none;
+  margin: 8px;
+}
+
+div.container {
+  width: 400px;
+  height: calc(400px / 48 * 32);
+  font-family: Nunito, sans-serif, Arial, Helvetica;
+  margin: 8px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  gap: calc(calc(400px / 48 * 32) / 25);
+  background-color: #f5f5f5;
+  border: calc(400px / 400 * 3) solid #a4a4a4;
+  border-radius: calc(400px / 400 * 4);
+}
+
+div.container h2 {
+  margin-bottom: calc(calc(400px / 48 * 32) / 25 * 2);
+  text-align: center;
+  font-size: calc(400px / 15 * 1.2);
+}
+
+div.container input {
+  background: none;
+  border: none;
+  border-bottom: calc(calc(400px / 48 * 32) / 50) solid #a4a4a4;
+  padding-bottom: calc(calc(400px / 48 * 32) / 25 * 2);
+  text-align: center;
+  color: #aa0000;
+  font-size: calc(400px / 40 * 2);
+  margin-bottom: calc(calc(400px / 48 * 32) / 25);
+}
+
+div.container input[data-valid] {
+  color: #00aa00;
+}
+
+div.container input:focus {
+  border-top: none;
+  border-left: none;
+  border-right: none;
+}
+
+div.container div.buttons {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  height: calc(calc(400px / 48 * 32) / 250 * 75);
+  width: 100%;
+}
+
+div.container div.buttons .btn {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  width: 30%;
+  height: 40%;
+  color: white;
+  border-radius: 9999px;
+  margin: calc(400px / 400 * 3);
+  cursor: pointer;
+  -webkit-transition: all ease-in-out .2s;
+  transition: all ease-in-out .2s;
+  border: calc(400px / 400 * 2) solid black;
+  font-size: calc(400px / 25);
+}
+
+div.container div.buttons .btn-clear {
+  background: red;
+}
+
+div.container div.buttons .btn-clear:hover {
+  background: #ff4d4d;
+}
+
+div.container div.buttons .btn-confirm {
+  background: #04ff58;
+}
+
+div.container div.buttons .btn-confirm:hover {
+  background: #51ff8b;
+}
+/*# sourceMappingURL=InputModal.css.map */

@@ -14,7 +14,14 @@ export function copyProperties(a, bs, override = true) {
         });
     }
     bs.forEach(b => copyFromSingleObject(a, b));
+    return a;
 }
-export function create(ctor, ...args) {
+export function New(ctor, ...args) {
     return ctor.construct.call(Object.create(ctor.prototype), ...args);
+}
+export function random(min = 0, max = 1, whole = true) {
+    return whole ? Math.floor(Math.random() * (max - min + 1) + min) : Math.random() * (max - min) + min;
+}
+export function insertIntoArray(array, index, values) {
+    return [...array.slice(0, index), ...values, ...array.slice(index)];
 }

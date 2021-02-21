@@ -1,0 +1,19 @@
+* {
+  margin: 0px;
+}
+
+* :focus {
+  outline: none;
+}
+
+canvas#screen {
+  -ms-interpolation-mode: nearest-neighbor;
+      image-rendering: -webkit-optimize-contrast;
+      image-rendering: -moz-crisp-edges;
+      image-rendering: -o-pixelated;
+      image-rendering: pixelated;
+  margin: 8px;
+  width: 480px;
+  height: 320px;
+}
+/*# sourceMappingURL=style.css.map */

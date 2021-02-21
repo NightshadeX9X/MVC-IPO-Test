@@ -1,19 +1,23 @@
-import { create } from "./functions.js";
-
-abstract class Vector implements Vector {
+import { New } from "./functions.js";
+class Vector implements Vector {
 	x: number = null as any;
 	y: number = null as any;
+
+	constructor(x = 0, y = x) {
+		return New(Vector, x, y);
+	}
 
 	static construct(this: Vector, x = 0, y = x) {
 		this.x = x;
 		this.y = y;
+
 		return this;
 	}
 
 	private getVectorFromArgs(a: number | Vector, b?: number) {
 		const vector = typeof b === "number"
-			? (create(Vector, a as number, b))
-			: (typeof a === "number" ? create(Vector, a) : a);
+			? (new Vector(a as number, b))
+			: (typeof a === "number" ? new Vector(a) : a);
 
 		return vector;
 	}
@@ -24,7 +28,7 @@ abstract class Vector implements Vector {
 	public sum(a: Vector): Vector;
 	public sum(a: number | Vector, b?: number) {
 		const vector = this.getVectorFromArgs(a, b)
-		return create(Vector, this.x + vector.x, this.y + vector.y);
+		return new Vector(this.x + vector.x, this.y + vector.y);
 	}
 
 	public diff(a: number): Vector;
@@ -32,7 +36,7 @@ abstract class Vector implements Vector {
 	public diff(a: Vector): Vector;
 	public diff(a: number | Vector, b?: number) {
 		const vector = this.getVectorFromArgs(a, b)
-		return create(Vector, this.x - vector.x, this.y - vector.y);
+		return new Vector(this.x - vector.x, this.y - vector.y);
 	}
 
 	public prod(a: number): Vector;
@@ -40,7 +44,7 @@ abstract class Vector implements Vector {
 	public prod(a: Vector): Vector;
 	public prod(a: number | Vector, b?: number) {
 		const vector = this.getVectorFromArgs(a, b)
-		return create(Vector, this.x * vector.x, this.y * vector.y);
+		return new Vector(this.x * vector.x, this.y * vector.y);
 	}
 
 	public quo(a: number): Vector;
@@ -50,7 +54,7 @@ abstract class Vector implements Vector {
 		const vector = this.getVectorFromArgs(a, b)
 		let x = vector.x || 1;
 		let y = vector.y || 1;
-		return create(Vector, this.x / x, this.y / y);
+		return new Vector(this.x / x, this.y / y);
 	}
 
 	// ------ OPERATION BY MODIFICATION
@@ -150,11 +154,11 @@ abstract class Vector implements Vector {
 	}
 
 	public static from(n: { x: number, y: number }) {
-		return create(Vector, n.x, n.y);
+		return new Vector(n.x, n.y);
 	}
 	public static fromString(string: Vector.AsString) {
 		const [x, y] = string.split("x").map(Number);
-		return create(Vector, x, y)
+		return new Vector(x, y)
 	}
 
 	public rangeTo(a: number): Vector[];
@@ -165,14 +169,14 @@ abstract class Vector implements Vector {
 		let inRange: Vector[] = [];
 		for (let x = this.x; x < vector.x; x++) {
 			for (let y = this.y; y < vector.y; y++) {
-				inRange.push(create(Vector, x, y));
+				inRange.push(new Vector(x, y));
 			}
 		}
 		return inRange;
 	}
 
 	public map(fn: (n: number) => number) {
-		const vec = create(Vector, fn(this.x), fn(this.y));
+		const vec = new Vector(fn(this.x), fn(this.y));
 		return vec;
 	}
 
