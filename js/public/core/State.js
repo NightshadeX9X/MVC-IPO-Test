@@ -4,12 +4,6 @@ import { Preloadable, Renderable, Updatable } from "./Attributes.js";
 import StateStack from "./StateStack.js";
 class State {
     constructor(...args) {
-        this.stateStack = null;
-        this.subStateStack = null;
-        this.evtHandler = null;
-        this.blocking = null;
-        this.linkedStates = null;
-        this.id = null;
         return New(State, ...args);
     }
     static construct(stateStack) {
@@ -21,6 +15,7 @@ class State {
         this.evtHandler = new Events.Handler();
         this.blocking = true;
         this.id = this.stateStack.game.stateIDGen.generate();
+        this.linkedStates = [];
         return this;
     }
     render(ctx) {

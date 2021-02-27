@@ -1,15 +1,8 @@
 import Events from "../util/Events.js";
 import { New } from "../util/functions.js";
-export default class Input {
+class Input {
     constructor() {
-        this.evtHandler = new Events.Handler();
-        this.preventDefault = null;
-        this.keyStates = new Map();
-        this.specialKeys = {
-            CTRL: false,
-            SHIFT: false,
-            ALT: false
-        };
+        this.keyStates = null;
         return New(Input);
     }
     static construct() {
@@ -81,3 +74,4 @@ export default class Input {
 }
 Input.keyDownSymbol = Symbol('key down');
 Input.keyUpSymbol = Symbol('key up');
+export default Input;

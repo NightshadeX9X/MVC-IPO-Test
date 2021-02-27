@@ -1,8 +1,6 @@
 import { New } from "./functions.js";
 class Vector {
     constructor(x = 0, y = x) {
-        this.x = null;
-        this.y = null;
         return New(Vector, x, y);
     }
     static construct(x = 0, y = x) {

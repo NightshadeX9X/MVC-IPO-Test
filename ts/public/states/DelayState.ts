@@ -3,6 +3,7 @@ import StateStack from "../core/StateStack.js";
 import { ArgsType } from "../util/types.js";
 import { Mixin, New } from '../util/functions.js';
 
+interface DelayState extends State { }
 class DelayState {
 	totalFrames: number = null as any;
 	elapsedFrames: number = null as any;
@@ -28,9 +29,14 @@ class DelayState {
 		}
 		this.elapsedFrames++;
 	}
+
+	static async create(ss: StateStack, frames: number) {
+		const ds = new DelayState(ss, frames);
+		await ss.push(ds);
+		await ds.waitForRemoval();
+	}
 }
 Mixin.apply(DelayState, [State]);
 
-interface DelayState extends State { }
 
 export default DelayState;

@@ -1,8 +1,10 @@
 import { New } from "./functions.js";
-class Vector implements Vector {
-	x: number = null as any;
-	y: number = null as any;
 
+interface Vector {
+	x: number;
+	y: number;
+}
+class Vector implements Vector {
 	constructor(x = 0, y = x) {
 		return New(Vector, x, y);
 	}

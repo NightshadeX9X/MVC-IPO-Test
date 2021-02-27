@@ -2,8 +2,10 @@ import { New } from "../util/functions.js";
 import Input from "./Input.js";
 import Loader from "./Loader.js";
 
+export interface Updatable {
+	toUpdate: boolean | null;
+}
 export class Updatable {
-	toUpdate: boolean | null = null as any;
 	constructor() {
 		return New(Updatable)
 	}
@@ -15,8 +17,10 @@ export class Updatable {
 	update(input: Input): void { };
 }
 
-export abstract class Renderable {
-	toRender: boolean | null = null as any;
+export interface Renderable {
+	toRender: boolean | null;
+}
+export class Renderable {
 	constructor() {
 		return New(Renderable)
 	}
@@ -28,8 +32,10 @@ export abstract class Renderable {
 	render(ctx: CanvasRenderingContext2D): void { };
 }
 
-export abstract class Preloadable {
-	toPreload: boolean | null = null as any;
+export interface Preloadable {
+	toPreload: boolean | null;
+}
+export class Preloadable {
 	constructor() {
 		return New(Preloadable)
 	}

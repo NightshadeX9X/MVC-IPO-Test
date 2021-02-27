@@ -3,6 +3,8 @@ import StateStack from "../core/StateStack.js";
 import { ArgsType } from "../util/types.js";
 import { Mixin, New } from '../util/functions.js';
 
+interface BlankState extends State { }
+
 class BlankState {
 	constructor(...args: ArgsType<typeof BlankState["construct"]>) {
 		return New(BlankState, ...args);
@@ -15,6 +17,5 @@ class BlankState {
 
 Mixin.apply(BlankState, [State]);
 
-interface BlankState extends State { }
 
 export default BlankState;

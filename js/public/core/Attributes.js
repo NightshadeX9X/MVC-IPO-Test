@@ -1,7 +1,6 @@
 import { New } from "../util/functions.js";
 export class Updatable {
     constructor() {
-        this.toUpdate = null;
         return New(Updatable);
     }
     static construct() {
@@ -13,7 +12,6 @@ export class Updatable {
 }
 export class Renderable {
     constructor() {
-        this.toRender = null;
         return New(Renderable);
     }
     static construct() {
@@ -25,7 +23,6 @@ export class Renderable {
 }
 export class Preloadable {
     constructor() {
-        this.toPreload = null;
         return New(Preloadable);
     }
     static construct() {

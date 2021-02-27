@@ -8,19 +8,26 @@ import Walker from "./Walker.js";
 import Direction from "../util/Direction.js";
 import Events from "../util/Events.js";
 
+interface Player extends Walker, Updatable {
+	evtHandler: Events.Handler;
+	lastInteraction: number;
+}
 class Player {
-	evtHandler: Events.Handler = null as any;
 	constructor(...args: ArgsType<typeof Player["construct"]>) {
 		return New(Player, ...args);
 	}
 	static construct(this: Player, roamState: RoamState) {
 		Walker.construct.call(this, roamState, new Vector(), 'player');
 		Updatable.construct.call(this);
-		this.evtHandler = new Events.Handler();
 
-		console.log(this.evtHandler.addEventListener('walk', (from: Vector, to: Vector, dir: Direction) => {
-			console.log("Player walked", { from: from.toString(), to: to.toString(), direction: Direction[dir] })
-		}));
+		this.evtHandler = new Events.Handler();
+		this.lastInteraction = 0;
+		this.evtHandler.addEventListener('walk', (oldPos: Vector, newPos: Vector, direction: Direction) => {
+			const gameObjects = this.roamState.gameObjects.filter(go => go.getCoveredSquares().find(v => v.equals(newPos)));
+			gameObjects.forEach(gameObject => {
+				gameObject.evtHandler.dispatchEvent('playertouch');
+			})
+		})
 
 		return this;
 	}
@@ -32,11 +39,30 @@ class Player {
 				break;
 			}
 		}
+
+		if (this.walking) {
+			for (const key in input.directionKeyStates) {
+				const dirStr = key as Direction.AsString;
+				if (input.directionKeyStates[dirStr]) {
+					break;
+				}
+			}
+		}
+
+		if (this.lastInteraction > 20 && !this.walking && input.interactionKey) {
+			this.lastInteraction = 0;
+			const ahead = this.getPosAhead();
+			const gameObject = this.roamState.gameObjects.find(go => go.pos.equals(ahead));
+			if (gameObject) {
+				gameObject.evtHandler.dispatchEvent('interact');
+			}
+		}
+		this.lastInteraction++;
 	}
 }
 
 Mixin.apply(Player, [Walker, Updatable])
 
-interface Player extends Walker, Updatable { }
+
 
 export default Player;

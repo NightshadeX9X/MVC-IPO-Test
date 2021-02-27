@@ -6,14 +6,17 @@ import Input from "./Input.js";
 import Loader from "./Loader.js";
 import StateStack from "./StateStack.js";
 
+interface Game extends Renderable, Updatable, Preloadable {
+	stateStack: StateStack;
+	cnv: HTMLCanvasElement;
+	ctx: CanvasRenderingContext2D;
+	input: Input;
+	loader: Loader;
+	fps: number;
+	stateIDGen: UIDGen;
+}
 class Game {
-	stateStack = new StateStack(this, this);
-	cnv = document.getElementById('screen') as HTMLCanvasElement;
-	ctx = this.cnv.getContext('2d') as CanvasRenderingContext2D;
-	input = new Input();
-	loader = new Loader();
-	fps = 60;
-	stateIDGen = new UIDGen();
+
 
 	constructor() {
 		return New(Game);
@@ -50,7 +53,7 @@ class Game {
 		this.stateStack.render(this.ctx);
 	}
 }
-interface Game extends Renderable, Updatable, Preloadable { }
+
 Mixin.apply(Game, [Renderable, Updatable, Preloadable]);
 
 export default Game;

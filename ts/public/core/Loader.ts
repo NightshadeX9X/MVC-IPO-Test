@@ -1,10 +1,9 @@
 import { New } from '../util/functions.js';
 import { JSON } from '../util/types.js';
 
+interface Loader { }
 class Loader {
-	private alreadyLoaded = new Map<string, Loader.Loadable>();
-
-
+	private alreadyLoaded: Map<string, Loader.Loadable> = null as any;
 	constructor() {
 		return New(Loader);
 	}

@@ -3,10 +3,6 @@ import { insertIntoArray, Mixin, New } from "../util/functions.js";
 import { Renderable, Updatable, Preloadable } from "./Attributes.js";
 class StateStack {
     constructor(...args) {
-        this.game = null;
-        this.parent = null;
-        this.states = null;
-        this.evtHandler = null;
         return New(StateStack, ...args);
     }
     static construct(game, parent) {

@@ -6,11 +6,14 @@ import Game from "./Game.js";
 import Input from "./Input.js";
 import Loader from "./Loader.js";
 import State from "./State.js";
+
+interface StateStack extends Renderable, Updatable, Preloadable {
+	game: Game;
+	parent: StateStack.Parent;
+	states: State[];
+	evtHandler: Events.Handler;
+}
 class StateStack {
-	game: Game = null as any;
-	parent: StateStack.Parent = null as any;
-	states: State[] = null as any;
-	evtHandler: Events.Handler = null as any;
 	constructor(...args: ArgsType<typeof StateStack["construct"]>) {
 		return New(StateStack, ...args);
 	}
@@ -103,7 +106,7 @@ class StateStack {
 }
 
 Mixin.apply(StateStack, [Renderable, Updatable, Preloadable]);
-interface StateStack extends Renderable, Updatable, Preloadable { }
+
 
 namespace StateStack {
 	export type Parent = Game | State;

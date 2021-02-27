@@ -1,4 +1,5 @@
 import { Class } from "./types.js";
+import Vector from "./Vector.js";
 
 export namespace Mixin {
 	export function apply<C>(child: Class<C, any[]>, parents: Class<any, any[]>[]) {
@@ -18,6 +19,7 @@ export function copyProperties(a: Record<keyof any, any>, bs: Record<keyof any, 
 }
 
 export function New<TInstance, TArgs extends any[]>(ctor: Class<TInstance, TArgs>, ...args: TArgs) {
+	// @ts-ignore
 	return ctor.construct.call(Object.create(ctor.prototype), ...args);
 }
 
@@ -27,4 +29,12 @@ export function random(min = 0, max = 1, whole = true) {
 
 export function insertIntoArray<T>(array: T[], index: number, values: T[]) {
 	return [...array.slice(0, index), ...values, ...array.slice(index)]
+}
+
+export function createCanvas(size: Vector) {
+	const cnv = document.createElement('canvas');
+	const ctx = cnv.getContext('2d') as CanvasRenderingContext2D;
+	cnv.width = size.x;
+	cnv.height = size.y;
+	return { cnv, ctx }
 }

@@ -1,7 +1,7 @@
 import { New } from '../util/functions.js';
 class Loader {
     constructor() {
-        this.alreadyLoaded = new Map();
+        this.alreadyLoaded = null;
         return New(Loader);
     }
     static construct() {

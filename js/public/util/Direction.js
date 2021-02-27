@@ -28,6 +28,42 @@ var Direction;
         return new Vector(0, -1);
     }
     Direction.toVector = toVector;
+    function fromVector(v) {
+        let horizontal;
+        let vertical;
+        if (v.x < 0)
+            horizontal = Direction.LEFT;
+        else
+            horizontal = Direction.RIGHT;
+        if (v.y < 0)
+            vertical = Direction.UP;
+        else
+            vertical = Direction.DOWN;
+        const abs = v.map(Math.abs);
+        if (abs.x > abs.y)
+            return horizontal;
+        else
+            return vertical;
+    }
+    Direction.fromVector = fromVector;
+    function routeTo(v) {
+        let horizontal;
+        let vertical;
+        if (v.x < 0)
+            horizontal = Direction.LEFT;
+        else
+            horizontal = Direction.RIGHT;
+        if (v.y < 0)
+            vertical = Direction.UP;
+        else
+            vertical = Direction.DOWN;
+        const abs = v.map(Math.abs);
+        if (abs.x > abs.y)
+            return [horizontal, vertical, Direction.invert(horizontal), Direction.invert(vertical)];
+        else
+            return [vertical, horizontal, Direction.invert(vertical), Direction.invert(horizontal)];
+    }
+    Direction.routeTo = routeTo;
     function getRandom() {
         return random(0, 3);
     }

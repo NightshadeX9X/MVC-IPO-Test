@@ -7,13 +7,6 @@ import Loader from "./Loader.js";
 import StateStack from "./StateStack.js";
 class Game {
     constructor() {
-        this.stateStack = new StateStack(this, this);
-        this.cnv = document.getElementById('screen');
-        this.ctx = this.cnv.getContext('2d');
-        this.input = new Input();
-        this.loader = new Loader();
-        this.fps = 60;
-        this.stateIDGen = new UIDGen();
         return New(Game);
     }
     static construct() {

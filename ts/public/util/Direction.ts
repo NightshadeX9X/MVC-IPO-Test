@@ -21,6 +21,30 @@ namespace Direction {
 		if (d === Direction.RIGHT) return new Vector(1, 0);
 		return new Vector(0, -1);
 	}
+	export function fromVector(v: Vector) {
+		let horizontal: Direction;
+		let vertical: Direction;
+		if (v.x < 0) horizontal = Direction.LEFT;
+		else horizontal = Direction.RIGHT;
+		if (v.y < 0) vertical = Direction.UP;
+		else vertical = Direction.DOWN;
+
+		const abs = v.map(Math.abs);
+		if (abs.x > abs.y) return horizontal;
+		else return vertical;
+	}
+	export function routeTo(v: Vector) {
+		let horizontal: Direction;
+		let vertical: Direction;
+		if (v.x < 0) horizontal = Direction.LEFT;
+		else horizontal = Direction.RIGHT;
+		if (v.y < 0) vertical = Direction.UP;
+		else vertical = Direction.DOWN;
+
+		const abs = v.map(Math.abs);
+		if (abs.x > abs.y) return [horizontal, vertical, Direction.invert(horizontal), Direction.invert(vertical)];
+		else return [vertical, horizontal, Direction.invert(vertical), Direction.invert(horizontal)];
+	}
 	export function getRandom() {
 		return random(0, 3) as Direction;
 	}

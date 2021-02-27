@@ -2,17 +2,19 @@ import Direction from "../util/Direction.js";
 import Events from "../util/Events.js";
 import { New } from "../util/functions.js";
 
-export default class Input {
+interface Input {
+	evtHandler: Events.Handler;
+	preventDefault: boolean;
+	specialKeys: {
+		CTRL: boolean,
+		SHIFT: boolean,
+		ALT: boolean
+	}
+}
+class Input {
 	private static keyDownSymbol = Symbol('key down');
 	private static keyUpSymbol = Symbol('key up');
-	public evtHandler = new Events.Handler();
-	public preventDefault: boolean = null as any;
-	private keyStates = new Map<string, typeof Input.keyDownSymbol | typeof Input.keyUpSymbol>()
-	public specialKeys = {
-		CTRL: false,
-		SHIFT: false,
-		ALT: false
-	}
+	private keyStates: Map<string, typeof Input.keyDownSymbol | typeof Input.keyUpSymbol> = null as any;
 
 	constructor() {
 		return New(Input);
@@ -90,3 +92,5 @@ export default class Input {
 		return this.keyIsDown('Escape') || this.keyIsDown('Return');
 	}
 }
+
+export default Input;

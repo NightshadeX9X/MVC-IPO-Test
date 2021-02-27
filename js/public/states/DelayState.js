@@ -22,6 +22,11 @@ class DelayState {
         }
         this.elapsedFrames++;
     }
+    static async create(ss, frames) {
+        const ds = new DelayState(ss, frames);
+        await ss.push(ds);
+        await ds.waitForRemoval();
+    }
 }
 Mixin.apply(DelayState, [State]);
 export default DelayState;

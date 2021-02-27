@@ -4,13 +4,18 @@ import { ArgsType } from "../util/types.js";
 import { Preloadable, Renderable, Updatable } from "./Attributes.js";
 import Input from "./Input.js";
 import StateStack from "./StateStack.js";
+
+interface State extends Renderable, Updatable, Preloadable {
+	stateStack: StateStack;
+	subStateStack: StateStack;
+	evtHandler: Events.Handler;
+	blocking: boolean;
+	linkedStates: State[];
+	id: string;
+}
+
 class State {
-	stateStack: StateStack = null as any;
-	subStateStack: StateStack = null as any;
-	evtHandler: Events.Handler = null as any;
-	blocking: boolean = null as any;
-	linkedStates: State[] = null as any;
-	id: string = null as any;
+
 
 	constructor(...args: ArgsType<typeof State["construct"]>) {
 		return New(State, ...args);
@@ -26,6 +31,7 @@ class State {
 		this.evtHandler = new Events.Handler();
 		this.blocking = true;
 		this.id = this.stateStack.game.stateIDGen.generate();
+		this.linkedStates = [];
 
 		return this;
 	}
@@ -55,6 +61,5 @@ class State {
 	}
 }
 Mixin.apply(State, [Renderable, Updatable, Preloadable]);
-interface State extends Renderable, Updatable, Preloadable { }
 
 export default State;
