@@ -1,57 +1,56 @@
-import { New } from "./functions.js";
 import UIDGen from "./UIDGen.js";
 var Events;
 (function (Events) {
-    class Handler {
-        constructor() {
+    var Handler = /** @class */ (function () {
+        function Handler() {
             this.events = [];
-            this.idGen = New(UIDGen);
-            return New(Handler);
-        }
-        static construct() {
-            this.events = [];
-            this.idGen = New(UIDGen);
+            this.idGen = new UIDGen();
             this.idGen.prefix = "EVT";
-            return this;
         }
-        addEventListener(name, callback, priority = 0) {
-            const id = this.idGen.generate();
+        Handler.prototype.addEventListener = function (name, callback, priority) {
+            if (priority === void 0) { priority = 0; }
+            var id = this.idGen.generate();
             this.events.push({
-                name,
-                id,
-                callback,
-                priority
+                name: name,
+                id: id,
+                callback: callback,
+                priority: priority
             });
             return id;
-        }
-        removeEventListener(nameOrId) {
-            let removeCount = 0;
+        };
+        Handler.prototype.removeEventListener = function (nameOrId) {
+            var removeCount = 0;
             if (typeof nameOrId === "string") {
-                for (let index = this.events.length - 1; index >= 0; index--) {
-                    const event = this.events[index];
-                    if (!event)
+                for (var index = this.events.length - 1; index >= 0; index--) {
+                    var event_1 = this.events[index];
+                    if (!event_1)
                         continue;
-                    if (event.name !== nameOrId && event.id !== nameOrId)
+                    if (event_1.name !== nameOrId && event_1.id !== nameOrId)
                         return removeCount;
                     this.events.splice(Number(index), 1);
                     removeCount++;
                 }
             }
             return removeCount;
-        }
-        dispatchEvent(nameOrId, ...data) {
-            let dispatchCount = 0;
+        };
+        Handler.prototype.dispatchEvent = function (nameOrId) {
+            var data = [];
+            for (var _i = 1; _i < arguments.length; _i++) {
+                data[_i - 1] = arguments[_i];
+            }
+            var dispatchCount = 0;
             if (typeof nameOrId === "string") {
-                const eventsWithName = this.events.filter(e => e.name === nameOrId || e.id === nameOrId);
-                eventsWithName.sort((a, b) => b.priority - a.priority).forEach(eventWithName => {
-                    eventWithName.callback(...data);
+                var eventsWithName = this.events.filter(function (e) { return e.name === nameOrId || e.id === nameOrId; });
+                eventsWithName.sort(function (a, b) { return b.priority - a.priority; }).forEach(function (eventWithName) {
+                    eventWithName.callback.apply(eventWithName, data);
                     dispatchCount++;
                 });
                 return dispatchCount;
             }
             return 0;
-        }
-    }
+        };
+        return Handler;
+    }());
     Events.Handler = Handler;
 })(Events || (Events = {}));
 export default Events;

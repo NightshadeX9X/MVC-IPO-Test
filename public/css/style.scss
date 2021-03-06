@@ -12,6 +12,12 @@
 	flex-direction: $direction;
 }
 
+@mixin UIElement() {
+	position: absolute;
+	top: 8px;
+	left: 8px;
+}
+
 canvas#screen {
 	image-rendering: pixelated;
 	margin: 8px;

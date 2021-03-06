@@ -1,5 +1,5 @@
 import Events from "../util/Events.js";
-import { New, Mixin } from "../util/functions.js";
+import { Parents } from "../util/functions.js";
 import { ArgsType } from "../util/types.js";
 import { Preloadable, Renderable, Updatable } from "./Attributes.js";
 import Input from "./Input.js";
@@ -14,26 +14,18 @@ interface State extends Renderable, Updatable, Preloadable {
 	id: string;
 }
 
+@Parents(Preloadable, Updatable, Renderable)
 class State {
+	subStateStack = new StateStack(this.stateStack.game, this);
+	evtHandler = new Events.Handler();
+	blocking = true;
+	id = this.stateStack.game.stateIDGen.generate();
+	linkedStates: State[] = [];
 
-
-	constructor(...args: ArgsType<typeof State["construct"]>) {
-		return New(State, ...args);
-	}
-
-	static construct(this: State, stateStack: StateStack) {
-		Renderable.construct.call(this);
-		Updatable.construct.call(this);
-		Preloadable.construct.call(this);
-
-		this.stateStack = stateStack;
-		this.subStateStack = new StateStack(this.stateStack.game, this);
-		this.evtHandler = new Events.Handler();
-		this.blocking = true;
-		this.id = this.stateStack.game.stateIDGen.generate();
-		this.linkedStates = [];
-
-		return this;
+	constructor(public stateStack: StateStack) {
+		Preloadable.call(this)
+		Updatable.call(this)
+		Renderable.call(this)
 	}
 
 	render(ctx: CanvasRenderingContext2D) {
@@ -60,6 +52,5 @@ class State {
 		return (this.stateStack?.states.indexOf(this)) ?? -1;
 	}
 }
-Mixin.apply(State, [Renderable, Updatable, Preloadable]);
 
 export default State;

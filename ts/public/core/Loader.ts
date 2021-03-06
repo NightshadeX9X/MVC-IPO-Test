@@ -3,14 +3,9 @@ import { JSON } from '../util/types.js';
 
 interface Loader { }
 class Loader {
-	private alreadyLoaded: Map<string, Loader.Loadable> = null as any;
+	private alreadyLoaded = new Map<string, Loader.Loadable>();
 	constructor() {
-		return New(Loader);
-	}
 
-	static construct(this: Loader) {
-		this.alreadyLoaded = new Map<string, Loader.Loadable>();
-		return this;
 	}
 
 	public async loadJSON(src: string, name = src, dynamic = false) {

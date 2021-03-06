@@ -5,15 +5,8 @@ interface Vector {
 	y: number;
 }
 class Vector implements Vector {
-	constructor(x = 0, y = x) {
-		return New(Vector, x, y);
-	}
+	constructor(public x = 0, public y = x) {
 
-	static construct(this: Vector, x = 0, y = x) {
-		this.x = x;
-		this.y = y;
-
-		return this;
 	}
 
 	private getVectorFromArgs(a: number | Vector, b?: number) {

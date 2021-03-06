@@ -2,37 +2,27 @@ import { Preloadable, Renderable, Updatable } from "../core/Attributes.js";
 import Input from "../core/Input.js";
 import RoamState from "../states/RoamState.js";
 import Events from "../util/Events.js";
-import { Mixin, New } from "../util/functions.js";
-import { ArgsType } from "../util/types.js";
+import { Parents } from "../util/functions.js";
+import UIDGen from "../util/UIDGen.js";
 import Vector from "../util/Vector.js";
 
-interface GameObject extends Preloadable, Renderable, Updatable {
-	roamState: RoamState;
-	evtHandler: Events.Handler;
-	variables: Map<string, any>;
-	pos: Vector;
-	size: Vector;
-	zIndex: number;
-	canBeWalkedThrough: boolean;
-}
+interface GameObject extends Preloadable, Renderable, Updatable { }
+@Parents(Preloadable, Updatable, Renderable)
 class GameObject {
-	constructor(...args: ArgsType<typeof GameObject["construct"]>) {
-		return New(GameObject, ...args);
-	}
-	static construct(this: GameObject, roamState: RoamState) {
-		Preloadable.construct.call(this);
-		Updatable.construct.call(this);
-		Renderable.construct.call(this);
+	evtHandler = new Events.Handler();
+	variables = new Map<string, any>();
+	pos = new Vector();
+	zIndex = 1;
+	size = new Vector(1);
+	canBeWalkedThrough = false;
+	static IDGen = new UIDGen("GameObject");
+	id = GameObject.IDGen.generate();
+	constructor(public roamState: RoamState) {
+		Preloadable.call(this)
+		Updatable.call(this)
+		Renderable.call(this)
 
-		this.roamState = roamState;
-		this.evtHandler = new Events.Handler();
-		this.variables = new Map<string, any>();
-		this.pos = new Vector();
-		this.zIndex = 1;
-		this.size = new Vector(1);
-		this.canBeWalkedThrough = false;
 		this.initEvtListeners();
-		return this;
 	}
 	private initEvtListeners() {
 		this.evtHandler.addEventListener('interact', () => {
@@ -57,6 +47,5 @@ class GameObject {
 
 }
 
-Mixin.apply(GameObject, [Preloadable, Renderable, Updatable])
 
 export default GameObject;

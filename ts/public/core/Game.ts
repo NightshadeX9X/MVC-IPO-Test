@@ -1,43 +1,32 @@
+import Party from "../pokemon/Party.js";
+import PokemonCreature from "../pokemon/PokemonCreature.js";
 import RoamState from "../states/RoamState.js";
-import { Mixin, New } from "../util/functions.js";
+import { Parents } from "../util/functions.js";
 import UIDGen from "../util/UIDGen.js";
 import { Preloadable, Renderable, Updatable } from "./Attributes.js";
 import Input from "./Input.js";
 import Loader from "./Loader.js";
 import StateStack from "./StateStack.js";
 
-interface Game extends Renderable, Updatable, Preloadable {
-	stateStack: StateStack;
-	cnv: HTMLCanvasElement;
-	ctx: CanvasRenderingContext2D;
-	input: Input;
-	loader: Loader;
-	fps: number;
-	stateIDGen: UIDGen;
-}
+interface Game extends Renderable, Updatable, Preloadable { }
+@Parents(Preloadable, Updatable, Renderable)
 class Game {
-
+	stateStack: StateStack;
+	cnv = document.getElementById('screen') as HTMLCanvasElement;
+	ctx = this.cnv.getContext('2d') as CanvasRenderingContext2D;
+	input = new Input();
+	loader = new Loader();
+	fps = 60;
+	stateIDGen = new UIDGen();
+	party = new Party();
 
 	constructor() {
-		return New(Game);
-	}
-
-	static construct(this: Game) {
-		Renderable.construct.call(this);
-		Updatable.construct.call(this);
-		Preloadable.construct.call(this);
-
+		Preloadable.call(this)
+		Updatable.call(this)
+		Renderable.call(this)
 		this.stateStack = new StateStack(this, this);
-		this.cnv = document.getElementById('screen') as HTMLCanvasElement;
-		this.ctx = this.cnv.getContext('2d') as CanvasRenderingContext2D;
-		this.input = new Input();
-		this.loader = new Loader();
-		this.fps = 60;
-
-		this.stateIDGen = new UIDGen();
 		this.stateIDGen.prefix = "STATE";
-
-		return this;
+		this.party.pokemon.push(new PokemonCreature('pikachu'))
 	}
 
 	async preload() {
@@ -53,7 +42,5 @@ class Game {
 		this.stateStack.render(this.ctx);
 	}
 }
-
-Mixin.apply(Game, [Renderable, Updatable, Preloadable]);
 
 export default Game;

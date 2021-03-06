@@ -10,7 +10,7 @@ export default class InputModalElement extends HTMLElement {
 
 		this.initShadowRoot();
 		this.initEvents();
-		this.regex = new RegExp(this.getAttribute('regex') || "");
+		this.regex = new RegExp(this.getAttribute('regex') || "", this.getAttribute('regex-flags') || "");
 	}
 
 	private checkIfInputValid(value = "") {

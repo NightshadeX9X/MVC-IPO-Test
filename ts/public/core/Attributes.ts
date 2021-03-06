@@ -2,46 +2,24 @@ import { New } from "../util/functions.js";
 import Input from "./Input.js";
 import Loader from "./Loader.js";
 
-export interface Updatable {
-	toUpdate: boolean | null;
-}
 export class Updatable {
+	toUpdate: boolean | null = null;
 	constructor() {
-		return New(Updatable)
-	}
-	static construct(this: Updatable) {
-		this.toUpdate = null;
-		return this;
 	}
 
 	update(input: Input): void { };
 }
 
-export interface Renderable {
-	toRender: boolean | null;
-}
 export class Renderable {
+	toRender: boolean | null = null;
 	constructor() {
-		return New(Renderable)
-	}
-	static construct(this: Renderable) {
-		this.toRender = null;
-		return this;
 	}
 
 	render(ctx: CanvasRenderingContext2D): void { };
 }
-
-export interface Preloadable {
-	toPreload: boolean | null;
-}
 export class Preloadable {
+	toPreload: boolean | null = null;
 	constructor() {
-		return New(Preloadable)
-	}
-	static construct(this: Preloadable) {
-		this.toPreload = null;
-		return this;
 	}
 
 	async preload(loader: Loader): Promise<void> { };

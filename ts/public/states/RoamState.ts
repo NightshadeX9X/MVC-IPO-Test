@@ -1,45 +1,43 @@
+import WildBattle from "../battle/WildBattle.js";
 import Input from "../core/Input.js";
 import Loader from "../core/Loader.js";
 import State from "../core/State.js";
 import StateStack from "../core/StateStack.js";
+import PokemonCreature from "../pokemon/PokemonCreature.js";
 import Camera from "../roam_state/Camera.js";
 import GameMap from "../roam_state/GameMap.js";
 import GameObject from "../roam_state/GameObject.js";
 import Player from "../roam_state/Player.js";
 import Walker from "../roam_state/Walker.js";
-import { Mixin, New } from "../util/functions.js";
+import { Parents } from "../util/functions.js";
 import { ArgsType, Class } from "../util/types.js";
 import Vector from "../util/Vector.js";
+import TextBoxState from "./TextBoxState.js";
+import WildBattleState from "./WildBattleState.js";
 
-interface RoamState extends State {
-	tileSize: number;
-	player: Player;
-	backgroundProcesses: StateStack;
-	gameMap: GameMap;
-	camera: Camera;
-	gameObjects: GameObject[];
-}
+interface RoamState extends State { }
+@Parents(State)
 class RoamState {
-	constructor(...args: ArgsType<typeof RoamState["construct"]>) {
-		return New(RoamState, ...args);
-	}
-
-	static construct(this: RoamState, stateStack: StateStack) {
-		State.construct.call(this, stateStack);
-
-		this.tileSize = 16;
-		this.player = new Player(this);
-		this.backgroundProcesses = new StateStack(this.stateStack.game, this);
+	tileSize = 16;
+	player = new Player(this);
+	backgroundProcesses = new StateStack(this.stateStack.game, this);
+	gameMap = new GameMap(this, 'route5');
+	camera = new Camera(this, new Vector(480, 320));
+	gameObjects: GameObject[] = [];
+	constructor(public stateStack: StateStack) {
+		State.call(this, stateStack);
 		this.backgroundProcesses.insert = async (state, index) => {
 			state.blocking = false;
 			state.toUpdate = true;
 			await StateStack.prototype.insert.call(this.backgroundProcesses, state, index);
-		}
-		this.gameMap = new GameMap(this, 'route5');
-		this.camera = new Camera(this, new Vector(300, 200));
-		this.gameObjects = [];
-
-		return this;
+		};
+		this.stateStack.game.input.evtHandler.addEventListener('keypress', async (e: KeyboardEvent) => {
+			if (this === this.stateStack.fromTop())
+				if (e.key === "t") {
+					// const battle = new WildBattle(this.stateStack.game.party, new PokemonCreature("pikachu"))
+					// await this.stateStack.push(new WildBattleState(this.stateStack, battle));
+				}
+		})
 	}
 
 	private async loadGameObjects(loader: Loader) {
@@ -123,6 +121,5 @@ namespace RoamState {
 	export type Node = Player | GameMap.Layer | GameObject;
 }
 
-Mixin.apply(RoamState, [State]);
 
 export default RoamState;

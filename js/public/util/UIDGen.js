@@ -1,17 +1,12 @@
-import { New } from "./functions.js";
-class UIDGen {
-    constructor() {
-        this.count = null;
-        this.prefix = null;
-        return New(UIDGen);
-    }
-    static construct() {
+var UIDGen = /** @class */ (function () {
+    function UIDGen(prefix) {
+        if (prefix === void 0) { prefix = ""; }
+        this.prefix = prefix;
         this.count = 0;
-        this.prefix = "";
-        return this;
     }
-    generate() {
-        return `${this.prefix}:${this.count++}`;
-    }
-}
+    UIDGen.prototype.generate = function () {
+        return this.prefix + ":" + this.count++;
+    };
+    return UIDGen;
+}());
 export default UIDGen;

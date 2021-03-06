@@ -1,20 +1,11 @@
 import { New } from "./functions.js";
 
 class UIDGen {
-	private count: number = null as any;
-	prefix: string = null as any;
+	private count = 0;
 
-	constructor() {
-		return New(UIDGen);
+	constructor(public prefix = "") {
+
 	}
-
-	static construct(this: UIDGen) {
-		this.count = 0;
-		this.prefix = "";
-
-		return this;
-	}
-
 	generate() {
 		return `${this.prefix}:${this.count++}`;
 	}

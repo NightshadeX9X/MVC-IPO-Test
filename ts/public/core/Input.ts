@@ -14,32 +14,23 @@ interface Input {
 class Input {
 	private static keyDownSymbol = Symbol('key down');
 	private static keyUpSymbol = Symbol('key up');
-	private keyStates: Map<string, typeof Input.keyDownSymbol | typeof Input.keyUpSymbol> = null as any;
-
+	private keyStates = new Map<string, typeof Input.keyDownSymbol | typeof Input.keyUpSymbol>();
+	evtHandler = new Events.Handler();
+	specialKeys = {
+		CTRL: false,
+		SHIFT: false,
+		ALT: false
+	}
+	preventDefault = true;
 	constructor() {
-		return New(Input);
+
 	}
-
-	static construct(this: Input) {
-		this.evtHandler = new Events.Handler();
-		this.keyStates = new Map<string, typeof Input.keyDownSymbol | typeof Input.keyUpSymbol>()
-		this.specialKeys = {
-			CTRL: false,
-			SHIFT: false,
-			ALT: false
-		}
-		this.preventDefault = true;
-
-
-		return this;
-	}
-
 	public start(el: Document | HTMLElement) {
 		el.addEventListener('keydown', e => {
 			if (this.preventDefault)
 				e.preventDefault();
 			if (!this.keyIsDown((e as KeyboardEvent).key)) {
-				this.evtHandler.dispatchEvent('keypress', (e as KeyboardEvent).key)
+				this.evtHandler.dispatchEvent('keypress', e)
 			}
 			this.keyStates.set((e as KeyboardEvent).key, Input.keyDownSymbol);
 			this.updateSpecialKeys(e as KeyboardEvent);
@@ -49,7 +40,7 @@ class Input {
 			if (this.preventDefault)
 				e.preventDefault();
 			if (this.keyIsDown((e as KeyboardEvent).key)) {
-				this.evtHandler.dispatchEvent('keyrelease', (e as KeyboardEvent).key)
+				this.evtHandler.dispatchEvent('keyrelease', e)
 			}
 			this.keyStates.set((e as KeyboardEvent).key, Input.keyUpSymbol);
 			this.updateSpecialKeys(e as KeyboardEvent);

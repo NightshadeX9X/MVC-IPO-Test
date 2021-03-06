@@ -1,9 +1,23 @@
-import { Class } from "./types.js";
+import { Class, Constructor } from "./types.js";
 import Vector from "./Vector.js";
 
-export namespace Mixin {
-	export function apply<C>(child: Class<C, any[]>, parents: Class<any, any[]>[]) {
-		copyProperties(child.prototype, parents.map(p => p.prototype), false)
+export function Parents(...parents: Constructor[]) {
+	return function (child: Constructor) {
+		// @ts-ignore
+		child.parents = parents;
+		const parentMethodCollection: any = {};
+		function copyFromParent(parent: Constructor) {
+			// @ts-ignore;
+			parent.parents?.forEach(grandParent => {
+				copyProperties(parentMethodCollection, [grandParent.prototype]);
+			})
+			copyProperties(parentMethodCollection, [parent.prototype]);
+		}
+		parents.forEach(parent => {
+			copyFromParent(parent);
+		});
+		Object.setPrototypeOf(child.prototype, parentMethodCollection);
+		child.prototype.constructor = child;
 	}
 }
 export function copyProperties(a: Record<keyof any, any>, bs: Record<keyof any, any>[], override = true) {
@@ -25,6 +39,12 @@ export function New<TInstance, TArgs extends any[]>(ctor: Class<TInstance, TArgs
 
 export function random(min = 0, max = 1, whole = true) {
 	return whole ? Math.floor(Math.random() * (max - min + 1) + min) : Math.random() * (max - min) + min;
+}
+
+export function chance(x = 1, outOfY = 100) {
+	if (x >= outOfY) return true;
+	const num = random(1, outOfY, true);
+	return num <= x;
 }
 
 export function insertIntoArray<T>(array: T[], index: number, values: T[]) {

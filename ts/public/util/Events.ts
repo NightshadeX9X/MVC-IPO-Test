@@ -16,18 +16,10 @@ namespace Events {
 
 	export class Handler {
 		private events: Reception[] = [];
-		private idGen = New(UIDGen);
+		private idGen = new UIDGen();
 
 		constructor() {
-			return New(Handler);
-		}
-
-		static construct(this: Handler) {
-			this.events = [];
-			this.idGen = New(UIDGen);
 			this.idGen.prefix = "EVT";
-
-			return this;
 		}
 
 		addEventListener(name: string, callback: Reception["callback"], priority = 0) {

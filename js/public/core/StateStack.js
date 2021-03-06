@@ -1,85 +1,150 @@
-import Events from "../util/Events.js";
-import { insertIntoArray, Mixin, New } from "../util/functions.js";
-import { Renderable, Updatable, Preloadable } from "./Attributes.js";
-class StateStack {
-    constructor(...args) {
-        return New(StateStack, ...args);
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __generator = (this && this.__generator) || function (thisArg, body) {
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    function verb(n) { return function (v) { return step([n, v]); }; }
+    function step(op) {
+        if (f) throw new TypeError("Generator is already executing.");
+        while (_) try {
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [op[0] & 2, t.value];
+            switch (op[0]) {
+                case 0: case 1: t = op; break;
+                case 4: _.label++; return { value: op[1], done: false };
+                case 5: _.label++; y = op[1]; op = [0]; continue;
+                case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                default:
+                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                    if (t[2]) _.ops.pop();
+                    _.trys.pop(); continue;
+            }
+            op = body.call(thisArg, _);
+        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
-    static construct(game, parent) {
-        Renderable.construct.call(this);
-        Updatable.construct.call(this);
-        Preloadable.construct.call(this);
+};
+import Events from "../util/Events.js";
+import { insertIntoArray, Parents } from "../util/functions.js";
+import { Renderable, Updatable, Preloadable } from "./Attributes.js";
+var StateStack = /** @class */ (function () {
+    function StateStack(game, parent) {
         this.game = game;
         this.parent = parent;
         this.states = [];
         this.evtHandler = new Events.Handler();
-        return this;
+        Preloadable.call(this);
+        Updatable.call(this);
+        Renderable.call(this);
     }
-    isIndependentlyUpdatable(state) {
+    StateStack.prototype.isIndependentlyUpdatable = function (state) {
         if (!this.states.includes(state))
             return false;
         if (state.toUpdate !== null)
             return state.toUpdate;
-        return this.states.filter(s => s.blocking).reverse()[0] === state;
-    }
-    isLinkedToIndependentlyUpdatable(state) {
-        return this.states.filter(s => this.isIndependentlyUpdatable(s)).some(s => s.linkedStates.includes(state));
-    }
-    toUpdateState(state) {
+        return this.states.filter(function (s) { return s.blocking; }).reverse()[0] === state;
+    };
+    StateStack.prototype.isLinkedToIndependentlyUpdatable = function (state) {
+        var _this = this;
+        return this.states.filter(function (s) { return _this.isIndependentlyUpdatable(s); }).some(function (s) { return s.linkedStates.includes(state); });
+    };
+    StateStack.prototype.toUpdateState = function (state) {
         return this.isIndependentlyUpdatable(state) || this.isLinkedToIndependentlyUpdatable(state);
-    }
-    toRenderState(state) {
+    };
+    StateStack.prototype.toRenderState = function (state) {
         if (!this.states.includes(state))
             return false;
         if (state.toUpdate !== null)
             return state.toUpdate;
         return true;
-    }
-    toPreloadState(state) {
+    };
+    StateStack.prototype.toPreloadState = function (state) {
         return this.states.includes(state);
-    }
-    fromTop(n = 0) {
+    };
+    StateStack.prototype.fromTop = function (n) {
+        if (n === void 0) { n = 0; }
         return this.states[this.states.length - (n + 1)];
-    }
-    fromBottom(n = 0) {
+    };
+    StateStack.prototype.fromBottom = function (n) {
+        if (n === void 0) { n = 0; }
         return this.states[n];
-    }
-    render(ctx) {
-        this.states.filter(state => this.toRenderState(state)).forEach(state => {
+    };
+    StateStack.prototype.render = function (ctx) {
+        var _this = this;
+        this.states.filter(function (state) { return _this.toRenderState(state); }).forEach(function (state) {
             state.render(ctx);
         });
-    }
+    };
     /* async preload(loader: Loader) {
         console.log("ss", this.states)
         await Promise.all(
             this.states.filter(state => this.toPreloadState(state)).map(state => state.preload(loader))
         );
     } */
-    update(input) {
-        this.states.filter(state => this.toUpdateState(state)).forEach(state => {
+    StateStack.prototype.update = function (input) {
+        var _this = this;
+        this.states.filter(function (state) { return _this.toUpdateState(state); }).forEach(function (state) {
             state.update(input);
         });
-    }
-    async insert(state, index) {
-        if (!state)
-            return;
-        await state.preload(this.game.loader);
-        this.states = insertIntoArray(this.states, index, [state]);
-        state.evtHandler.dispatchEvent('insert', this);
-        this.evtHandler.dispatchEvent('state insert', state);
-    }
-    async push(state) {
-        await this.insert(state, this.states.length);
-    }
-    pop() {
+    };
+    StateStack.prototype.insert = function (state, index) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (!state)
+                            return [2 /*return*/];
+                        return [4 /*yield*/, state.preload(this.game.loader)];
+                    case 1:
+                        _a.sent();
+                        this.states = insertIntoArray(this.states, index, [state]);
+                        state.evtHandler.dispatchEvent('insert', this);
+                        this.evtHandler.dispatchEvent('state insert', state);
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    StateStack.prototype.push = function (state) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.insert(state, this.states.length)];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    StateStack.prototype.pop = function () {
         this.remove(this.states.length - 1);
-    }
-    remove(index) {
-        const state = this.states[index];
+    };
+    StateStack.prototype.remove = function (index) {
+        var state = this.states[index];
         this.states.splice(index, 1);
-        state?.evtHandler.dispatchEvent('remove');
+        state === null || state === void 0 ? void 0 : state.evtHandler.dispatchEvent('remove');
         this.evtHandler.dispatchEvent('state remove');
-    }
-}
-Mixin.apply(StateStack, [Renderable, Updatable, Preloadable]);
+    };
+    StateStack = __decorate([
+        Parents(Preloadable, Updatable, Renderable)
+    ], StateStack);
+    return StateStack;
+}());
 export default StateStack;

@@ -1,0 +1,110 @@
+* {
+  margin: 0px;
+}
+
+* :focus {
+  outline: none;
+}
+
+canvas#screen {
+  -ms-interpolation-mode: nearest-neighbor;
+      image-rendering: -webkit-optimize-contrast;
+      image-rendering: -moz-crisp-edges;
+      image-rendering: -o-pixelated;
+      image-rendering: pixelated;
+  margin: 8px;
+  width: 480px;
+  height: 320px;
+}
+
+.container {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  left: 15px;
+  top: 240px;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  background-color: #222;
+  border: 3px solid black;
+  color: white;
+  font-family: monospace;
+  width: 460px;
+  height: 80px;
+}
+
+.container h3.row {
+  margin: 4px;
+  font-size: 15px;
+}
+
+.container .arrow-down {
+  position: absolute;
+  right: 10px;
+  bottom: 5px;
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-top: 15px solid #f00;
+  -webkit-animation-timing-function: ease-in-out;
+          animation-timing-function: ease-in-out;
+  -webkit-animation-name: Hover;
+          animation-name: Hover;
+  -webkit-animation-duration: 0.4s;
+          animation-duration: 0.4s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+}
+
+@-webkit-keyframes Hover {
+  0% {
+    -webkit-transform: translateY(0px);
+            transform: translateY(0px);
+  }
+  25% {
+    -webkit-transform: translateY(5px);
+            transform: translateY(5px);
+  }
+  50% {
+    -webkit-transform: translateY(0px);
+            transform: translateY(0px);
+  }
+  75% {
+    -webkit-transform: translateY(-5px);
+            transform: translateY(-5px);
+  }
+  100% {
+    -webkit-transform: translateY(-1px);
+            transform: translateY(-1px);
+  }
+}
+
+@keyframes Hover {
+  0% {
+    -webkit-transform: translateY(0px);
+            transform: translateY(0px);
+  }
+  25% {
+    -webkit-transform: translateY(5px);
+            transform: translateY(5px);
+  }
+  50% {
+    -webkit-transform: translateY(0px);
+            transform: translateY(0px);
+  }
+  75% {
+    -webkit-transform: translateY(-5px);
+            transform: translateY(-5px);
+  }
+  100% {
+    -webkit-transform: translateY(-1px);
+            transform: translateY(-1px);
+  }
+}
+/*# sourceMappingURL=TextBox.css.map */

@@ -1,31 +1,19 @@
 import { ArgsType } from "../util/types.js";
-import { Mixin, New } from '../util/functions.js';
 import GameMap from "./GameMap.js";
 import { Preloadable, Renderable } from "../core/Attributes.js";
 import Loader from "../core/Loader.js";
 import Vector from "../util/Vector.js";
+import { Parents } from "../util/functions.js";
 
-interface GameMapLayer extends Preloadable, Renderable {
-	gameMap: GameMap;
-	zIndex: number;
-	image: HTMLImageElement;
-	imageName: string;
-	parts: GameMap.Layer.Part[][][];
-}
-
+interface GameMapLayer extends Preloadable, Renderable { }
+@Parents(Preloadable, Renderable)
 class GameMapLayer {
-	constructor(...args: ArgsType<typeof GameMapLayer["construct"]>) {
-		return New(GameMapLayer, ...args);
-	}
-	static construct(this: GameMapLayer, gameMap: GameMap, zIndex: number) {
-		Preloadable.construct.call(this);
-		Renderable.construct.call(this);
-
-		this.gameMap = gameMap;
-		this.zIndex = zIndex;
-		this.imageName = `${this.zIndex}`;
-
-		return this;
+	imageName = `${this.zIndex}`;
+	image: HTMLImageElement = null as any;
+	parts: GameMap.Layer.Part[][][] = [];
+	constructor(public gameMap: GameMap, public zIndex: number) {
+		Preloadable.call(this);
+		Renderable.call(this);
 	}
 	private getParts() {
 		const toReturn: GameMapLayer["parts"] = [];
@@ -49,7 +37,7 @@ class GameMapLayer {
 				for (let x = start.x; x <= end.x; x++) {
 					const old = Array.from(toReturn[y][x]);
 					const priority = Number(part.priority)
-					toReturn[y][x] = [...old.filter(o => o.priority >= priority), part];
+					toReturn[y][x] = [...old.filter(o => (o.priority || 0) >= priority), part];
 				}
 			}
 		});
@@ -74,7 +62,6 @@ class GameMapLayer {
 	}
 }
 
-Mixin.apply(GameMapLayer, [Preloadable, Renderable])
 
 
 export default GameMapLayer;

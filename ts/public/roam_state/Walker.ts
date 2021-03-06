@@ -1,51 +1,36 @@
-import { Preloadable, Renderable } from "../core/Attributes.js";
+import { Preloadable, Renderable, Updatable } from "../core/Attributes.js";
 import Loader from "../core/Loader.js";
 import BlankState from "../states/BlankState.js";
 import DelayState from "../states/DelayState.js";
 import RoamState from "../states/RoamState.js";
 import Direction from "../util/Direction.js";
 import Events from "../util/Events.js";
-import { Mixin, New } from "../util/functions.js";
 import Spritesheet from "../util/Spritesheet.js";
-import { ArgsType } from "../util/types.js";
 import Vector from "../util/Vector.js";
 
-interface Walker extends Preloadable, Renderable {
-	pos: Vector;
-	walkingToward: Vector | null;
-	imageUrl: string;
-	image: HTMLImageElement;
-	roamState: RoamState;
-	walking: boolean;
-	direction: Direction;
-	spritesheet: Spritesheet;
-	zIndex: number;
-	SIGNATURE: 'walker';
-}
+interface Walker extends Preloadable, Renderable { }
 class Walker {
-	constructor(...args: ArgsType<typeof Walker["construct"]>) {
-		return New(Walker, ...args);
-	}
-	static construct(this: Walker, roamState: RoamState, pos: Vector, imageUrl: string) {
-		Preloadable.construct.call(this);
-		Renderable.construct.call(this);
 
-		this.pos = pos;
-		this.walkingToward = null;
-		this.imageUrl = imageUrl;
-		this.roamState = roamState;
-		this.direction = Direction.DOWN;
-		this.walking = false;
-		this.zIndex = 1;
-		this.SIGNATURE = 'walker';
+	private readonly SIGNATURE = 'walker';
+	walkingToward: Vector | null = null;
+	direction = Direction.DOWN;
+	walking = false;
+	zIndex = 1;
+	spritesheet: Spritesheet = null as any;
+	image: HTMLImageElement = null as any;
 
-
-		return this;
+	constructor(public roamState: RoamState, public pos: Vector, public imageUrl: string) {
+		Preloadable.call(this);
+		Renderable.call(this);
 	}
 
 	async preload(loader: Loader) {
+		console.log(`${this.constructor.name} preload started`)
 		this.image = await loader.loadImage(`/assets/images/characters/${this.imageUrl}.png`)
 		this.spritesheet = new Spritesheet(this.image);
+		console.log(`${this.constructor.name} preload ended`)
+		console.log(this.spritesheet)
+
 	}
 
 	render(ctx: CanvasRenderingContext2D) {
@@ -83,24 +68,20 @@ class Walker {
 		}
 		if (layer) {
 			if (layer.partAt(ahead, (p) => p.type === "wall" && walkable(p.value))) {
-				console.log("into wall")
 				return false;
 			};
 		}
 		if (ahead.x < 0 || ahead.y < 0 || ahead.x >= this.roamState.gameMap.size.x || ahead.y >= this.roamState.gameMap.size.y) {
-			console.log("into outside map bounds")
 			return false;
 		}
 
 
 		if (this.roamState.gameObjects.filter(go => !go.canBeWalkedThrough).find(go => go.getCoveredSquares().find(v => v.equals(ahead)))) {
-			console.log("into game object")
 			return false;
 		}
 
 		const walkers = this.allButThis();
 		if (walkers.find((w: Walker) => w.walkingToward?.equals(ahead) || w.pos.equals(ahead))) {
-			console.log("into walker")
 			return false;
 		};
 		return true;
@@ -139,6 +120,7 @@ class Walker {
 
 	setDirection(direction: Direction) {
 		this.direction = direction;
+		// if (!this.spritesheet) return;
 		if (direction === Direction.DOWN)
 			this.spritesheet.coords.y = 0;
 		if (direction === Direction.LEFT)
@@ -163,7 +145,6 @@ class Walker {
 	}
 
 }
-Mixin.apply(Walker, [Preloadable, Renderable])
 
 
 export default Walker;

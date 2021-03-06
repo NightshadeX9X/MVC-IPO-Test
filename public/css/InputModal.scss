@@ -3,7 +3,8 @@
 $primary: #f5f5f5;
 $secondary: #a4a4a4;
 div.container {
-	$width: 400px;
+	@include UIElement();
+	$width: 180px;
 	$height: calc(#{$width} / 48 * 32); // 320
 	width: $width;
 	height: $height;

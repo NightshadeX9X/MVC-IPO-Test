@@ -1,5 +1,5 @@
 import Events from "../util/Events.js";
-import { insertIntoArray, Mixin, New } from "../util/functions.js";
+import { insertIntoArray, Parents } from "../util/functions.js";
 import { ArgsType } from "../util/types.js";
 import { Renderable, Updatable, Preloadable } from "./Attributes.js";
 import Game from "./Game.js";
@@ -7,26 +7,15 @@ import Input from "./Input.js";
 import Loader from "./Loader.js";
 import State from "./State.js";
 
-interface StateStack extends Renderable, Updatable, Preloadable {
-	game: Game;
-	parent: StateStack.Parent;
-	states: State[];
-	evtHandler: Events.Handler;
-}
+interface StateStack extends Renderable, Updatable, Preloadable { }
+@Parents(Preloadable, Updatable, Renderable)
 class StateStack {
-	constructor(...args: ArgsType<typeof StateStack["construct"]>) {
-		return New(StateStack, ...args);
-	}
-	static construct(this: StateStack, game: Game, parent: StateStack.Parent) {
-		Renderable.construct.call(this);
-		Updatable.construct.call(this);
-		Preloadable.construct.call(this);
-
-		this.game = game;
-		this.parent = parent;
-		this.states = [];
-		this.evtHandler = new Events.Handler();
-		return this;
+	states: State[] = [];
+	evtHandler = new Events.Handler();
+	constructor(public game: Game, public parent: StateStack.Parent) {
+		Preloadable.call(this)
+		Updatable.call(this)
+		Renderable.call(this)
 	}
 
 	private isIndependentlyUpdatable(state: State) {
@@ -105,7 +94,6 @@ class StateStack {
 	}
 }
 
-Mixin.apply(StateStack, [Renderable, Updatable, Preloadable]);
 
 
 namespace StateStack {

@@ -1,30 +1,18 @@
 import { ArgsType, JSON } from "../util/types.js";
-import { Mixin, New } from '../util/functions.js';
+import { Parents } from '../util/functions.js';
 import RoamState from "../states/RoamState.js";
 import GameMapLayer from "./GameMapLayer.js";
 import { Preloadable } from "../core/Attributes.js";
 import Loader from "../core/Loader.js";
 import Vector from "../util/Vector.js";
 
-interface GameMap extends Preloadable {
-	layers: GameMap.Layer[];
-	roamState: RoamState;
-	name: string;
-	json: GameMap.JSON;
-}
-
+interface GameMap extends Preloadable { }
+@Parents(Preloadable)
 class GameMap {
-	constructor(...args: ArgsType<typeof GameMap["construct"]>) {
-		return New(GameMap, ...args);
-	}
-	static construct(this: GameMap, roamState: RoamState, name: string) {
-		Preloadable.construct.call(this);
-
-		this.roamState = roamState;
-		this.name = name;
-		this.layers = [];
-
-		return this;
+	layers: GameMapLayer[] = [];
+	json: GameMap.JSON = null as any;
+	constructor(public roamState: RoamState, public name: string) {
+		Preloadable.call(this);
 	}
 
 	private loadJSONData(loader: Loader) {
@@ -51,7 +39,6 @@ class GameMap {
 	}
 }
 
-Mixin.apply(GameMap, [Preloadable])
 
 namespace GameMap {
 	export const Layer = GameMapLayer;
@@ -65,7 +52,7 @@ namespace GameMap {
 
 		export type Part = IndividualPart & {
 			range: Vector.AsStringRange,
-			priority: number;
+			priority?: number;
 		};
 	}
 

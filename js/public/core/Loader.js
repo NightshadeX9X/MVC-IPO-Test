@@ -1,52 +1,126 @@
-import { New } from '../util/functions.js';
-class Loader {
-    constructor() {
-        this.alreadyLoaded = null;
-        return New(Loader);
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __generator = (this && this.__generator) || function (thisArg, body) {
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    function verb(n) { return function (v) { return step([n, v]); }; }
+    function step(op) {
+        if (f) throw new TypeError("Generator is already executing.");
+        while (_) try {
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [op[0] & 2, t.value];
+            switch (op[0]) {
+                case 0: case 1: t = op; break;
+                case 4: _.label++; return { value: op[1], done: false };
+                case 5: _.label++; y = op[1]; op = [0]; continue;
+                case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                default:
+                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                    if (t[2]) _.ops.pop();
+                    _.trys.pop(); continue;
+            }
+            op = body.call(thisArg, _);
+        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
-    static construct() {
+};
+var Loader = /** @class */ (function () {
+    function Loader() {
         this.alreadyLoaded = new Map();
-        return this;
     }
-    async loadJSON(src, name = src, dynamic = false) {
-        const loaded = this.alreadyLoaded.get(name);
-        if (loaded && !dynamic)
-            return Promise.resolve(loaded);
-        const res = await fetch(src);
-        const json = res.json();
-        if (!dynamic)
-            this.alreadyLoaded.set(name, json);
-        return json;
-    }
-    async loadImage(src, name = src, dynamic = false) {
-        const loaded = this.alreadyLoaded.get(name);
-        if (loaded && !dynamic)
-            return Promise.resolve(loaded);
-        return new Promise((res, rej) => {
-            const image = new Image();
-            image.onload = () => {
-                if (!dynamic)
-                    this.alreadyLoaded.set(name, image);
-                res(image);
-            };
-            image.src = src;
+    Loader.prototype.loadJSON = function (src, name, dynamic) {
+        if (name === void 0) { name = src; }
+        if (dynamic === void 0) { dynamic = false; }
+        return __awaiter(this, void 0, void 0, function () {
+            var loaded, res, json;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        loaded = this.alreadyLoaded.get(name);
+                        if (loaded && !dynamic)
+                            return [2 /*return*/, Promise.resolve(loaded)];
+                        return [4 /*yield*/, fetch(src)];
+                    case 1:
+                        res = _a.sent();
+                        json = res.json();
+                        if (!dynamic)
+                            this.alreadyLoaded.set(name, json);
+                        return [2 /*return*/, json];
+                }
+            });
         });
-    }
-    async loadAudio(src, name = src, dynamic = false) {
-        const loaded = this.alreadyLoaded.get(name);
-        if (loaded && !dynamic)
-            return loaded;
-        const audio = new Audio(src);
-        if (!dynamic)
-            this.alreadyLoaded.set(name, audio);
-        return audio;
-    }
-    async loadJSModule(path) {
-        const imported = await import(path);
-        return imported;
-    }
-    async loadJSDefault(path) {
-        return await this.loadJSModule(path);
-    }
-}
+    };
+    Loader.prototype.loadImage = function (src, name, dynamic) {
+        if (name === void 0) { name = src; }
+        if (dynamic === void 0) { dynamic = false; }
+        return __awaiter(this, void 0, void 0, function () {
+            var loaded;
+            var _this = this;
+            return __generator(this, function (_a) {
+                loaded = this.alreadyLoaded.get(name);
+                if (loaded && !dynamic)
+                    return [2 /*return*/, Promise.resolve(loaded)];
+                return [2 /*return*/, new Promise(function (res, rej) {
+                        var image = new Image();
+                        image.onload = function () {
+                            if (!dynamic)
+                                _this.alreadyLoaded.set(name, image);
+                            res(image);
+                        };
+                        image.src = src;
+                    })];
+            });
+        });
+    };
+    Loader.prototype.loadAudio = function (src, name, dynamic) {
+        if (name === void 0) { name = src; }
+        if (dynamic === void 0) { dynamic = false; }
+        return __awaiter(this, void 0, void 0, function () {
+            var loaded, audio;
+            return __generator(this, function (_a) {
+                loaded = this.alreadyLoaded.get(name);
+                if (loaded && !dynamic)
+                    return [2 /*return*/, loaded];
+                audio = new Audio(src);
+                if (!dynamic)
+                    this.alreadyLoaded.set(name, audio);
+                return [2 /*return*/, audio];
+            });
+        });
+    };
+    Loader.prototype.loadJSModule = function (path) {
+        return __awaiter(this, void 0, void 0, function () {
+            var imported;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, import(path)];
+                    case 1:
+                        imported = _a.sent();
+                        return [2 /*return*/, imported];
+                }
+            });
+        });
+    };
+    Loader.prototype.loadJSDefault = function (path) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.loadJSModule(path)];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
+    return Loader;
+}());
 export default Loader;

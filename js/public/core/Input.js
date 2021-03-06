@@ -1,77 +1,85 @@
 import Events from "../util/Events.js";
-import { New } from "../util/functions.js";
-class Input {
-    constructor() {
-        this.keyStates = null;
-        return New(Input);
-    }
-    static construct() {
-        this.evtHandler = new Events.Handler();
+var Input = /** @class */ (function () {
+    function Input() {
         this.keyStates = new Map();
+        this.evtHandler = new Events.Handler();
         this.specialKeys = {
             CTRL: false,
             SHIFT: false,
             ALT: false
         };
         this.preventDefault = true;
-        return this;
     }
-    start(el) {
-        el.addEventListener('keydown', e => {
-            if (this.preventDefault)
+    Input.prototype.start = function (el) {
+        var _this = this;
+        el.addEventListener('keydown', function (e) {
+            if (_this.preventDefault)
                 e.preventDefault();
-            if (!this.keyIsDown(e.key)) {
-                this.evtHandler.dispatchEvent('keypress', e.key);
+            if (!_this.keyIsDown(e.key)) {
+                _this.evtHandler.dispatchEvent('keypress', e);
             }
-            this.keyStates.set(e.key, Input.keyDownSymbol);
-            this.updateSpecialKeys(e);
+            _this.keyStates.set(e.key, Input.keyDownSymbol);
+            _this.updateSpecialKeys(e);
         });
-        el.addEventListener('keyup', e => {
-            if (this.preventDefault)
+        el.addEventListener('keyup', function (e) {
+            if (_this.preventDefault)
                 e.preventDefault();
-            if (this.keyIsDown(e.key)) {
-                this.evtHandler.dispatchEvent('keyrelease', e.key);
+            if (_this.keyIsDown(e.key)) {
+                _this.evtHandler.dispatchEvent('keyrelease', e);
             }
-            this.keyStates.set(e.key, Input.keyUpSymbol);
-            this.updateSpecialKeys(e);
+            _this.keyStates.set(e.key, Input.keyUpSymbol);
+            _this.updateSpecialKeys(e);
         });
-    }
-    updateSpecialKeys(e) {
+    };
+    Input.prototype.updateSpecialKeys = function (e) {
         this.specialKeys.SHIFT = e.shiftKey;
         this.specialKeys.ALT = e.altKey;
         this.specialKeys.CTRL = e.ctrlKey;
-    }
-    keyIsDown(key) {
+    };
+    Input.prototype.keyIsDown = function (key) {
         return this.keyStates.get(key) === Input.keyDownSymbol;
-    }
-    get directionKeyStates() {
-        const states = {
-            UP: false,
-            LEFT: false,
-            RIGHT: false,
-            DOWN: false,
-        };
-        this.keyStates.forEach((symbol, key) => {
-            if (symbol === Input.keyUpSymbol)
-                return;
-            if (key === "w" || key === "ArrowUp")
-                states.UP = true;
-            if (key === "a" || key === "ArrowLeft")
-                states.LEFT = true;
-            if (key === "s" || key === "ArrowDown")
-                states.DOWN = true;
-            if (key === "d" || key === "ArrowRight")
-                states.RIGHT = true;
-        });
-        return states;
-    }
-    get interactionKey() {
-        return this.keyIsDown(' ') || this.keyIsDown('Enter');
-    }
-    get escapeKey() {
-        return this.keyIsDown('Escape') || this.keyIsDown('Return');
-    }
-}
-Input.keyDownSymbol = Symbol('key down');
-Input.keyUpSymbol = Symbol('key up');
+    };
+    Object.defineProperty(Input.prototype, "directionKeyStates", {
+        get: function () {
+            var states = {
+                UP: false,
+                LEFT: false,
+                RIGHT: false,
+                DOWN: false,
+            };
+            this.keyStates.forEach(function (symbol, key) {
+                if (symbol === Input.keyUpSymbol)
+                    return;
+                if (key === "w" || key === "ArrowUp")
+                    states.UP = true;
+                if (key === "a" || key === "ArrowLeft")
+                    states.LEFT = true;
+                if (key === "s" || key === "ArrowDown")
+                    states.DOWN = true;
+                if (key === "d" || key === "ArrowRight")
+                    states.RIGHT = true;
+            });
+            return states;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Input.prototype, "interactionKey", {
+        get: function () {
+            return this.keyIsDown(' ') || this.keyIsDown('Enter');
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Input.prototype, "escapeKey", {
+        get: function () {
+            return this.keyIsDown('Escape') || this.keyIsDown('Return');
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Input.keyDownSymbol = Symbol('key down');
+    Input.keyUpSymbol = Symbol('key up');
+    return Input;
+}());
 export default Input;

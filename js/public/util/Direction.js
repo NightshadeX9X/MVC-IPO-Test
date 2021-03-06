@@ -29,8 +29,8 @@ var Direction;
     }
     Direction.toVector = toVector;
     function fromVector(v) {
-        let horizontal;
-        let vertical;
+        var horizontal;
+        var vertical;
         if (v.x < 0)
             horizontal = Direction.LEFT;
         else
@@ -39,7 +39,7 @@ var Direction;
             vertical = Direction.UP;
         else
             vertical = Direction.DOWN;
-        const abs = v.map(Math.abs);
+        var abs = v.map(Math.abs);
         if (abs.x > abs.y)
             return horizontal;
         else
@@ -47,8 +47,8 @@ var Direction;
     }
     Direction.fromVector = fromVector;
     function routeTo(v) {
-        let horizontal;
-        let vertical;
+        var horizontal;
+        var vertical;
         if (v.x < 0)
             horizontal = Direction.LEFT;
         else
@@ -57,7 +57,7 @@ var Direction;
             vertical = Direction.UP;
         else
             vertical = Direction.DOWN;
-        const abs = v.map(Math.abs);
+        var abs = v.map(Math.abs);
         if (abs.x > abs.y)
             return [horizontal, vertical, Direction.invert(horizontal), Direction.invert(vertical)];
         else

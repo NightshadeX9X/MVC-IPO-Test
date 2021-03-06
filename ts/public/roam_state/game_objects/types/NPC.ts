@@ -1,6 +1,6 @@
 import RoamState from "../../../states/RoamState.js";
 import Direction from "../../../util/Direction.js";
-import { Mixin, New } from "../../../util/functions.js";
+import { New, Parents } from "../../../util/functions.js";
 import { ArgsType } from "../../../util/types.js";
 import Vector from "../../../util/Vector.js";
 import GameObject from "../../GameObject.js";
@@ -10,23 +10,20 @@ interface NPC extends GameObject, Walker {
 
 }
 
+@Parents(GameObject, Walker)
 class NPC {
-	constructor(...args: ArgsType<typeof NPC["construct"]>) {
-		return New(NPC, ...args);
-	}
-	static construct(this: NPC, roamState: RoamState) {
-		GameObject.construct.call(this, roamState);
-		Walker.construct.call(this, roamState, this.pos, `player`);
-
+	facePlayerOnInteraction = true;
+	constructor(public roamState: RoamState) {
+		GameObject.call(this, roamState)
+		Walker.call(this, roamState, this.pos, `player`)
 		this.evtHandler.addEventListener('interact', () => {
-			this.setDirection(Direction.invert(this.roamState.player.direction));
+			if (this.facePlayerOnInteraction)
+				this.setDirection(Direction.invert(this.roamState.player.direction));
 		})
 		this.evtHandler.addEventListener('walk', () => {
 			console.log("walked")
 		})
-		return this;
 	}
 
 }
-Mixin.apply(NPC, [Walker, GameObject]);
 export default NPC;
