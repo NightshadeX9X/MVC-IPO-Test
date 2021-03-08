@@ -41,7 +41,31 @@ var TextBoxState = /** @class */ (function () {
                 }
                 else {
                     _this.location[2] = TextBoxElement.maxLength;
-                    _this.element.updateRow(_this.location[1], _this.row);
+                    var row = _this.row.split("").map(function (char, i) {
+                        var filter = function () {
+                            var index = _this.location[1] * TextBoxElement.maxLength + i;
+                            return _this.toDrawChar(char, index);
+                        };
+                        if (!filter())
+                            return;
+                        var red = false;
+                        var before = 0;
+                        while (!red) {
+                            var index = _this.location[1] * TextBoxElement.maxLength + i - before;
+                            if (_this.paragraph.charAt(index) === " " || _this.paragraph.charAt(index) === "$")
+                                break;
+                            var previousChars = _this.paragraph.slice(index - 2, index).split("");
+                            if (previousChars[0] === "%" && previousChars[1] === "%") {
+                                red = true;
+                            }
+                            before++;
+                        }
+                        if (red)
+                            return "<span class=\"red\">" + char + "</span>";
+                        return char;
+                    }).join("");
+                    console.log(row);
+                    _this.element.updateRow(_this.location[1], row);
                 }
             }
         });
@@ -49,6 +73,7 @@ var TextBoxState = /** @class */ (function () {
             _this.element.remove();
             _this.stateStack.game.input.evtHandler.removeEventListener(enterEvtListener);
         });
+        console.log(this.paragraph);
     }
     TextBoxState.prototype.update = function (input) {
         this.tick(input);
@@ -60,13 +85,45 @@ var TextBoxState = /** @class */ (function () {
         enumerable: false,
         configurable: true
     });
+    TextBoxState.prototype.toDrawChar = function (char, index) {
+        if (char !== "[" && char !== "]" && char !== "%" &&
+            this.paragraph.charAt(index - 1) !== "[" &&
+            this.paragraph.charAt(index + 1) !== "]") {
+            return true;
+        }
+        return false;
+    };
     TextBoxState.prototype.tick = function (input) {
         if (!this.toTick)
             return;
         if (this.charsPassed >= this.originalSentence.length - 1) {
             this.toTick = false;
         }
-        this.element.updateRow(this.location[1], this.element.text[this.location[1]] + this.char);
+        {
+            var before = 0;
+            var red = false;
+            while (!red) {
+                var index = this.location[1] * TextBoxElement.maxLength + this.location[2] - before;
+                if (this.paragraph.charAt(index) === " " || this.paragraph.charAt(index) === "$")
+                    break;
+                var previousChars = this.paragraph.slice(index - 2, index).split("");
+                if (previousChars[0] === "%" && previousChars[1] === "%") {
+                    red = true;
+                }
+                before++;
+            }
+            if (red) {
+                console.log("red");
+                if (this.toDrawChar(this.char, this.location[1] * TextBoxElement.maxLength + this.location[2])) {
+                    this.element.updateRow(this.location[1], this.element.text[this.location[1]] + ("<span class=\"red\">" + this.char + "</span>"));
+                }
+            }
+            else {
+                if (this.toDrawChar(this.char, this.location[1] * TextBoxElement.maxLength + this.location[2])) {
+                    this.element.updateRow(this.location[1], this.element.text[this.location[1]] + this.char);
+                }
+            }
+        }
         this.location[2]++;
         if (this.location[2] >= TextBoxElement.maxLength) {
             if (this.location[1] < 2) {

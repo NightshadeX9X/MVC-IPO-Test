@@ -16,6 +16,7 @@ var Player = /** @class */ (function () {
         this.roamState = roamState;
         this.lastInteraction = 0;
         this.evtHandler = new Events.Handler();
+        this.canInteract = true;
         Walker.call(this, roamState, new Vector(), 'player');
         Updatable.call(this);
         this.evtHandler.addEventListener('walk', function (oldPos, newPos, direction) {
@@ -24,6 +25,7 @@ var Player = /** @class */ (function () {
                 gameObject.evtHandler.dispatchEvent('playertouch');
             });
         });
+        this.pos = new Vector(4, 20);
     }
     Player.prototype.update = function (input) {
         for (var key in input.directionKeyStates) {
@@ -41,7 +43,7 @@ var Player = /** @class */ (function () {
                 }
             }
         }
-        if (this.lastInteraction > 20 && !this.walking && input.interactionKey) {
+        if (this.lastInteraction > 20 && !this.walking && input.interactionKey && this.canInteract) {
             this.lastInteraction = 0;
             var ahead_1 = this.getPosAhead();
             var gameObject = this.roamState.gameObjects.find(function (go) { return go.pos.equals(ahead_1); });

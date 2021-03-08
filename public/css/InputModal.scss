@@ -4,12 +4,12 @@ $primary: #f5f5f5;
 $secondary: #a4a4a4;
 div.container {
 	@include UIElement();
-	$width: 180px;
+	$width: 464px;
 	$height: calc(#{$width} / 48 * 32); // 320
 	width: $width;
 	height: $height;
 	font-family: Nunito, sans-serif, Arial, Helvetica;
-	margin: 8px;
+	margin-left: 5px;
 	@include Flex(column);
 	gap: calc(#{$height} / 25);
 	background-color: $primary;

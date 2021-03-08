@@ -18,11 +18,15 @@ class NPC {
 		Walker.call(this, roamState, this.pos, `player`)
 		this.evtHandler.addEventListener('interact', () => {
 			if (this.facePlayerOnInteraction)
-				this.setDirection(Direction.invert(this.roamState.player.direction));
+				this.faceWalker()
 		})
 		this.evtHandler.addEventListener('walk', () => {
 			console.log("walked")
 		})
+	}
+
+	faceWalker(walker: Walker = this.roamState.player) {
+		this.setDirection(Direction.invert(walker.direction));
 	}
 
 }

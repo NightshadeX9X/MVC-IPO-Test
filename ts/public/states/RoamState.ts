@@ -24,6 +24,40 @@ class RoamState {
 	gameMap = new GameMap(this, 'route5');
 	camera = new Camera(this, new Vector(480, 320));
 	gameObjects: GameObject[] = [];
+	colorToneMaxAlpha = 0.4;
+
+	/** The color tone overlay displayed on top of the Camera display. The color varies depending on the hour
+	 * This list provides all the color tones using an array, from hour 0 (00:00) to hour 23 (23:00)
+	 * The current time is rounded to the nearest hour, and that index of the this array is the color tone to draw.
+	 * Color tones should only be rendered in outdoor maps.
+	 * Format: [Red, Green, Blue, Alpha]
+	*/
+	colorTones: [number, number, number, number][] = [
+		[0, 0, 255, this.colorToneMaxAlpha], // 0
+		[0, 0, 255, this.colorToneMaxAlpha * 0.8], // 1
+		[0, 0, 255, this.colorToneMaxAlpha * 0.6], // 2
+		[0, 0, 255, this.colorToneMaxAlpha * 0.4], // 3
+		[0, 0, 255, this.colorToneMaxAlpha * 0.2], // 4
+		[0, 0, 255, 0], // 5
+		[255, 255, 0, 0], // 6
+		[255, 255, 0, this.colorToneMaxAlpha * 0.2], // 7
+		[255, 255, 0, this.colorToneMaxAlpha * 0.4], // 8
+		[255, 255, 0, this.colorToneMaxAlpha * 0.6], // 9
+		[255, 255, 0, this.colorToneMaxAlpha * 0.8], // 10
+		[255, 255, 0, this.colorToneMaxAlpha], // 11
+		[255, 255, 0, this.colorToneMaxAlpha], // 12
+		[255, 255, 0, this.colorToneMaxAlpha * 0.8], // 13
+		[255, 255, 0, this.colorToneMaxAlpha * 0.6], // 14
+		[255, 255, 0, this.colorToneMaxAlpha * 0.4], // 15
+		[255, 255, 0, this.colorToneMaxAlpha * 0.2], // 16
+		[255, 255, 0, 0], // 17
+		[0, 0, 255, 0], // 18
+		[0, 0, 255, this.colorToneMaxAlpha * 0.2], // 19
+		[0, 0, 255, this.colorToneMaxAlpha * 0.4], // 20
+		[0, 0, 255, this.colorToneMaxAlpha * 0.6], // 21
+		[0, 0, 255, this.colorToneMaxAlpha * 0.8], // 22
+		[0, 0, 255, this.colorToneMaxAlpha], // 23
+	]
 	constructor(public stateStack: StateStack) {
 		State.call(this, stateStack);
 		this.backgroundProcesses.insert = async (state, index) => {
@@ -31,13 +65,6 @@ class RoamState {
 			state.toUpdate = true;
 			await StateStack.prototype.insert.call(this.backgroundProcesses, state, index);
 		};
-		this.stateStack.game.input.evtHandler.addEventListener('keypress', async (e: KeyboardEvent) => {
-			if (this === this.stateStack.fromTop())
-				if (e.key === "t") {
-					// const battle = new WildBattle(this.stateStack.game.party, new PokemonCreature("pikachu"))
-					// await this.stateStack.push(new WildBattleState(this.stateStack, battle));
-				}
-		})
 	}
 
 	private async loadGameObjects(loader: Loader) {

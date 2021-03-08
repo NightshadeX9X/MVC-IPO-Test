@@ -13,7 +13,7 @@ var GameObject = /** @class */ (function () {
     function GameObject(roamState) {
         this.roamState = roamState;
         this.evtHandler = new Events.Handler();
-        this.variables = new Map();
+        this.variables = null;
         this.pos = new Vector();
         this.zIndex = 1;
         this.size = new Vector(1);
@@ -22,6 +22,8 @@ var GameObject = /** @class */ (function () {
         Preloadable.call(this);
         Updatable.call(this);
         Renderable.call(this);
+        if (!this.variables)
+            this.variables = {};
         this.initEvtListeners();
     }
     GameObject_1 = GameObject;

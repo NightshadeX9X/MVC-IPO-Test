@@ -18,6 +18,7 @@ class Walker {
 	zIndex = 1;
 	spritesheet: Spritesheet = null as any;
 	image: HTMLImageElement = null as any;
+	walkingEnabled = true;
 
 	constructor(public roamState: RoamState, public pos: Vector, public imageUrl: string) {
 		Preloadable.call(this);
@@ -56,6 +57,7 @@ class Walker {
 		}
 	}
 	canMove(dir: Direction) {
+		if (!this.walkingEnabled) return false;
 		if (this.walking) return false;
 		const layer = this.walkingOnMapLayer();
 		const ahead = this.getPosAhead(dir);
@@ -97,6 +99,7 @@ class Walker {
 		return this.all().filter(w => w !== this);
 	}
 	async walk(this: Walker & { evtHandler: Events.Handler }, dir = this.direction) {
+		if (!this.walkingEnabled) return;
 		if (!this.walking)
 			this.setDirection(dir);
 		if (!this.canMove(dir)) return;

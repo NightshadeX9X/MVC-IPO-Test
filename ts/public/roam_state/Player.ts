@@ -13,6 +13,7 @@ interface Player extends Walker, Updatable { }
 class Player {
 	lastInteraction = 0;
 	evtHandler = new Events.Handler();
+	canInteract = true;
 	constructor(public roamState: RoamState) {
 		Walker.call(this, roamState, new Vector(), 'player');
 		Updatable.call(this);
@@ -21,7 +22,8 @@ class Player {
 			gameObjects.forEach(gameObject => {
 				gameObject.evtHandler.dispatchEvent('playertouch');
 			})
-		})
+		});
+		this.pos = new Vector(4, 20);
 	}
 	update(input: Input) {
 		for (const key in input.directionKeyStates) {
@@ -41,7 +43,7 @@ class Player {
 			}
 		}
 
-		if (this.lastInteraction > 20 && !this.walking && input.interactionKey) {
+		if (this.lastInteraction > 20 && !this.walking && input.interactionKey && this.canInteract) {
 			this.lastInteraction = 0;
 			const ahead = this.getPosAhead();
 			const gameObject = this.roamState.gameObjects.find(go => go.pos.equals(ahead));

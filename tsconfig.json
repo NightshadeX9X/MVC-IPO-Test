@@ -66,6 +66,6 @@
 	"exclude": [
 		"public/assets/images/tilesets",
 		"public/assets/images/maps",
-		"ts/public/UI/*.ts"
+		"ts/public/UI/."
 	]
 }

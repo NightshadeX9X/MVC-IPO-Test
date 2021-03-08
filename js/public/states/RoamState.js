@@ -64,6 +64,39 @@ var RoamState = /** @class */ (function () {
         this.gameMap = new GameMap(this, 'route5');
         this.camera = new Camera(this, new Vector(480, 320));
         this.gameObjects = [];
+        this.colorToneMaxAlpha = 0.4;
+        /** The color tone overlay displayed on top of the Camera display. The color varies depending on the hour
+         * This list provides all the color tones using an array, from hour 0 (00:00) to hour 23 (23:00)
+         * The current time is rounded to the nearest hour, and that index of the this array is the color tone to draw.
+         * Color tones should only be rendered in outdoor maps.
+         * Format: [Red, Green, Blue, Alpha]
+        */
+        this.colorTones = [
+            [0, 0, 255, this.colorToneMaxAlpha],
+            [0, 0, 255, this.colorToneMaxAlpha * 0.8],
+            [0, 0, 255, this.colorToneMaxAlpha * 0.6],
+            [0, 0, 255, this.colorToneMaxAlpha * 0.4],
+            [0, 0, 255, this.colorToneMaxAlpha * 0.2],
+            [0, 0, 255, 0],
+            [255, 255, 0, 0],
+            [255, 255, 0, this.colorToneMaxAlpha * 0.2],
+            [255, 255, 0, this.colorToneMaxAlpha * 0.4],
+            [255, 255, 0, this.colorToneMaxAlpha * 0.6],
+            [255, 255, 0, this.colorToneMaxAlpha * 0.8],
+            [255, 255, 0, this.colorToneMaxAlpha],
+            [255, 255, 0, this.colorToneMaxAlpha],
+            [255, 255, 0, this.colorToneMaxAlpha * 0.8],
+            [255, 255, 0, this.colorToneMaxAlpha * 0.6],
+            [255, 255, 0, this.colorToneMaxAlpha * 0.4],
+            [255, 255, 0, this.colorToneMaxAlpha * 0.2],
+            [255, 255, 0, 0],
+            [0, 0, 255, 0],
+            [0, 0, 255, this.colorToneMaxAlpha * 0.2],
+            [0, 0, 255, this.colorToneMaxAlpha * 0.4],
+            [0, 0, 255, this.colorToneMaxAlpha * 0.6],
+            [0, 0, 255, this.colorToneMaxAlpha * 0.8],
+            [0, 0, 255, this.colorToneMaxAlpha],
+        ];
         State.call(this, stateStack);
         this.backgroundProcesses.insert = function (state, index) { return __awaiter(_this, void 0, void 0, function () {
             return __generator(this, function (_a) {
@@ -78,16 +111,6 @@ var RoamState = /** @class */ (function () {
                 }
             });
         }); };
-        this.stateStack.game.input.evtHandler.addEventListener('keypress', function (e) { return __awaiter(_this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                if (this === this.stateStack.fromTop())
-                    if (e.key === "t") {
-                        // const battle = new WildBattle(this.stateStack.game.party, new PokemonCreature("pikachu"))
-                        // await this.stateStack.push(new WildBattleState(this.stateStack, battle));
-                    }
-                return [2 /*return*/];
-            });
-        }); });
     }
     RoamState_1 = RoamState;
     RoamState.prototype.loadGameObjects = function (loader) {

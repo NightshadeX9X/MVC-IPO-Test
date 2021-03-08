@@ -21,10 +21,10 @@ div.container {
   position: absolute;
   top: 8px;
   left: 8px;
-  width: 180px;
-  height: calc(180px / 48 * 32);
+  width: 464px;
+  height: calc(464px / 48 * 32);
   font-family: Nunito, sans-serif, Arial, Helvetica;
-  margin: 8px;
+  margin-left: 5px;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -38,27 +38,27 @@ div.container {
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
           flex-direction: column;
-  gap: calc(calc(180px / 48 * 32) / 25);
+  gap: calc(calc(464px / 48 * 32) / 25);
   background-color: #f5f5f5;
-  border: calc(180px / 400 * 3) solid #a4a4a4;
-  border-radius: calc(180px / 400 * 4);
+  border: calc(464px / 400 * 3) solid #a4a4a4;
+  border-radius: calc(464px / 400 * 4);
 }
 
 div.container h2 {
-  margin-bottom: calc(calc(180px / 48 * 32) / 25 * 2);
+  margin-bottom: calc(calc(464px / 48 * 32) / 25 * 2);
   text-align: center;
-  font-size: calc(180px / 15 * 1.2);
+  font-size: calc(464px / 15 * 1.2);
 }
 
 div.container input {
   background: none;
   border: none;
-  border-bottom: calc(calc(180px / 48 * 32) / 50) solid #a4a4a4;
-  padding-bottom: calc(calc(180px / 48 * 32) / 25 * 2);
+  border-bottom: calc(calc(464px / 48 * 32) / 50) solid #a4a4a4;
+  padding-bottom: calc(calc(464px / 48 * 32) / 25 * 2);
   text-align: center;
   color: #aa0000;
-  font-size: calc(180px / 40 * 2);
-  margin-bottom: calc(calc(180px / 48 * 32) / 25);
+  font-size: calc(464px / 40 * 2);
+  margin-bottom: calc(calc(464px / 48 * 32) / 25);
 }
 
 div.container input[data-valid] {
@@ -85,7 +85,7 @@ div.container div.buttons {
   -webkit-box-direction: normal;
       -ms-flex-direction: row;
           flex-direction: row;
-  height: calc(calc(180px / 48 * 32) / 250 * 75);
+  height: calc(calc(464px / 48 * 32) / 250 * 75);
   width: 100%;
 }
 
@@ -107,12 +107,12 @@ div.container div.buttons .btn {
   height: 40%;
   color: white;
   border-radius: 9999px;
-  margin: calc(180px / 400 * 3);
+  margin: calc(464px / 400 * 3);
   cursor: pointer;
   -webkit-transition: all ease-in-out .2s;
   transition: all ease-in-out .2s;
-  border: calc(180px / 400 * 2) solid black;
-  font-size: calc(180px / 25);
+  border: calc(464px / 400 * 2) solid black;
+  font-size: calc(464px / 25);
 }
 
 div.container div.buttons .btn-clear {

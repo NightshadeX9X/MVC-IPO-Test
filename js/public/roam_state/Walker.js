@@ -59,6 +59,7 @@ var Walker = /** @class */ (function () {
         this.zIndex = 1;
         this.spritesheet = null;
         this.image = null;
+        this.walkingEnabled = true;
         Preloadable.call(this);
         Renderable.call(this);
     }
@@ -125,6 +126,8 @@ var Walker = /** @class */ (function () {
     };
     Walker.prototype.canMove = function (dir) {
         var _this = this;
+        if (!this.walkingEnabled)
+            return false;
         if (this.walking)
             return false;
         var layer = this.walkingOnMapLayer();
@@ -175,6 +178,8 @@ var Walker = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
+                        if (!this.walkingEnabled)
+                            return [2 /*return*/];
                         if (!this.walking)
                             this.setDirection(dir);
                         if (!this.canMove(dir))

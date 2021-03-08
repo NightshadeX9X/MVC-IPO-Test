@@ -40,23 +40,100 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-import TextBoxState from "../../../../states/TextBoxState.js";
+import CommandSuite from "../../../../util/Commands.js";
+import Direction from "../../../../util/Direction.js";
 import { Parents } from "../../../../util/functions.js";
 import Vector from "../../../../util/Vector.js";
 import NPC from "../../types/NPC.js";
 var npc1 = /** @class */ (function () {
     function npc1(roamState) {
         this.roamState = roamState;
+        this.variables = {
+            interactionCount: 0
+        };
         NPC.call(this, roamState);
         this.pos = new Vector(7, 20);
-        this.variables.set('active', true);
-        this.facePlayerOnInteraction = false;
     }
     npc1.prototype.onInteract = function () {
+        var _a;
         return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                this.roamState.stateStack.push(new TextBoxState(this.roamState.stateStack, "hello there bonu how much among us have you played today huh? while I was busy making tea you were busy playing among us with ashu and ashi! :(((((("));
-                return [2 /*return*/];
+            var cmds, confirmPartake, willPartake, dogOrCat, rowletOrLitten, color, movie;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        cmds = new CommandSuite.NPCs(this);
+                        return [4 /*yield*/, cmds.preparePlayer()];
+                    case 1:
+                        _b.sent();
+                        if (!(this.variables.interactionCount >= 1)) return [3 /*break*/, 4];
+                        return [4 /*yield*/, cmds.showText("I'm sorry, but you can only take the survey once.")];
+                    case 2:
+                        _b.sent();
+                        return [4 /*yield*/, cmds.unpreparePlayer()];
+                    case 3:
+                        _b.sent();
+                        return [2 /*return*/];
+                    case 4: return [4 /*yield*/, cmds.showText("%%Hello %%there ]! Would you %%like to take part in a %%survey ]?")];
+                    case 5:
+                        _b.sent();
+                        return [4 /*yield*/, cmds.collectUserInput("Would you like to take part in a survey?", /^(yes|y|no|n)$/i)];
+                    case 6:
+                        confirmPartake = _b.sent();
+                        willPartake = ((_a = confirmPartake.answer) === null || _a === void 0 ? void 0 : _a.startsWith("y"));
+                        if (!!willPartake) return [3 /*break*/, 9];
+                        return [4 /*yield*/, cmds.showText("Oh... That's too bad.")];
+                    case 7:
+                        _b.sent();
+                        return [4 /*yield*/, cmds.unpreparePlayer()];
+                    case 8:
+                        _b.sent();
+                        return [2 /*return*/];
+                    case 9: return [4 /*yield*/, cmds.showText("Great!")];
+                    case 10:
+                        _b.sent();
+                        return [4 /*yield*/, cmds.showText("Just hold on while I go and get my papers!")];
+                    case 11:
+                        _b.sent();
+                        return [4 /*yield*/, cmds.walk(Direction.RIGHT, 4)];
+                    case 12:
+                        _b.sent();
+                        return [4 /*yield*/, cmds.walk(Direction.UP, 11)];
+                    case 13:
+                        _b.sent();
+                        return [4 /*yield*/, cmds.delay(120)];
+                    case 14:
+                        _b.sent();
+                        return [4 /*yield*/, cmds.walk(Direction.DOWN, 11)];
+                    case 15:
+                        _b.sent();
+                        return [4 /*yield*/, cmds.walk(Direction.LEFT, 4)];
+                    case 16:
+                        _b.sent();
+                        this.faceWalker();
+                        return [4 /*yield*/, cmds.showText("Alright, let's begin!")];
+                    case 17:
+                        _b.sent();
+                        return [4 /*yield*/, cmds.collectUserInput("Do you prefer dogs or cats?", /^(dog|cat)s?$/i)];
+                    case 18:
+                        dogOrCat = _b.sent();
+                        return [4 /*yield*/, cmds.collectUserInput("Do you prefer rowlets or littens?", /^(rowlet|litten)s?$/i)];
+                    case 19:
+                        rowletOrLitten = _b.sent();
+                        return [4 /*yield*/, cmds.collectUserInput("What is your favorite color?")];
+                    case 20:
+                        color = _b.sent();
+                        return [4 /*yield*/, cmds.collectUserInput("What is your favorite movie?")];
+                    case 21:
+                        movie = _b.sent();
+                        return [4 /*yield*/, cmds.showText("Thank you! Your answers were " + dogOrCat.answer + ", " + rowletOrLitten.answer + ", " + color.answer + " and " + movie.answer)];
+                    case 22:
+                        _b.sent();
+                        this.variables.interactionCount++;
+                        return [4 /*yield*/, cmds.unpreparePlayer()];
+                    case 23:
+                        _b.sent();
+                        return [2 /*return*/];
+                }
             });
         });
     };

@@ -17,12 +17,16 @@ var NPC = /** @class */ (function () {
         Walker.call(this, roamState, this.pos, "player");
         this.evtHandler.addEventListener('interact', function () {
             if (_this.facePlayerOnInteraction)
-                _this.setDirection(Direction.invert(_this.roamState.player.direction));
+                _this.faceWalker();
         });
         this.evtHandler.addEventListener('walk', function () {
             console.log("walked");
         });
     }
+    NPC.prototype.faceWalker = function (walker) {
+        if (walker === void 0) { walker = this.roamState.player; }
+        this.setDirection(Direction.invert(walker.direction));
+    };
     NPC = __decorate([
         Parents(GameObject, Walker)
     ], NPC);

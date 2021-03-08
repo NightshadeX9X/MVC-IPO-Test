@@ -43,6 +43,10 @@ canvas#screen {
   font-size: 15px;
 }
 
+.container h3.row span.red {
+  color: red;
+}
+
 .container .arrow-down {
   position: absolute;
   right: 10px;

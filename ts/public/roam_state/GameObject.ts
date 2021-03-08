@@ -10,7 +10,7 @@ interface GameObject extends Preloadable, Renderable, Updatable { }
 @Parents(Preloadable, Updatable, Renderable)
 class GameObject {
 	evtHandler = new Events.Handler();
-	variables = new Map<string, any>();
+	variables: Record<string, any> = null as any;
 	pos = new Vector();
 	zIndex = 1;
 	size = new Vector(1);
@@ -22,6 +22,7 @@ class GameObject {
 		Updatable.call(this)
 		Renderable.call(this)
 
+		if (!this.variables) this.variables = {};
 		this.initEvtListeners();
 	}
 	private initEvtListeners() {
